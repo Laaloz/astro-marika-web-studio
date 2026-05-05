@@ -1,4 +1,6 @@
 ---
+import SanityImage from '../SanityImage.astro';
+
 const {
   eyebrow,
   headingPrefix,
@@ -10,8 +12,7 @@ const {
   primaryCtaHref,
   secondaryCtaLabel,
   secondaryCtaHref,
-  imageUrl,
-  imageAlt,
+  image,
 } = Astro.props;
 
 const hasSecondaryCta = secondaryCtaLabel && secondaryCtaHref;
@@ -42,8 +43,16 @@ const hasSecondaryCta = secondaryCtaLabel && secondaryCtaHref;
 	</div>
 	<div class="hero-block__media">
 		{
-			imageUrl ? (
-				<img class="hero-block__image" src={imageUrl} alt={imageAlt || ''} loading="lazy" />
+			image ? (
+				<SanityImage
+					image={image}
+					alt={image.alt || ''}
+					width={760}
+					height={900}
+					fit="crop"
+					class="hero-block__image"
+					sizes="(min-width: 64rem) 38rem, 100vw"
+				/>
 			) : (
 				<div class="hero-block__image hero-block__image--placeholder"></div>
 			)

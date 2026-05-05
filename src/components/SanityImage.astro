@@ -1,0 +1,48 @@
+---
+import type {SanityImageSource} from '@sanity/image-url'
+import {type SanityImageFit, urlFor} from '../lib/sanityImage'
+
+interface Props {
+  image: SanityImageSource | null | undefined
+  alt?: string
+  width: number
+  height?: number
+  fit?: SanityImageFit
+  class?: string
+  loading?: 'lazy' | 'eager'
+  sizes?: string
+}
+
+const {
+  image,
+  alt = '',
+  width,
+  height,
+  fit,
+  class: className,
+  loading = 'lazy',
+  sizes,
+} = Astro.props
+
+const imageBuilder = image ? urlFor(image)?.width(width) : null
+const imageUrl = imageBuilder
+  ? (height ? imageBuilder.height(height) : imageBuilder)
+      [fit ? 'fit' : 'url']?.(fit as never) ?? null
+  : null
+
+const resolvedUrl = imageUrl && typeof imageUrl !== 'string' ? imageUrl.url() : imageUrl
+---
+
+{
+  resolvedUrl && (
+    <img
+      src={resolvedUrl}
+      alt={alt}
+      width={width}
+      height={height}
+      class={className}
+      loading={loading}
+      sizes={sizes}
+    />
+  )
+}

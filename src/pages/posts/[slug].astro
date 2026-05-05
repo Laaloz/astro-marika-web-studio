@@ -1,8 +1,8 @@
 ---
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
-import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 import { PortableText } from "astro-portabletext";
+import SanityImage from "../../components/SanityImage.astro";
 import MainLayout from "../../layouts/main.astro";
 
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
@@ -15,14 +15,6 @@ export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
   return await sanityClient.fetch(SLUGS_QUERY);
 }
 
-const { projectId, dataset } = sanityClient.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? createImageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
-const postImageUrl = post.image
-  ? urlFor(post.image)?.width(550).height(310).url()
-  : null;
 ---
 
 <MainLayout content={{ title: `${post.title} | Marika Web Studio` }}>
@@ -37,13 +29,15 @@ const postImageUrl = post.image
         <p class="caption">Julkaistu {new Date(post.publishedAt).toLocaleDateString('fi-FI')}</p>
       </div>
       {
-        postImageUrl && (
-          <img
-            src={postImageUrl}
-            alt={post.title}
+        post.image && (
+          <SanityImage
+            image={post.image}
+            alt={post.image?.alt || post.title}
+            width={1100}
+            height={620}
+            fit="crop"
             class="aspect-video w-full rounded-[32px] object-cover"
-            width="1100"
-            height="620"
+            sizes="(min-width: 72rem) 72rem, 100vw"
           />
         )
       }
