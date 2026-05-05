@@ -5,8 +5,13 @@ import { PortableText } from "astro-portabletext";
 import SanityImage from "../../components/SanityImage.astro";
 import MainLayout from "../../layouts/main.astro";
 
-const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
+const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
+  ...,
+  "excerpt": pt::text(body)
+}`;
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, Astro.params);
+
+const postDescription = typeof post?.excerpt === 'string' ? post.excerpt.trim().slice(0, 160) : undefined;
 
 export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
   const SLUGS_QUERY = `*[_type == "post" && defined(slug.current)]{
@@ -17,7 +22,7 @@ export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
 
 ---
 
-<MainLayout content={{ title: `${post.title} | Marika Web Studio` }}>
+<MainLayout content={{ title: `${post.title} | Marika Web Studio`, description: postDescription, image: post.image }}>
   <main class="page-shell">
     <section class="surface-panel surface-panel--hero">
       <div class="actions-row">
@@ -37,6 +42,9 @@ export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
             height={620}
             fit="crop"
             class="aspect-video w-full rounded-[32px] object-cover"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
             sizes="(min-width: 72rem) 72rem, 100vw"
           />
         )

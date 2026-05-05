@@ -10,6 +10,8 @@ interface Props {
   fit?: SanityImageFit
   class?: string
   loading?: 'lazy' | 'eager'
+  decoding?: 'async' | 'auto' | 'sync'
+  fetchpriority?: 'high' | 'low' | 'auto'
   sizes?: string
 }
 
@@ -21,6 +23,8 @@ const {
   fit,
   class: className,
   loading = 'lazy',
+  decoding = 'async',
+  fetchpriority,
   sizes,
 } = Astro.props
 
@@ -42,6 +46,8 @@ const resolvedUrl = imageUrl && typeof imageUrl !== 'string' ? imageUrl.url() : 
       height={height}
       class={className}
       loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
       sizes={sizes}
     />
   )

@@ -6,6 +6,8 @@ import {sanityClient} from 'sanity:client';
 
 const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
   title,
+  "metaDescription": pageBuilder[_type == "heroSection"][0].description,
+  "metaImage": pageBuilder[_type == "heroSection"][0].image,
   pageBuilder[]{
     ...,
     _type == "heroSection" => {
@@ -27,8 +29,8 @@ export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
 const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, Astro.params);
 ---
 
-<MainLayout content={{title: `${page?.title || 'Page'} | Marika Web Studio`}}>
-	<main class="page-shell page-shell--builder">
+<MainLayout content={{title: `${page?.title || 'Page'} | Marika Web Studio`, description: page?.metaDescription, image: page?.metaImage}}>
+	<main class="page-shell page-shell--builder page-shell--hero">
 		{(page?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'heroSection') {
 				return <HeroSection {...block} />;

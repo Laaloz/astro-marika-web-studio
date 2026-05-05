@@ -1,6 +1,50 @@
 ---
 import '../styles/global.css';
-const { content = { title: 'Marika Web Studio' } } = Astro.props;
+import {sanityClient} from 'sanity:client';
+import {urlFor} from '../lib/sanityImage';
+import type {SanityImageSource} from '@sanity/image-url';
+
+interface ContentMetadata {
+	title?: string;
+	description?: string;
+	image?: string | SanityImageSource;
+	canonical?: string;
+	noindex?: boolean;
+}
+
+const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
+  siteTitle,
+  siteDescription,
+  seoTitle,
+  seoDescription,
+  ogImage
+}`;
+
+const siteSettings = await sanityClient.fetch<{
+	siteTitle?: string;
+	siteDescription?: string;
+	seoTitle?: string;
+	seoDescription?: string;
+	ogImage?: SanityImageSource;
+} | null>(SITE_SETTINGS_QUERY);
+
+const defaultTitle = siteSettings?.seoTitle || siteSettings?.siteTitle || 'Marika Web Studio';
+const defaultDescription =
+	siteSettings?.seoDescription ||
+	siteSettings?.siteDescription ||
+	'Digitaalisia palveluita, joissa tunne ja toimivuus kohtaavat. Verkkosivuja ja visuaalisia kokonaisuuksia, jotka tuntuvat omilta ja herattavat luottamuksen.';
+
+const { content = {} } = Astro.props as { content?: ContentMetadata };
+
+const title = content.title || defaultTitle;
+const description = content.description || defaultDescription;
+const canonical = content.canonical || (Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined);
+const socialImageSource = content.image || siteSettings?.ogImage || '/favicon.svg';
+const socialImagePath =
+	typeof socialImageSource === 'string'
+		? socialImageSource
+		: urlFor(socialImageSource)?.width(1200).height(630).fit('crop').url();
+const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).href : undefined;
 ---
 
 
@@ -8,10 +52,25 @@ const { content = { title: 'Marika Web Studio' } } = Astro.props;
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
+		<link rel="preload" href="/fonts/inter-variable.ttf" as="font" type="font/ttf" crossorigin />
+		<link rel="preload" href="/fonts/fraunces-variable.ttf" as="font" type="font/ttf" crossorigin />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		{canonical && <link rel="canonical" href={canonical} />}
 		<meta name="generator" content={Astro.generator} />
-		<title>{content.title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="fi_FI" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		{canonical && <meta property="og:url" content={canonical} />}
+		{socialImageUrl && <meta property="og:image" content={socialImageUrl} />}
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		{socialImageUrl && <meta name="twitter:image" content={socialImageUrl} />}
+		{content.noindex && <meta name="robots" content="noindex, nofollow" />}
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />

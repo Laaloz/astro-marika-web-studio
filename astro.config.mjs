@@ -3,8 +3,14 @@ import { defineConfig } from "astro/config";
 
 import sanity from "@sanity/astro";
 
+const site =
+  process.env.PUBLIC_SITE_URL ||
+  process.env.SITE_URL ||
+  (process.env.CONTEXT === "production" ? process.env.URL : undefined);
+
 // https://astro.build/config
 export default defineConfig({
+  site,
   vite: {
     plugins: [tailwindcss()],
   },
