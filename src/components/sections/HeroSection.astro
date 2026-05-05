@@ -1,0 +1,52 @@
+---
+const {
+  eyebrow,
+  headingPrefix,
+  headingEmphasis,
+  headingSuffix,
+  description,
+  note,
+  primaryCtaLabel,
+  primaryCtaHref,
+  secondaryCtaLabel,
+  secondaryCtaHref,
+  imageUrl,
+  imageAlt,
+} = Astro.props;
+
+const hasSecondaryCta = secondaryCtaLabel && secondaryCtaHref;
+---
+
+<section class="hero-block">
+	<div class="hero-block__copy">
+		<p class="hero-block__eyebrow">{eyebrow}</p>
+		<h1 class="hero-block__title">
+			<span class="hero-block__title-part hero-block__title-part--base">{headingPrefix}</span>
+			<span class="hero-block__title-part hero-block__title-part--accent">{headingEmphasis}</span>
+			{headingSuffix && <span class="hero-block__title-part hero-block__title-part--base">{headingSuffix}</span>}
+		</h1>
+		<div class="hero-block__body">
+			<p>{description}</p>
+			{note && <p class="hero-block__note">{note}</p>}
+		</div>
+		<div class="actions-row hero-block__actions">
+			<a class="button button--hero-primary" href={primaryCtaHref}>
+				{primaryCtaLabel}
+			</a>
+			{hasSecondaryCta && (
+				<a class="button button--hero-secondary" href={secondaryCtaHref}>
+					{secondaryCtaLabel}
+				</a>
+			)}
+		</div>
+	</div>
+	<div class="hero-block__media">
+		{
+			imageUrl ? (
+				<img class="hero-block__image" src={imageUrl} alt={imageAlt || ''} loading="lazy" />
+			) : (
+				<div class="hero-block__image hero-block__image--placeholder"></div>
+			)
+		}
+	</div>
+</section>

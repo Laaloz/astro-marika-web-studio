@@ -1,26 +1,27 @@
 ---
-import '../styles/global.css';
-// Component Imports
-import Button from '../components/Button.astro';
+import MainLayout from '../layouts/main.astro';
+import HeroSection from '../components/sections/HeroSection.astro';
 
-// Full Astro Component Syntax:
-// https://docs.astro.build/basics/astro-components/
+const homepageHero = {
+	eyebrow: 'Studio Maruzella',
+	headingPrefix: 'Digitaalisia palveluita, joissa',
+	headingEmphasis: 'tunne ja toimivuus',
+	headingSuffix: 'kohtaavat',
+	description:
+		'Verkkosivuja ja visuaalisia kokonaisuuksia, jotka tuntuvat omilta ja herattavat luottamuksen. Selkeita, sujuvia ja brandia vahvistavia ratkaisuja verkkosivuista Canva-pohjiin.',
+	note: 'Toimivan ei tarvitse tarkoittaa tylsaa se voi olla myos inspiroivaa.',
+	primaryCtaLabel: 'Laita viestia',
+	primaryCtaHref: 'mailto:hello@studiomaruzella.fi',
+	secondaryCtaLabel: 'Palvelut',
+	secondaryCtaHref: '/styleguide',
+	imageUrl:
+		'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
+	imageAlt: 'Nainen istuu kannettavan tietokoneen kanssa luonnonvalossa.',
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro + TailwindCSS</title>
-	</head>
-
-	<body>
-		<div class="grid place-items-center h-screen content-center">
-			<Button>Tailwind Button in Astro!</Button>
-			<a href="/markdown-page" class="p-4 underline">Markdown is also supported...</a>
-		</div>
-	</body>
-</html>
+<MainLayout content={{ title: 'Marika Web Studio' }}>
+	<main class="page-shell">
+		<HeroSection {...homepageHero} />
+	</main>
+</MainLayout>

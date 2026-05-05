@@ -1,0 +1,101 @@
+:root {
+  --color-brand-primary: #cedefd;
+  --color-brand-secondary: #ece59e;
+  --color-brand-secondary-dark: #71650b;
+  --color-brand-accent: #ffcae0;
+  --color-brand-accent-strong: #d53a0b;
+  --color-background: #fffefb;
+  --color-surface: #ffffff;
+  --color-heading: #3b2115;
+  --color-text: #2f2a26;
+  --color-text-primary: #092c4c;
+  --color-muted: #828282;
+  --color-muted-strong: #4f4f4f;
+  --color-neutral-900: #333333;
+  --color-neutral-300: #bdbdbd;
+  --color-neutral-200: #e0e0e0;
+  --color-black: #000000;
+  --color-black-2: #1d1d1d;
+  --color-black-3: #282828;
+  --color-white: #ffffff;
+  --color-info: #2f80ed;
+  --color-success: #27ae60;
+  --color-warning: #ffc943;
+  --color-error: #eb5757;
+  --color-display: #bbcbe0;
+
+  --shadow-card: 0 4px 24px rgb(9 44 76 / 0.2);
+  --shadow-swatch: 0 4px 24px rgb(9 44 76 / 0.4);
+  --shadow-hero: 0 28px 60px rgb(30 18 16 / 0.35);
+  --shadow-button-accent: 0 12px 24px rgb(213 58 11 / 0.24);
+  --radius-sm: 2px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-xl: 2.25rem;
+  --radius-pill: 999px;
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 56px;
+  --space-7: 72px;
+  --space-8: 80px;
+  --space-9: 96px;
+  --space-10: 120px;
+
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --text-body-large: 1.25rem;
+  --leading-body-large: 1.75rem;
+  --text-body-medium: 1.125rem;
+  --leading-body-medium: 1.375rem;
+  --text-body-normal: 1rem;
+  --leading-body-normal: 1.5rem;
+  --text-body-small: 0.875rem;
+  --leading-body-small: 1.3125rem;
+
+  --text-h1: 2.75rem;
+  --leading-h1: 3.025rem;
+  --text-h2: 2.5rem;
+  --leading-h2: 3rem;
+  --text-h3: 2rem;
+  --leading-h3: 2.4rem;
+  --text-h4: 1.75rem;
+  --leading-h4: 2.1rem;
+  --text-h5: 1.5rem;
+  --leading-h5: 1.8rem;
+  --text-h6: 1.25rem;
+  --leading-h6: 1.5rem;
+
+  --page-padding: clamp(1rem, 4vw, 4rem);
+  --content-width: 72rem;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --text-body-large: 1.25rem;
+    --leading-body-large: 1.75rem;
+    --text-body-medium: 1.125rem;
+    --leading-body-medium: 1.375rem;
+    --text-body-normal: 1rem;
+    --leading-body-normal: 1.6rem;
+    --text-body-small: 0.875rem;
+    --leading-body-small: 1.05rem;
+
+    --text-h1: 5.5rem;
+    --leading-h1: 5.59375rem;
+    --text-h2: 3rem;
+    --leading-h2: 3.475rem;
+    --text-h3: 2rem;
+    --leading-h3: 2.4rem;
+    --text-h4: 1.75rem;
+    --leading-h4: 2.1rem;
+    --text-h5: 1.5rem;
+    --leading-h5: 1.8rem;
+    --text-h6: 1.25rem;
+    --leading-h6: 1.5rem;
+  }
+}

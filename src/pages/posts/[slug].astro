@@ -3,6 +3,7 @@ import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
 import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 import { PortableText } from "astro-portabletext";
+import MainLayout from "../../layouts/main.astro";
 
 const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]`;
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, Astro.params);
@@ -24,22 +25,32 @@ const postImageUrl = post.image
   : null;
 ---
 
-<main class="container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4">
-  <a href="/posts" class="hover:underline">&larr; Back to posts</a>
-  {
-    postImageUrl && (
-      <img
-        src={postImageUrl}
-        alt={post.title}
-        class="aspect-video rounded-xl"
-        width="550"
-        height="310"
-      />
-    )
-  }
-  <h1 class="text-4xl font-bold mb-8">{post.title}</h1>
-  <div class="prose">
-    <p>Published: {new Date(post.publishedAt).toLocaleDateString()}</p>
-    {Array.isArray(post.body) && <PortableText value={post.body} />}
-  </div>
-</main>
+<MainLayout content={{ title: `${post.title} | Marika Web Studio` }}>
+  <main class="page-shell">
+    <section class="surface-panel surface-panel--hero">
+      <div class="actions-row">
+        <a class="button button--secondary" href="/posts">Takaisin postauksiin</a>
+      </div>
+      <div class="section-head">
+        <p class="eyebrow">Article</p>
+        <h1>{post.title}</h1>
+        <p class="caption">Julkaistu {new Date(post.publishedAt).toLocaleDateString('fi-FI')}</p>
+      </div>
+      {
+        postImageUrl && (
+          <img
+            src={postImageUrl}
+            alt={post.title}
+            class="aspect-video w-full rounded-[32px] object-cover"
+            width="1100"
+            height="620"
+          />
+        )
+      }
+    </section>
+
+    <article class="surface-panel rich-text">
+      {Array.isArray(post.body) && <PortableText value={post.body} />}
+    </article>
+  </main>
+</MainLayout>

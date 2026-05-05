@@ -1,0 +1,55 @@
+---
+import type {SanityDocument} from '@sanity/client';
+import {createImageUrlBuilder, type SanityImageSource} from '@sanity/image-url';
+import MainLayout from '../layouts/main.astro';
+import HeroSection from '../components/sections/HeroSection.astro';
+import {sanityClient} from 'sanity:client';
+
+const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
+  title,
+  pageBuilder[]{
+    ...,
+    _type == "heroSection" => {
+      ...,
+      image {
+        ...,
+        alt
+      }
+    }
+  }
+}`;
+
+export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
+  return await sanityClient.fetch(`*[_type == "page" && defined(slug.current)]{
+    "params": {"slug": slug.current}
+  }`);
+}
+
+const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, Astro.params);
+
+const {projectId, dataset} = sanityClient.config();
+const urlFor = (source: SanityImageSource) =>
+  projectId && dataset ? createImageUrlBuilder({projectId, dataset}).image(source) : null;
+
+const pageBuilder = (page?.pageBuilder || []).map((block: SanityDocument) => {
+  if (block._type !== 'heroSection') return block;
+
+  return {
+    ...block,
+    imageUrl: block.image ? urlFor(block.image)?.width(760).height(900).fit('crop').url() : null,
+    imageAlt: block.image?.alt || '',
+  };
+});
+---
+
+<MainLayout content={{title: `${page?.title || 'Page'} | Marika Web Studio`}}>
+	<main class="page-shell page-shell--builder">
+		{pageBuilder.map((block: SanityDocument) => {
+			if (block._type === 'heroSection') {
+				return <HeroSection {...block} />;
+			}
+
+			return null;
+		})}
+	</main>
+</MainLayout>

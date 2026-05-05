@@ -1,0 +1,246 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+const brandColors = [
+  { name: 'Primary', value: '#CEDEFD', style: 'background: #CEDEFD;' },
+  { name: 'Secondary', value: '#ECE59E', style: 'background: #ECE59E;' },
+  { name: 'Secondary Dark', value: '#71650B', style: 'background: #71650B;' },
+  { name: 'Accent', value: '#FFCAE0', style: 'background: #FFCAE0;' },
+  { name: 'Accent Strong', value: '#D53A0B', style: 'background: #D53A0B;' },
+  { name: 'Background', value: '#FFFEFB', style: 'background: #FFFEFB;' },
+  { name: 'Headings', value: '#3B2115', style: 'background: #3B2115;' },
+  { name: 'Body Text', value: '#2F2A26', style: 'background: #2F2A26;' },
+];
+
+const stateColors = [
+  { name: 'Info', value: '#2F80ED', style: 'background: #2F80ED;' },
+  { name: 'Success', value: '#27AE60', style: 'background: #27AE60;' },
+  { name: 'Warning', value: '#FFC943', style: 'background: #FFC943;' },
+  { name: 'Error', value: '#EB5757', style: 'background: #EB5757;' },
+];
+
+const neutralColors = [
+  { name: 'Gray 1', value: '#333333', style: 'background: #333333;' },
+  { name: 'Gray 2', value: '#4F4F4F', style: 'background: #4F4F4F;' },
+  { name: 'Gray 3', value: '#828282', style: 'background: #828282;' },
+  { name: 'Gray 4', value: '#BDBDBD', style: 'background: #BDBDBD;' },
+  { name: 'Gray 5', value: '#E0E0E0', style: 'background: #E0E0E0;' },
+  { name: 'Black', value: '#000000', style: 'background: #000000;' },
+  { name: 'Black 2', value: '#1D1D1D', style: 'background: #1D1D1D;' },
+  { name: 'White', value: '#FFFFFF', style: 'background: #FFFFFF;' },
+];
+
+const desktopHeadings = [
+  { name: 'Heading 1', size: '88px / 5.5rem', lineHeight: '89.3px', sample: 'Fraunces statement' },
+  { name: 'Heading 2', size: '48px / 3rem', lineHeight: '55.6px', sample: 'Fraunces section title' },
+  { name: 'Heading 3', size: '32px / 2rem', lineHeight: '38.4px', sample: 'Fraunces subsection' },
+  { name: 'Heading 4', size: '28px / 1.75rem', lineHeight: '33.6px', sample: 'Fraunces support heading' },
+  { name: 'Heading 5', size: '24px / 1.5rem', lineHeight: '28.8px', sample: 'Fraunces compact heading' },
+  { name: 'Heading 6', size: '20px / 1.25rem', lineHeight: '24px', sample: 'Fraunces small heading' },
+];
+
+const bodyStyles = [
+  { name: 'Large text', size: '20px / 1.25rem', lineHeight: '28px', sample: 'Inter large regular for lead paragraphs and hero copy.' },
+  { name: 'Medium text', size: '18px / 1.125rem', lineHeight: '22px', sample: 'Inter medium regular for denser supporting text.' },
+  { name: 'Normal text', size: '16px / 1rem', lineHeight: '24-25.6px', sample: 'Inter normal regular for body text, labels and default content.' },
+  { name: 'Small text', size: '14px / 0.875rem', lineHeight: '16.8-21px', sample: 'Inter small regular for captions, metadata and helper copy.' },
+];
+
+const spacingDesktop = ['8', '16', '24', '32', '40', '56', '72', '80', '96', '120'];
+const spacingMobile = ['8', '14', '18', '24', '30', '42', '54', '60', '72', '90'];
+
+const grids = [
+  { label: 'Desktop 1440', columns: 12, margin: '64px', gutter: '24px' },
+  { label: 'Desktop 1024', columns: 12, margin: '64px', gutter: '24px' },
+  { label: 'Tablet 768', columns: 8, margin: '16px', gutter: '16px' },
+  { label: 'Mobile 320', columns: 4, margin: '16px', gutter: '16px' },
+];
+---
+
+<MainLayout content={{ title: 'Styleguide | Marika Web Studio' }}>
+  <main class="page-shell">
+    <section class="surface-panel surface-panel--hero">
+      <div class="section-head">
+        <p class="eyebrow">Figma to Project</p>
+        <h1>Marika Web Studio Styleguide</h1>
+      </div>
+      <p class="lede">
+        Taman sivun tarkoitus on ankkuroida Figma-styleguiden foundation suoraan Astro-projektiin:
+        vari-tokenit, typografia, spacing ja grid-ajattelu elavat nyt samassa paikassa.
+      </p>
+      <div class="pill-list">
+        <span class="pill">Fraunces headings</span>
+        <span class="pill">Inter body text</span>
+        <span class="pill">Brand and state colors</span>
+        <span class="pill">Desktop + mobile scales</span>
+      </div>
+    </section>
+
+    <div class="section-stack">
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">01. Colors</p>
+          <h2>Brand Colors</h2>
+          <p class="caption">Primary palette, text colors and semantic states from the Figma styleguide.</p>
+        </div>
+        <div class="swatch-grid">
+          {brandColors.map((color) => (
+            <article class="swatch">
+              <div class="swatch-chip" style={color.style}></div>
+              <div>
+                <p class="swatch-label">{color.name}</p>
+                <p class="caption">{color.value}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">02. States</p>
+          <h2>Feedback Colors</h2>
+        </div>
+        <div class="swatch-grid">
+          {stateColors.map((color) => (
+            <article class="swatch">
+              <div class="swatch-chip" style={color.style}></div>
+              <div>
+                <p class="swatch-label">{color.name}</p>
+                <p class="caption">{color.value}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">03. Neutrals</p>
+          <h2>Neutral Scale</h2>
+        </div>
+        <div class="swatch-grid">
+          {neutralColors.map((color) => (
+            <article class="swatch">
+              <div class="swatch-chip" style={color.style}></div>
+              <div>
+                <p class="swatch-label">{color.name}</p>
+                <p class="caption">{color.value}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">04. Typography</p>
+          <h2>Heading Scale</h2>
+          <p class="caption">Headings use Fraunces. CSS variables swap to the mobile values automatically on smaller screens.</p>
+        </div>
+        <div class="spec-table">
+          <div class="spec-row spec-head">
+            <span>Name</span>
+            <span>Font size</span>
+            <span>Line height</span>
+          </div>
+          {desktopHeadings.map((item, index) => (
+            <div class="spec-row">
+              <div class="type-sample">
+                <strong>{item.name}</strong>
+                {
+                  index === 0 ? <h1>{item.sample}</h1> :
+                  index === 1 ? <h2>{item.sample}</h2> :
+                  index === 2 ? <h3>{item.sample}</h3> :
+                  index === 3 ? <h4>{item.sample}</h4> :
+                  index === 4 ? <h5>{item.sample}</h5> :
+                  <h6>{item.sample}</h6>
+                }
+              </div>
+              <span>{item.size}</span>
+              <span>{item.lineHeight}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">05. Body Text</p>
+          <h2>Inter Text Styles</h2>
+        </div>
+        <div class="spec-table">
+          <div class="spec-row spec-head">
+            <span>Name</span>
+            <span>Font size</span>
+            <span>Line height</span>
+          </div>
+          {bodyStyles.map((item) => (
+            <div class="spec-row">
+              <div class="type-sample">
+                <strong>{item.name}</strong>
+                <p>{item.sample}</p>
+              </div>
+              <span>{item.size}</span>
+              <span>{item.lineHeight}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">06. Spacing</p>
+          <h2>Spacing Tokens</h2>
+        </div>
+        <div class="grid-preview">
+          <div class="grid-row">
+            <strong>Desktop scale</strong>
+            <div class="pill-list">
+              {spacingDesktop.map((space) => <span class="pill">{space}px</span>)}
+            </div>
+          </div>
+          <div class="grid-row">
+            <strong>Mobile scale</strong>
+            <div class="pill-list">
+              {spacingMobile.map((space) => <span class="pill">{space}px</span>)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">07. Grid</p>
+          <h2>Grid Presets</h2>
+          <p class="caption">Grid data is documented here so future layouts can reuse the same breakpoint logic.</p>
+        </div>
+        <div class="grid-preview">
+          {grids.map((grid) => (
+            <article class="grid-row">
+              <div>
+                <strong>{grid.label}</strong>
+                <p class="caption">{grid.columns} columns, margin {grid.margin}, gutter {grid.gutter}</p>
+              </div>
+              <div class="grid-bars" style={`grid-template-columns: repeat(${grid.columns}, minmax(0, 1fr));`}>
+                {Array.from({ length: grid.columns }).map(() => <div class="grid-bar"></div>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="surface-panel">
+        <div class="section-head">
+          <p class="eyebrow">08. Buttons</p>
+          <h2>Foundation Actions</h2>
+          <p class="caption">Figma node covered the overall styleguide, so this project now exposes a starter action style for the next implementation steps.</p>
+        </div>
+        <div class="actions-row">
+          <a class="button button--primary" href="/">Primary action</a>
+          <a class="button button--secondary" href="/posts">Secondary action</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</MainLayout>

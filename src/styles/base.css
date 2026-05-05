@@ -1,0 +1,131 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-body);
+  background: var(--color-background);
+  color: var(--color-text);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgb(206 222 253 / 0.6), transparent 32%),
+    linear-gradient(180deg, #fffefb 0%, #fffefb 70%, #f6f1e8 100%);
+  color: var(--color-text);
+  font-size: var(--text-body-normal);
+  line-height: var(--leading-body-normal);
+}
+
+a {
+  color: inherit;
+  text-decoration-color: rgb(213 58 11 / 0.55);
+  text-underline-offset: 0.18em;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-weight: 400;
+}
+
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-h1);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-h3);
+}
+
+h4 {
+  font-size: var(--text-h4);
+  line-height: var(--leading-h4);
+}
+
+h5 {
+  font-size: var(--text-h5);
+  line-height: var(--leading-h5);
+}
+
+h6 {
+  font-size: var(--text-h6);
+  line-height: var(--leading-h6);
+}
+
+p,
+ul,
+ol,
+dl {
+  margin: 0;
+}
+
+.page-shell {
+  width: min(100%, calc(var(--content-width) + var(--page-padding) * 2));
+  margin: 0 auto;
+  padding: var(--space-8) var(--page-padding) var(--space-10);
+}
+
+.page-shell--builder {
+  padding-top: var(--space-6);
+}
+
+.section-stack {
+  display: grid;
+  gap: var(--space-7);
+  margin-top: var(--space-8);
+}
+
+.section-head {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.eyebrow {
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 42rem;
+  color: var(--color-text-primary);
+  font-size: var(--text-body-large);
+  line-height: var(--leading-body-large);
+}
+
+.caption {
+  color: var(--color-muted);
+  font-size: var(--text-body-small);
+  line-height: var(--leading-body-small);
+}
+
+@media (max-width: 48rem) {
+  .page-shell {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-8);
+  }
+}

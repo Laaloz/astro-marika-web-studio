@@ -1,16 +1,18 @@
 ---
-title: 'Markdown + Tailwind'
+title: 'Markdown | Marika Web Studio'
 layout: ../layouts/main.astro
 ---
 
-<div class="grid place-items-center h-screen content-center">
- <div class="py-2 px-4 bg-purple-500 text-white font-semibold rounded-lg shadow-md">
-  Tailwind classes also work in Markdown!
- </div>
- <a
-  href="/"
-  class="p-4 underline hover:text-purple-500 transition-colors ease-in-out duration-200"
- >
-  Go home
- </a>
-</div>
+<main class="page-shell">
+ <section class="surface-panel surface-panel--hero">
+  <p class="eyebrow">Markdown Demo</p>
+  <h1>Markdown toimii nyt saman design foundationin paalla.</h1>
+  <p class="lede">
+   Myos markdown-sisalto voi kayttaa samoja globaaleja token-luokkia kuin Astro-sivut.
+  </p>
+  <div class="actions-row">
+   <a href="/" class="button button--secondary">Etusivu</a>
+   <a href="/styleguide" class="button button--primary">Styleguide</a>
+  </div>
+ </section>
+</main>

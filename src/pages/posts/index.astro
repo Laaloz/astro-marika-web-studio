@@ -1,6 +1,7 @@
 ---
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
+import MainLayout from "../../layouts/main.astro";
 
 const POSTS_QUERY = `*[
   _type == "post"
@@ -10,16 +11,38 @@ const POSTS_QUERY = `*[
 const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
 ---
 
-<main class="container mx-auto min-h-screen max-w-3xl p-8">
-  <h1 class="text-4xl font-bold mb-8">Posts</h1>
-  <ul class="flex flex-col gap-y-4">
-    {posts.map((post) => (
-        <li class="hover:underline">
-          <a href={`/posts/${post.slug.current}`}>
-            <h2 class="text-xl font-semibold">{post.title}</h2>
-            <p>{new Date(post.publishedAt).toLocaleDateString()}</p>
-          </a>
-        </li>
-      ))}
-  </ul>
-</main>
+<MainLayout content={{ title: 'Posts | Marika Web Studio' }}>
+  <main class="page-shell">
+    <section class="surface-panel surface-panel--hero">
+      <div class="section-head">
+        <p class="eyebrow">Sanity Content</p>
+        <h1>Posts</h1>
+        <p class="lede">Sanity-postaukset kayttavat nyt samaa layout- ja typografiafoundationia kuin styleguide.</p>
+      </div>
+      <div class="actions-row">
+        <a class="button button--secondary" href="/">Etusivu</a>
+        <a class="button button--primary" href="/styleguide">Styleguide</a>
+      </div>
+    </section>
+
+    <section class="surface-panel">
+      {
+        posts.length > 0 ? (
+          <ul class="post-list">
+            {posts.map((post) => (
+              <li>
+                <a class="post-link-card" href={`/posts/${post.slug.current}`}>
+                  <p class="eyebrow">Post</p>
+                  <h3>{post.title}</h3>
+                  <p class="post-meta">{new Date(post.publishedAt).toLocaleDateString('fi-FI')}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Postauksia ei loytynyt viela.</p>
+        )
+      }
+    </section>
+  </main>
+</MainLayout>

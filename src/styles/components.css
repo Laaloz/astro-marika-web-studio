@@ -1,0 +1,237 @@
+.surface-panel {
+  border: 1px solid rgb(59 33 21 / 0.1);
+  border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 0.78);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.surface-panel--hero {
+  display: grid;
+  gap: var(--space-5);
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.875rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button--primary {
+  background: var(--color-brand-accent-strong);
+  color: var(--color-white);
+  box-shadow: var(--shadow-button-accent);
+}
+
+.button--secondary {
+  background: rgb(255 255 255 / 0.85);
+  border-color: rgb(59 33 21 / 0.12);
+  color: var(--color-heading);
+}
+
+.button--hero-primary {
+  min-height: 3.5rem;
+  padding: 0.95rem 1.5rem;
+  background: #d9defd;
+  color: #31221c;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.button--hero-secondary {
+  min-height: 3.5rem;
+  padding: 0.95rem 1.5rem;
+  color: rgb(255 248 242 / 0.92);
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgb(255 248 242 / 0.45);
+}
+
+.pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pill {
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-pill);
+  background: rgb(206 222 253 / 0.55);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.swatch-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.swatch {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.swatch-chip {
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgb(9 44 76 / 0.08);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-swatch);
+}
+
+.swatch-label {
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+.spec-table {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: rgb(59 33 21 / 0.12);
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+}
+
+.spec-row strong {
+  color: var(--color-text-primary);
+}
+
+.spec-head {
+  background: var(--color-brand-primary);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.type-sample {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.grid-preview,
+.grid-row,
+.grid-bars,
+.post-list,
+.rich-text {
+  display: grid;
+}
+
+.grid-preview {
+  gap: var(--space-4);
+}
+
+.grid-row {
+  gap: 1rem;
+}
+
+.grid-bars {
+  gap: 1rem;
+}
+
+.grid-bar {
+  min-height: 3rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, var(--color-brand-primary), #b7cdf7);
+}
+
+.post-list {
+  gap: 1rem;
+}
+
+.post-link-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(59 33 21 / 0.1);
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 0.82);
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.post-link-card:hover {
+  transform: translateY(-2px);
+  border-color: rgb(213 58 11 / 0.28);
+  box-shadow: var(--shadow-card);
+}
+
+.post-meta {
+  color: var(--color-muted);
+  font-size: var(--text-body-small);
+  line-height: var(--leading-body-small);
+}
+
+.rich-text {
+  gap: 1.25rem;
+  color: var(--color-text);
+}
+
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+  margin-top: 1rem;
+}
+
+.rich-text p,
+.rich-text li,
+.rich-text blockquote {
+  font-size: var(--text-body-normal);
+  line-height: var(--leading-body-normal);
+}
+
+.rich-text ul,
+.rich-text ol {
+  padding-left: 1.25rem;
+}
+
+.rich-text a {
+  color: var(--color-brand-accent-strong);
+}
+
+.rich-text blockquote {
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 3px solid rgb(206 222 253);
+  color: var(--color-muted-strong);
+}
+
+@media (max-width: 48rem) {
+  .spec-row {
+    grid-template-columns: 1fr;
+  }
+}
