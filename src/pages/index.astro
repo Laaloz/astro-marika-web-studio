@@ -1,27 +1,35 @@
 ---
+import type {SanityDocument} from '@sanity/client';
 import MainLayout from '../layouts/main.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
+import {sanityClient} from 'sanity:client';
 
-const homepageHero = {
-	eyebrow: 'Studio Maruzella',
-	headingPrefix: 'Digitaalisia palveluita, joissa',
-	headingEmphasis: 'tunne ja toimivuus',
-	headingSuffix: 'kohtaavat',
-	description:
-		'Verkkosivuja ja visuaalisia kokonaisuuksia, jotka tuntuvat omilta ja herattavat luottamuksen. Selkeita, sujuvia ja brandia vahvistavia ratkaisuja verkkosivuista Canva-pohjiin.',
-	note: 'Toimivan ei tarvitse tarkoittaa tylsaa se voi olla myos inspiroivaa.',
-	primaryCtaLabel: 'Laita viestia',
-	primaryCtaHref: 'mailto:hello@studiomaruzella.fi',
-	secondaryCtaLabel: 'Palvelut',
-	secondaryCtaHref: '/styleguide',
-	imageUrl:
-		'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
-	imageAlt: 'Nainen istuu kannettavan tietokoneen kanssa luonnonvalossa.',
-};
+const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]][0]{
+  title,
+  pageBuilder[]{
+    ...,
+    _type == "heroSection" => {
+      ...,
+      image {
+        ...,
+        alt
+      }
+    }
+  }
+}`;
+
+const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY);
 ---
 
-<MainLayout content={{ title: 'Marika Web Studio' }}>
+
+<MainLayout content={{ title: `${homepage?.title || 'Marika Web Studio'} | Marika Web Studio` }}>
 	<main class="page-shell">
-		<HeroSection {...homepageHero} />
+		{(homepage?.pageBuilder || []).map((block: SanityDocument) => {
+			if (block._type === 'heroSection') {
+				return <HeroSection {...block} />;
+			}
+
+			return null;
+		})}
 	</main>
 </MainLayout>
