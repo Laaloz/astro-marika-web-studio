@@ -12,12 +12,32 @@ interface ContentMetadata {
 	noindex?: boolean;
 }
 
+interface NavigationLink {
+	label?: string;
+	href?: string;
+}
+
+interface NavigationItem extends NavigationLink {
+	submenu?: NavigationLink[];
+}
+
 const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   siteTitle,
   siteDescription,
   seoTitle,
   seoDescription,
-  ogImage
+  ogImage,
+  logoDesktop,
+  logoMobile,
+  logoHref,
+  mainNavigation[]{
+    label,
+    href,
+    submenu[]{
+      label,
+      href
+    }
+  }
 }`;
 
 const siteSettings = await sanityClient.fetch<{
@@ -26,13 +46,51 @@ const siteSettings = await sanityClient.fetch<{
 	seoTitle?: string;
 	seoDescription?: string;
 	ogImage?: SanityImageSource;
+	logoDesktop?: SanityImageSource & { alt?: string };
+	logoMobile?: SanityImageSource & { alt?: string };
+	logoHref?: string;
+	mainNavigation?: NavigationItem[];
 } | null>(SITE_SETTINGS_QUERY);
+
+const defaultNavigation: NavigationItem[] = [
+	{ label: 'Palvelut', href: '/palvelut', submenu: [] },
+	{ label: 'Portfolio', href: '/portfolio' },
+	{ label: 'Marika', href: '/marika' },
+	{ label: 'Ota yhteyttä', href: '/ota-yhteytta' },
+];
+
+const navigation = Array.isArray(siteSettings?.mainNavigation) && siteSettings.mainNavigation.length > 0
+	? siteSettings.mainNavigation
+	: defaultNavigation;
+
+const logoDesktop = siteSettings?.logoDesktop;
+const logoMobile = siteSettings?.logoMobile;
+const logoDesktopAlt = siteSettings?.logoDesktop?.alt || siteSettings?.siteTitle || 'Sivuston logo';
+const logoMobileAlt = siteSettings?.logoMobile?.alt || siteSettings?.siteTitle || 'Sivuston logo';
+const logoDesktopUrl = logoDesktop ? urlFor(logoDesktop)?.url() : undefined;
+const logoMobileUrl = logoMobile ? urlFor(logoMobile)?.url() : undefined;
+const logoHref = siteSettings?.logoHref || '/';
+
+const normalizePath = (path: string) => {
+	const plainPath = path.split('#')[0]?.split('?')[0] || '/';
+	const trimmed = plainPath.replace(/\/+$/, '');
+	return trimmed === '' ? '/' : trimmed;
+};
+
+const currentPath = normalizePath(Astro.url.pathname);
+const isInternalPath = (href?: string) => typeof href === 'string' && href.startsWith('/');
+const isCurrentPath = (href?: string) => isInternalPath(href) && normalizePath(href as string) === currentPath;
+const menuItemId = (item: NavigationItem) => {
+	const source = `${item.label || 'section'}-${item.href || ''}`;
+	return source.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'section';
+};
+const navItemAnchorId = (scope: 'desktop' | 'mobile', index: number) => `${scope}-nav-item-${index}`;
 
 const defaultTitle = siteSettings?.seoTitle || siteSettings?.siteTitle || 'Marika Web Studio';
 const defaultDescription =
 	siteSettings?.seoDescription ||
 	siteSettings?.siteDescription ||
-	'Digitaalisia palveluita, joissa tunne ja toimivuus kohtaavat. Verkkosivuja ja visuaalisia kokonaisuuksia, jotka tuntuvat omilta ja herattavat luottamuksen.';
+	'Digitaalisia palveluita, joissa tunne ja toimivuus kohtaavat. Verkkosivuja ja visuaalisia kokonaisuuksia, jotka tuntuvat omilta ja herättävät luottamuksen.';
 
 const { content = {} } = Astro.props as { content?: ContentMetadata };
 
@@ -73,6 +131,361 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 		<title>{title}</title>
 	</head>
 	<body>
-		<slot />
+		<a class="skip-link" href="#main-content">Siirry pääsisältöön</a>
+		<header class="site-header" role="banner">
+			<div class="site-header__desktop">
+				<div class="site-header__desktop-inner">
+					<a class="site-header__logo site-header__logo--desktop" href={logoHref} aria-label="Etusivu">
+						{logoDesktopUrl ? (
+							<img
+								src={logoDesktopUrl}
+								alt={logoDesktopAlt}
+								class="site-header__logo-image site-header__logo-image--desktop"
+								loading="eager"
+								fetchpriority="high"
+								decoding="async"
+							/>
+						) : (
+							<span class="site-header__logo-fallback">STUDIO MARUZELLA</span>
+						)}
+					</a>
+					<nav aria-label="Päävalikko" class="site-nav site-nav--desktop">
+						<ul class="site-nav__list">
+							{navigation.map((item, index) => {
+								const hasSubmenu = Array.isArray(item.submenu) && item.submenu.length > 0;
+								const submenuHasCurrent = hasSubmenu && item.submenu?.some((subitem) => isCurrentPath(subitem.href));
+								const itemActive = isCurrentPath(item.href) || submenuHasCurrent;
+								const currentAnchorId = navItemAnchorId('desktop', index);
+								const nextAnchorHref =
+									index === navigation.length - 1
+										? '#main-content'
+										: `#${navItemAnchorId('desktop', index + 1)}`;
+
+								return (
+									<li class:list={{ 'site-nav__item': true, 'site-nav__item--has-submenu': hasSubmenu }}>
+										<a
+											id={currentAnchorId}
+											class:list={{ 'site-nav__link': true, 'site-nav__link--active': itemActive }}
+											href={item.href || '#'}
+											aria-current={isCurrentPath(item.href) ? 'page' : undefined}
+										>
+											<span>{item.label || 'Linkki'}</span>
+											{hasSubmenu && (
+												<svg class="site-nav__caret" viewBox="0 0 24 24" aria-hidden="true">
+													<path d="M6 9L12 15L18 9" />
+												</svg>
+											)}
+										</a>
+										{hasSubmenu && (
+											<div class="site-subnav" aria-label={`${item.label || 'Alavalikko'} alavalikko`}>
+												{navigation.length > 1 && (
+													<a class="site-subnav__skip" href={nextAnchorHref}>
+														Ohita tämän alavalikon linkit
+													</a>
+												)}
+												<ul class="site-subnav__links">
+													{item.submenu?.map((subitem) => (
+														<li>
+															<a
+																class="site-subnav__link"
+																href={subitem.href || '#'}
+																aria-current={isCurrentPath(subitem.href) ? 'page' : undefined}
+															>
+																{subitem.label || 'Alalinkki'}
+															</a>
+														</li>
+													))}
+												</ul>
+											</div>
+										)}
+									</li>
+								);
+							})}
+						</ul>
+					</nav>
+				</div>
+			</div>
+
+			<div class="site-header__mobile" data-mobile-nav>
+				<div class="site-header__mobile-bar">
+					<span class="site-header__logo site-header__logo--mobile">
+						{logoMobileUrl ? (
+							<img
+								src={logoMobileUrl}
+								alt={logoMobileAlt}
+								class="site-header__logo-image site-header__logo-image--mobile"
+								loading="eager"
+								fetchpriority="high"
+								decoding="async"
+							/>
+						) : (
+							<span class="site-header__logo-fallback">SM</span>
+						)}
+					</span>
+					<button
+						type="button"
+						class="site-header__mobile-trigger"
+						data-mobile-nav-trigger
+						aria-controls="mobile-menu"
+						aria-expanded="false"
+					>
+						<span class="sr-only">Avaa päävalikko</span>
+						<span class="site-header__hamburger" aria-hidden="true">
+							<span></span>
+							<span></span>
+							<span></span>
+						</span>
+					</button>
+				</div>
+				<nav id="mobile-menu" class="mobile-nav" aria-label="Päävalikko mobiili" hidden>
+					<ul class="mobile-nav__list">
+						<li>
+							<a class="mobile-nav__link" href={logoHref} aria-current={isCurrentPath(logoHref) ? 'page' : undefined}>
+								Etusivu
+							</a>
+						</li>
+						{navigation.map((item, index) => {
+							const hasSubmenu = Array.isArray(item.submenu) && item.submenu.length > 0;
+							const submenuHasCurrent = hasSubmenu && item.submenu?.some((subitem) => isCurrentPath(subitem.href));
+							const itemActive = isCurrentPath(item.href) || submenuHasCurrent;
+							const submenuId = `mobile-submenu-${menuItemId(item)}`;
+							const currentAnchorId = navItemAnchorId('mobile', index);
+							const nextAnchorHref =
+								index === navigation.length - 1
+									? '#main-content'
+									: `#${navItemAnchorId('mobile', index + 1)}`;
+
+							if (!hasSubmenu) {
+								return (
+									<li>
+										<a
+											id={currentAnchorId}
+											class:list={{ 'mobile-nav__link': true, 'mobile-nav__link--active': itemActive }}
+											href={item.href || '#'}
+											aria-current={isCurrentPath(item.href) ? 'page' : undefined}
+										>
+											{item.label || 'Linkki'}
+										</a>
+									</li>
+								);
+							}
+
+							return (
+								<li>
+									<details class="mobile-subnav" open={submenuHasCurrent} data-mobile-subnav>
+										<summary
+											id={currentAnchorId}
+											class:list={{ 'mobile-subnav__summary': true, 'mobile-subnav__summary--active': itemActive }}
+											aria-controls={submenuId}
+										>
+											<span>{item.label || 'Alavalikko'}</span>
+											<svg class="mobile-subnav__caret" viewBox="0 0 24 24" aria-hidden="true">
+												<path d="M6 9L12 15L18 9" />
+											</svg>
+										</summary>
+										{navigation.length > 1 && (
+											<a class="mobile-subnav__skip" href={nextAnchorHref}>
+												Ohita tämän alavalikon linkit
+											</a>
+										)}
+										<ul id={submenuId} class="mobile-subnav__list" aria-label={`${item.label || 'Alavalikko'} alavalikko`}>
+											{item.submenu?.map((subitem) => (
+												<li>
+													<a
+														class="mobile-subnav__link"
+														href={subitem.href || '#'}
+														aria-current={isCurrentPath(subitem.href) ? 'page' : undefined}
+													>
+														{subitem.label || 'Alalinkki'}
+													</a>
+												</li>
+											))}
+										</ul>
+									</details>
+								</li>
+							);
+						})}
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<main id="main-content">
+			<slot />
+		</main>
+		<script is:inline>
+			const header = document.querySelector('.site-header');
+			if (header instanceof HTMLElement) {
+				let previousY = window.scrollY;
+				let ticking = false;
+				const hideThreshold = 10;
+				const showThreshold = 3;
+				const hideStartOffset = 120;
+
+				const updateHeaderVisibility = () => {
+					const currentY = window.scrollY;
+					if (document.documentElement.classList.contains('mobile-nav-open')) {
+						header.classList.remove('site-header--hidden');
+						previousY = currentY;
+						ticking = false;
+						return;
+					}
+
+					if (currentY <= hideStartOffset) {
+						header.classList.remove('site-header--hidden');
+						previousY = currentY;
+						ticking = false;
+						return;
+					}
+
+					const delta = currentY - previousY;
+					if (delta <= -showThreshold) {
+						header.classList.remove('site-header--hidden');
+						previousY = currentY;
+					} else if (delta >= hideThreshold) {
+						if (currentY <= 0) {
+							header.classList.remove('site-header--hidden');
+						} else {
+							header.classList.add('site-header--hidden');
+						}
+						previousY = currentY;
+					}
+					ticking = false;
+				};
+
+				window.addEventListener('scroll', () => {
+					if (!ticking) {
+						window.requestAnimationFrame(updateHeaderVisibility);
+						ticking = true;
+					}
+				}, {passive: true});
+			}
+
+			const alignDesktopSubmenus = () => {
+				const desktopItems = document.querySelectorAll('.site-nav__item--has-submenu');
+				desktopItems.forEach((item) => {
+					if (!(item instanceof HTMLElement)) return;
+					const submenu = item.querySelector('.site-subnav');
+					if (!(submenu instanceof HTMLElement)) return;
+
+					item.removeAttribute('data-submenu-align');
+					submenu.style.setProperty('--submenu-shift', '0px');
+					submenu.style.visibility = 'hidden';
+					submenu.style.display = 'grid';
+					submenu.style.left = '0';
+					submenu.style.right = 'auto';
+
+					const viewportPadding = 16;
+					let bounds = submenu.getBoundingClientRect();
+					if (bounds.right > window.innerWidth - viewportPadding) {
+						item.setAttribute('data-submenu-align', 'right');
+						submenu.style.left = 'auto';
+						submenu.style.right = '0';
+						bounds = submenu.getBoundingClientRect();
+					}
+
+					if (bounds.left < viewportPadding) {
+						const shift = viewportPadding - bounds.left;
+						submenu.style.setProperty('--submenu-shift', `${Math.ceil(shift)}px`);
+					}
+
+					bounds = submenu.getBoundingClientRect();
+					if (bounds.right > window.innerWidth - viewportPadding) {
+						const shift = (window.innerWidth - viewportPadding) - bounds.right;
+						submenu.style.setProperty('--submenu-shift', `${Math.floor(shift)}px`);
+					}
+
+					submenu.style.removeProperty('left');
+					submenu.style.removeProperty('right');
+					submenu.style.removeProperty('display');
+					submenu.style.removeProperty('visibility');
+				});
+			};
+
+			const mobileNav = document.querySelector('[data-mobile-nav]');
+			if (mobileNav instanceof HTMLElement) {
+				const trigger = mobileNav.querySelector('[data-mobile-nav-trigger]');
+				const mobileMenu = mobileNav.querySelector('#mobile-menu');
+				const mobileSubmenus = mobileNav.querySelectorAll('[data-mobile-subnav]');
+				let isOpen = false;
+				const setScrollLock = () => {
+					document.documentElement.classList.toggle('mobile-nav-open', isOpen);
+					document.body.classList.toggle('mobile-nav-open', isOpen);
+				};
+				const closeMobileNav = (focusTrigger = false) => {
+					isOpen = false;
+					mobileNav.classList.remove('is-open');
+					if (mobileMenu instanceof HTMLElement) mobileMenu.hidden = true;
+					if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'false');
+					mobileSubmenus.forEach((submenu) => {
+						if (submenu instanceof HTMLDetailsElement) submenu.open = false;
+					});
+					setScrollLock();
+					if (focusTrigger && trigger instanceof HTMLElement) trigger.focus();
+				};
+				const openMobileNav = () => {
+					isOpen = true;
+					mobileNav.classList.add('is-open');
+					if (mobileMenu instanceof HTMLElement) mobileMenu.hidden = false;
+					if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'true');
+					if (header instanceof HTMLElement) header.classList.remove('site-header--hidden');
+					setScrollLock();
+				};
+				const setExpanded = () => {
+					header?.classList.toggle('site-header--mobile-open', isOpen);
+					setScrollLock();
+				};
+				const setMobileHeaderHeight = () => {
+					const mobileBar = mobileNav.querySelector('.site-header__mobile-bar');
+					if (!(mobileBar instanceof HTMLElement)) return;
+					mobileNav.style.setProperty('--mobile-header-height', `${Math.ceil(mobileBar.getBoundingClientRect().height)}px`);
+				};
+				setExpanded();
+				setMobileHeaderHeight();
+				if (trigger instanceof HTMLElement) {
+					trigger.addEventListener('click', () => {
+						if (isOpen) {
+							closeMobileNav();
+						} else {
+							openMobileNav();
+						}
+						setExpanded();
+					});
+				}
+				mobileSubmenus.forEach((submenu) => {
+					if (!(submenu instanceof HTMLDetailsElement)) return;
+					submenu.addEventListener('toggle', () => {
+						if (!submenu.open) return;
+						mobileSubmenus.forEach((other) => {
+							if (other !== submenu && other instanceof HTMLDetailsElement) other.open = false;
+						});
+					});
+				});
+				window.addEventListener('resize', setMobileHeaderHeight);
+				window.addEventListener('resize', () => {
+					if (window.matchMedia('(min-width: 64rem)').matches && isOpen) {
+						closeMobileNav();
+					}
+					setScrollLock();
+				});
+				document.addEventListener('keydown', (event) => {
+					if (event.key === 'Escape' && isOpen) {
+						const openSubmenu = Array.from(mobileSubmenus).find(
+							(item) => item instanceof HTMLDetailsElement && item.open
+						);
+						if (openSubmenu instanceof HTMLDetailsElement) {
+							openSubmenu.open = false;
+							const openSummary = openSubmenu.querySelector('summary');
+							if (openSummary instanceof HTMLElement) openSummary.focus();
+						} else {
+							closeMobileNav(true);
+							setExpanded();
+						}
+					}
+				});
+			}
+
+			alignDesktopSubmenus();
+			window.addEventListener('resize', alignDesktopSubmenus);
+		</script>
 	</body>
 	</html>

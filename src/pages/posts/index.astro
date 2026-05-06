@@ -11,13 +11,13 @@ const POSTS_QUERY = `*[
 const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
 ---
 
-<MainLayout content={{ title: 'Posts | Marika Web Studio', description: 'Sanity-postaukset kayttavat samaa layout- ja typografiafoundationia kuin muu sivusto.' }}>
+<MainLayout content={{ title: 'Posts | Marika Web Studio', description: 'Sanity-postaukset käyttävät samaa layout- ja typografiafoundationia kuin muu sivusto.' }}>
   <main class="page-shell">
     <section class="surface-panel surface-panel--hero">
       <div class="section-head">
         <p class="eyebrow">Sanity Content</p>
         <h1>Posts</h1>
-        <p class="lede">Sanity-postaukset kayttavat nyt samaa layout- ja typografiafoundationia kuin styleguide.</p>
+        <p class="lede">Sanity-postaukset käyttävät nyt samaa layout- ja typografiafoundationia kuin styleguide.</p>
       </div>
       <div class="actions-row">
         <a class="button button--secondary" href="/">Etusivu</a>
@@ -40,7 +40,7 @@ const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
             ))}
           </ul>
         ) : (
-          <p>Postauksia ei loytynyt viela.</p>
+          <p>Postauksia ei löytynyt vielä.</p>
         )
       }
     </section>
