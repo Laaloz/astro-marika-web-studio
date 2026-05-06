@@ -1,4 +1,5 @@
 ---
+import {Image} from 'astro:assets'
 import type {SanityImageSource} from '@sanity/image-url'
 import {type SanityImageFit, urlFor} from '../lib/sanityImage'
 
@@ -8,6 +9,9 @@ interface Props {
   width: number
   height?: number
   fit?: SanityImageFit
+  format?: 'avif' | 'webp' | 'png' | 'jpg' | 'jpeg'
+  quality?: number
+  widths?: number[]
   class?: string
   loading?: 'lazy' | 'eager'
   decoding?: 'async' | 'auto' | 'sync'
@@ -21,6 +25,9 @@ const {
   width,
   height,
   fit,
+  format = 'avif',
+  quality = 50,
+  widths,
   class: className,
   loading = 'lazy',
   decoding = 'async',
@@ -39,11 +46,14 @@ const resolvedUrl = imageUrl && typeof imageUrl !== 'string' ? imageUrl.url() : 
 
 {
   resolvedUrl && (
-    <img
+    <Image
       src={resolvedUrl}
       alt={alt}
       width={width}
       height={height}
+      format={format}
+      quality={quality}
+      widths={widths}
       class={className}
       loading={loading}
       decoding={decoding}

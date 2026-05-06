@@ -11,6 +11,12 @@ const site =
 // https://astro.build/config
 export default defineConfig({
   site,
+  image: {
+    remotePatterns: [{
+      protocol: "https",
+      hostname: "cdn.sanity.io",
+    }],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

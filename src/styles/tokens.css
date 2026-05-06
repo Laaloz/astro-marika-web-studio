@@ -71,7 +71,7 @@
   --leading-h6: 1.5rem;
 
   --page-padding: clamp(1rem, 4vw, 4rem);
-  --content-width: 72rem;
+  --content-width: 90rem;
 }
 
 @media (min-width: 64rem) {

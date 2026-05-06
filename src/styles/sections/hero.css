@@ -124,7 +124,6 @@
   object-fit: cover;
   object-position: center top;
   border: 0;
-  border-radius: 0.375rem 0.375rem 0 0;
 }
 
 .hero-block__image--placeholder {

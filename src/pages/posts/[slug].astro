@@ -41,6 +41,7 @@ export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
             width={1100}
             height={620}
             fit="crop"
+            widths={[480, 768, 1100, 1440]}
             class="aspect-video w-full rounded-[32px] object-cover"
             loading="eager"
             fetchpriority="high"
