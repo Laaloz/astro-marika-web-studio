@@ -140,6 +140,8 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 							<img
 								src={logoDesktopUrl}
 								alt={logoDesktopAlt}
+								width="320"
+								height="56"
 								class="site-header__logo-image site-header__logo-image--desktop"
 								loading="eager"
 								fetchpriority="high"
@@ -213,6 +215,8 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 							<img
 								src={logoMobileUrl}
 								alt={logoMobileAlt}
+								width="56"
+								height="30"
 								class="site-header__logo-image site-header__logo-image--mobile"
 								loading="eager"
 								fetchpriority="high"
