@@ -23,6 +23,11 @@ interface NavigationItem extends NavigationLink {
 
 interface FooterNavigationItem extends NavigationLink {}
 
+interface FooterSocialLink extends NavigationLink {
+	label?: string;
+	icon?: SanityImageSource & { alt?: string };
+}
+
 const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   siteTitle,
   siteDescription,
@@ -40,8 +45,13 @@ const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
       href
     }
   },
-  footerBrandName,
-  footerInstagramUrl,
+  footerLogo,
+  footerSocialLinks[]{
+    label,
+    href,
+    icon
+  },
+  footerNavigationLabel,
   footerNavigation[]{
     label,
     href
@@ -64,8 +74,9 @@ const siteSettings = await sanityClient.fetch<{
 	logoMobile?: SanityImageSource & { alt?: string };
 	logoHref?: string;
 	mainNavigation?: NavigationItem[];
-	footerBrandName?: string;
-	footerInstagramUrl?: string;
+	footerLogo?: SanityImageSource & { alt?: string };
+	footerSocialLinks?: FooterSocialLink[];
+	footerNavigationLabel?: string;
 	footerNavigation?: FooterNavigationItem[];
 	footerContactTitle?: string;
 	footerContactLines?: string[];
@@ -104,8 +115,11 @@ const footerNavigation =
 	Array.isArray(siteSettings?.footerNavigation) && siteSettings.footerNavigation.length > 0
 		? siteSettings.footerNavigation
 		: defaultFooterNavigation;
-const footerBrandName = siteSettings?.footerBrandName || 'Maruella studio';
-const footerInstagramUrl = siteSettings?.footerInstagramUrl || undefined;
+const footerNavigationLabel = siteSettings?.footerNavigationLabel || 'Sivut';
+const footerLogo = siteSettings?.footerLogo;
+const footerLogoUrl = footerLogo ? urlFor(footerLogo)?.url() : undefined;
+const footerLogoAlt = footerLogo?.alt || siteSettings?.siteTitle || 'Sivuston logo';
+const footerSocialLinks = Array.isArray(siteSettings?.footerSocialLinks) ? siteSettings.footerSocialLinks : [];
 const footerContactTitle = siteSettings?.footerContactTitle || 'Yhteystiedot';
 const footerContactLines =
 	Array.isArray(siteSettings?.footerContactLines) && siteSettings.footerContactLines.length > 0
@@ -367,20 +381,30 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 			<div class="site-container site-footer__inner">
 				<div class="site-footer__grid">
 					<div class="site-footer__brand">
-						<h2 class="site-footer__brand-name">{footerBrandName}</h2>
-						{footerInstagramUrl && (
-							<a class="site-footer__instagram" href={footerInstagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
-								<svg viewBox="0 0 24 24" aria-hidden="true">
-									<rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
-									<circle cx="12" cy="12" r="4"></circle>
-									<circle cx="17.6" cy="6.4" r="1.2"></circle>
-								</svg>
-							</a>
+						{footerLogoUrl ? (
+							<img src={footerLogoUrl} alt={footerLogoAlt} class="site-footer__brand-logo" loading="lazy" decoding="async" />
+						) : (
+							<h2 class="site-footer__brand-name">{siteSettings?.siteTitle || 'Maruella studio'}</h2>
+						)}
+						{footerSocialLinks.length > 0 && (
+							<ul class="site-footer__social-links" role="list">
+								{footerSocialLinks.map((item) => {
+									const iconUrl = item.icon ? urlFor(item.icon)?.width(36).height(36).fit('max').url() : undefined;
+									const iconAlt = item.icon?.alt || item.label || 'Some';
+									return (
+										<li>
+											<a class="site-footer__social-link" href={item.href || '#'} aria-label={item.label || undefined}>
+												{iconUrl ? <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" /> : <span>{item.label || 'Some'}</span>}
+											</a>
+										</li>
+									);
+								})}
+							</ul>
 						)}
 					</div>
 
 					<div class="site-footer__column">
-						<h3 class="site-footer__title">Sivut</h3>
+						<h3 class="site-footer__title">{footerNavigationLabel}</h3>
 						<ul class="site-footer__links" role="list">
 							{footerNavigation.map((item) => (
 								<li>
