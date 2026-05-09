@@ -1,0 +1,105 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+const sparkleAsset = 'http://localhost:3845/assets/1a0c4c0cdcdea13091cf4dbb23d2d0096fe223b1.svg'
+
+interface StepItem {
+  _key?: string
+  title?: string
+  description?: string
+}
+
+const {
+  eyebrow,
+  titlePrefix,
+  titleEmphasis,
+  titleSuffix,
+  introFirstParagraph,
+  introSecondParagraph,
+  steps = [],
+  ctaLabel,
+  ctaHref,
+  image,
+} = Astro.props as {
+  eyebrow?: string
+  titlePrefix?: string
+  titleEmphasis?: string
+  titleSuffix?: string
+  introFirstParagraph?: string
+  introSecondParagraph?: string
+  steps?: StepItem[]
+  ctaLabel?: string
+  ctaHref?: string
+  image?: {alt?: string}
+}
+
+const hasRequiredContent = Boolean(eyebrow && titlePrefix && titleEmphasis && introFirstParagraph && introSecondParagraph)
+const hasCta = Boolean(ctaLabel && ctaHref)
+const stepItems = steps.filter((step) => step?.title && step?.description)
+---
+
+{
+  hasRequiredContent && (
+<section class="page-section design-implementation" aria-label={eyebrow || 'Suunnittelu ja toteutus'}>
+  <div class="site-container design-implementation__container">
+    <div class="design-implementation__image-wrap">
+      {
+        image ? (
+          <SanityImage
+            image={image}
+            alt={image.alt || ''}
+            width={529}
+            height={705}
+            fit="crop"
+            widths={[360, 529, 680]}
+            class="design-implementation__image"
+            loading="lazy"
+            decoding="async"
+            sizes="(min-width: 64rem) 33rem, 100vw"
+          />
+        ) : (
+          <div class="design-implementation__image design-implementation__image--placeholder"></div>
+        )
+      }
+    </div>
+
+    <div class="design-implementation__content">
+      <div class="design-implementation__heading-group">
+        <p class="design-implementation__eyebrow">{eyebrow}</p>
+
+        <h2 class="design-implementation__title">
+          {titlePrefix}
+          <span class="design-implementation__title-accent"> {titleEmphasis}</span>
+          {titleSuffix}
+        </h2>
+      </div>
+
+      <div class="design-implementation__intro">
+        <p>{introFirstParagraph}</p>
+        <p>{introSecondParagraph}</p>
+      </div>
+
+      <div class="design-implementation__steps">
+        {stepItems.map((step) => (
+          <article class="design-implementation__step">
+            <h3 class="design-implementation__step-title">{step.title}</h3>
+            <p>{step.description}</p>
+          </article>
+        ))}
+      </div>
+
+      {hasCta && (
+      <a class="button button--primary-accent design-implementation__cta" href={ctaHref}>
+        <span>{ctaLabel}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
+        </svg>
+      </a>
+      )}
+    </div>
+
+    <img class="design-implementation__sparkle" src={sparkleAsset} alt="" aria-hidden="true" />
+  </div>
+</section>
+  )
+}

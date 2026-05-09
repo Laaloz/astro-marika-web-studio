@@ -125,7 +125,7 @@
 
 .hero-block__image {
   width: 100%;
-  aspect-ratio: 527 / 791;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   object-position: center top;
   border: 0;
@@ -193,5 +193,10 @@
 
   .hero-block__media {
     width: 100%;
+  }
+
+  .hero-block__image {
+    aspect-ratio: 4 / 5;
+    height: auto;
   }
 }
