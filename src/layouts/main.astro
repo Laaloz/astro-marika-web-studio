@@ -3,6 +3,8 @@ import '../styles/global.css';
 import {sanityClient} from 'sanity:client';
 import {urlFor} from '../lib/sanityImage';
 import type {SanityImageSource} from '@sanity/image-url';
+import {PortableText} from 'astro-portabletext';
+import type {PortableTextBlock} from '@portabletext/types';
 
 interface ContentMetadata {
 	title?: string;
@@ -79,7 +81,7 @@ const siteSettings = await sanityClient.fetch<{
 	footerNavigationLabel?: string;
 	footerNavigation?: FooterNavigationItem[];
 	footerContactTitle?: string;
-	footerContactLines?: string[];
+	footerContactLines?: PortableTextBlock[];
 	footerCopyright?: string;
 	footerPrivacyLabel?: string;
 	footerPrivacyHref?: string;
@@ -121,13 +123,69 @@ const footerLogoUrl = footerLogo ? urlFor(footerLogo)?.url() : undefined;
 const footerLogoAlt = footerLogo?.alt || siteSettings?.siteTitle || 'Sivuston logo';
 const footerSocialLinks = Array.isArray(siteSettings?.footerSocialLinks) ? siteSettings.footerSocialLinks : [];
 const footerContactTitle = siteSettings?.footerContactTitle || 'Yhteystiedot';
-const footerContactLines =
-	Array.isArray(siteSettings?.footerContactLines) && siteSettings.footerContactLines.length > 0
-		? siteSettings.footerContactLines
+const normalizeFooterContactContent = (value: unknown): PortableTextBlock[] => {
+	if (!Array.isArray(value) || value.length === 0) return [];
+
+	return value
+		.map((item, index) => {
+			if (item && typeof item === 'object' && (item as { _type?: string })._type === 'block') {
+				return item as PortableTextBlock;
+			}
+
+			if (typeof item === 'string') {
+				return {
+					_type: 'block',
+					_key: `legacy-string-${index}`,
+					style: 'normal',
+					children: [{ _type: 'span', _key: `legacy-string-span-${index}`, text: item, marks: [] }],
+					markDefs: [],
+				} as PortableTextBlock;
+			}
+
+			if (item && typeof item === 'object') {
+				const row = item as { label?: string; href?: string };
+				if (row.label) {
+					const marks = row.href ? [`legacy-link-${index}`] : [];
+					return {
+						_type: 'block',
+						_key: `legacy-row-${index}`,
+						style: 'normal',
+						children: [{ _type: 'span', _key: `legacy-row-span-${index}`, text: row.label, marks }],
+						markDefs: row.href ? [{ _key: `legacy-link-${index}`, _type: 'link', href: row.href }] : [],
+					} as PortableTextBlock;
+				}
+			}
+
+			return null;
+		})
+		.filter((block): block is PortableTextBlock => Boolean(block));
+};
+
+const footerContactContent =
+	normalizeFooterContactContent(siteSettings?.footerContactLines).length > 0
+		? normalizeFooterContactContent(siteSettings?.footerContactLines)
 		: [
-				'Marika. design - websuunnittelija',
-				'lorem.ipsum@gmail.com',
-				'+358408971399, myös whatsapp',
+				{
+					_type: 'block',
+					style: 'normal',
+					_key: 'fallback-contact-1',
+					children: [{_type: 'span', text: 'Marika. design - websuunnittelija'}],
+					markDefs: [],
+				},
+				{
+					_type: 'block',
+					style: 'normal',
+					_key: 'fallback-contact-2',
+					children: [{_type: 'span', text: 'lorem.ipsum@gmail.com', marks: ['email']}],
+					markDefs: [{_key: 'email', _type: 'link', href: 'mailto:lorem.ipsum@gmail.com'}],
+				},
+				{
+					_type: 'block',
+					style: 'normal',
+					_key: 'fallback-contact-3',
+					children: [{_type: 'span', text: '+358408971399, myös whatsapp', marks: ['phone']}],
+					markDefs: [{_key: 'phone', _type: 'link', href: 'tel:+358408971399'}],
+				},
 		  ];
 const footerCopyright = siteSettings?.footerCopyright || '© Finding Design, 2026.';
 const footerPrivacyLabel = siteSettings?.footerPrivacyLabel || 'Tietosuojaseloste';
@@ -381,10 +439,8 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 			<div class="site-container site-footer__inner">
 				<div class="site-footer__grid">
 					<div class="site-footer__brand">
-						{footerLogoUrl ? (
+						{footerLogoUrl && (
 							<img src={footerLogoUrl} alt={footerLogoAlt} class="site-footer__brand-logo" loading="lazy" decoding="async" />
-						) : (
-							<h2 class="site-footer__brand-name">{siteSettings?.siteTitle || 'Maruella studio'}</h2>
 						)}
 						{footerSocialLinks.length > 0 && (
 							<ul class="site-footer__social-links" role="list">
@@ -394,7 +450,8 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 									return (
 										<li>
 											<a class="site-footer__social-link" href={item.href || '#'} aria-label={item.label || undefined}>
-												{iconUrl ? <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" /> : <span>{item.label || 'Some'}</span>}
+												{iconUrl ? <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" /> : <span aria-hidden="true">•</span>}
+												<span class="sr-only">{item.label || 'Some'}</span>
 											</a>
 										</li>
 									);
@@ -416,11 +473,9 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 
 					<div class="site-footer__column site-footer__column--contact">
 						<h3 class="site-footer__title">{footerContactTitle}</h3>
-						<ul class="site-footer__contact" role="list">
-							{footerContactLines.map((row) => (
-								<li>{row}</li>
-							))}
-						</ul>
+						<div class="site-footer__contact">
+							<PortableText value={footerContactContent} />
+						</div>
 					</div>
 				</div>
 				<div class="site-footer__meta">
