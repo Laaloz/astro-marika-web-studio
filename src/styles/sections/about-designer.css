@@ -76,7 +76,7 @@
   width: 100%;
   height: auto;
   display: block;
-  aspect-ratio: 521 / 635;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
@@ -85,7 +85,9 @@
   left: clamp(31rem, 58vw, 45.95rem);
   bottom: 1.05rem;
   width: 7.65rem;
+  aspect-ratio: 1 / 1;
   height: auto;
+  object-fit: contain;
   transform: rotate(-4.71deg);
   pointer-events: none;
 }
@@ -117,10 +119,6 @@
   .about-designer__image-wrap {
     order: 1;
     width: 100%;
-  }
-
-  .about-designer__image {
-    aspect-ratio: 1 / 1.586;
   }
 
   .about-designer__content {
