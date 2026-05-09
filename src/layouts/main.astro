@@ -21,6 +21,8 @@ interface NavigationItem extends NavigationLink {
 	submenu?: NavigationLink[];
 }
 
+interface FooterNavigationItem extends NavigationLink {}
+
 const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   siteTitle,
   siteDescription,
@@ -37,7 +39,19 @@ const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
       label,
       href
     }
-  }
+  },
+  footerBrandName,
+  footerInstagramUrl,
+  footerNavigation[]{
+    label,
+    href
+  },
+  footerContactTitle,
+  footerContactLines,
+  footerCopyright,
+  footerPrivacyLabel,
+  footerPrivacyHref
+  
 }`;
 
 const siteSettings = await sanityClient.fetch<{
@@ -50,6 +64,14 @@ const siteSettings = await sanityClient.fetch<{
 	logoMobile?: SanityImageSource & { alt?: string };
 	logoHref?: string;
 	mainNavigation?: NavigationItem[];
+	footerBrandName?: string;
+	footerInstagramUrl?: string;
+	footerNavigation?: FooterNavigationItem[];
+	footerContactTitle?: string;
+	footerContactLines?: string[];
+	footerCopyright?: string;
+	footerPrivacyLabel?: string;
+	footerPrivacyHref?: string;
 } | null>(SITE_SETTINGS_QUERY);
 
 const defaultNavigation: NavigationItem[] = [
@@ -70,6 +92,32 @@ const logoMobileAlt = siteSettings?.logoMobile?.alt || siteSettings?.siteTitle |
 const logoDesktopUrl = logoDesktop ? urlFor(logoDesktop)?.url() : undefined;
 const logoMobileUrl = logoMobile ? urlFor(logoMobile)?.url() : undefined;
 const logoHref = siteSettings?.logoHref || '/';
+
+const defaultFooterNavigation: FooterNavigationItem[] = [
+	{ label: 'Palvelut', href: '/palvelut' },
+	{ label: 'Portfolio', href: '/referenssit' },
+	{ label: 'Marika', href: '/marika' },
+	{ label: 'Ota yhteyttä', href: '/ota-yhteytta' },
+];
+
+const footerNavigation =
+	Array.isArray(siteSettings?.footerNavigation) && siteSettings.footerNavigation.length > 0
+		? siteSettings.footerNavigation
+		: defaultFooterNavigation;
+const footerBrandName = siteSettings?.footerBrandName || 'Maruella studio';
+const footerInstagramUrl = siteSettings?.footerInstagramUrl || undefined;
+const footerContactTitle = siteSettings?.footerContactTitle || 'Yhteystiedot';
+const footerContactLines =
+	Array.isArray(siteSettings?.footerContactLines) && siteSettings.footerContactLines.length > 0
+		? siteSettings.footerContactLines
+		: [
+				'Marika. design - websuunnittelija',
+				'lorem.ipsum@gmail.com',
+				'+358408971399, myös whatsapp',
+		  ];
+const footerCopyright = siteSettings?.footerCopyright || '© Finding Design, 2026.';
+const footerPrivacyLabel = siteSettings?.footerPrivacyLabel || 'Tietosuojaseloste';
+const footerPrivacyHref = siteSettings?.footerPrivacyHref || '/tietosuojaseloste';
 
 const normalizePath = (path: string) => {
 	const plainPath = path.split('#')[0]?.split('?')[0] || '/';
@@ -315,6 +363,48 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 		<main id="main-content">
 			<slot />
 		</main>
+		<footer class="site-footer" aria-label="Alatunniste">
+			<div class="site-container site-footer__inner">
+				<div class="site-footer__grid">
+					<div class="site-footer__brand">
+						<h2 class="site-footer__brand-name">{footerBrandName}</h2>
+						{footerInstagramUrl && (
+							<a class="site-footer__instagram" href={footerInstagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram">
+								<svg viewBox="0 0 24 24" aria-hidden="true">
+									<rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+									<circle cx="12" cy="12" r="4"></circle>
+									<circle cx="17.6" cy="6.4" r="1.2"></circle>
+								</svg>
+							</a>
+						)}
+					</div>
+
+					<div class="site-footer__column">
+						<h3 class="site-footer__title">Sivut</h3>
+						<ul class="site-footer__links" role="list">
+							{footerNavigation.map((item) => (
+								<li>
+									<a href={item.href || '#'}>{item.label || 'Linkki'}</a>
+								</li>
+							))}
+						</ul>
+					</div>
+
+					<div class="site-footer__column site-footer__column--contact">
+						<h3 class="site-footer__title">{footerContactTitle}</h3>
+						<ul class="site-footer__contact" role="list">
+							{footerContactLines.map((row) => (
+								<li>{row}</li>
+							))}
+						</ul>
+					</div>
+				</div>
+				<div class="site-footer__meta">
+					<p>{footerCopyright}</p>
+					<a href={footerPrivacyHref}>{footerPrivacyLabel}</a>
+				</div>
+			</div>
+		</footer>
 		<script is:inline>
 			const header = document.querySelector('.site-header');
 			if (header instanceof HTMLElement) {
