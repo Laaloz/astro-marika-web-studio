@@ -134,7 +134,6 @@ dl {
 .page-shell {
   width: min(100%, calc(var(--content-width) + var(--page-padding) * 2));
   margin: 0 auto;
-  padding: 0 var(--page-padding);
 }
 
 .site-container {
@@ -206,8 +205,4 @@ dl {
 }
 
 @media (max-width: 48rem) {
-  .page-shell {
-    padding-top: var(--space-6);
-    padding-bottom: var(--space-8);
-  }
 }
