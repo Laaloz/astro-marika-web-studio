@@ -1,0 +1,77 @@
+---
+import {PortableText} from 'astro-portabletext'
+import type {PortableTextBlock} from '@portabletext/types'
+
+const defaultIconSvg =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.1" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.1" fill="currentColor"/><circle cx="15" cy="10" r="1.1" fill="currentColor"/><path d="M8.7 14.2c.9 1.3 2 2 3.3 2s2.4-.7 3.3-2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+
+const {
+  eyebrow,
+  title,
+  body,
+  closingLine,
+  ctaLabel,
+  ctaHref,
+  badgeTopLine,
+  badgeBottomLine,
+  introIconSvg,
+} = Astro.props as {
+  eyebrow?: string
+  title?: string
+  body?: PortableTextBlock[]
+  closingLine?: string
+  ctaLabel?: string
+  ctaHref?: string
+  badgeTopLine?: string
+  badgeBottomLine?: string
+  introIconSvg?: string
+}
+
+const hasRequiredContent = Boolean(
+  eyebrow &&
+    title &&
+    Array.isArray(body) &&
+    body.length > 0 &&
+    ctaLabel &&
+    ctaHref,
+)
+
+const iconMarkup = introIconSvg?.trim() || defaultIconSvg
+---
+
+{
+  hasRequiredContent && (
+    <section class="page-section call-to-action" aria-label={eyebrow || title || 'Ota yhteyttä'}>
+      <div class="site-container call-to-action__container">
+        <div class="call-to-action__card">
+          <div class="call-to-action__curve" aria-hidden="true"></div>
+
+          <div class="call-to-action__icon" set:html={iconMarkup}></div>
+
+          <div class="call-to-action__content">
+            <p class="call-to-action__eyebrow">{eyebrow}</p>
+            <h2 class="call-to-action__title">{title}</h2>
+
+            <div class="call-to-action__body rich-text">
+              <PortableText value={body} />
+            </div>
+
+            {closingLine && <p class="call-to-action__closing">{closingLine}</p>}
+
+            <a class="button button--primary-accent call-to-action__button" href={ctaHref}>
+              <span>{ctaLabel}</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <aside class="call-to-action__badge" aria-hidden="true">
+          <p class="call-to-action__badge-top">{badgeTopLine || 'Valmis'}</p>
+          <p class="call-to-action__badge-bottom">{badgeBottomLine || 'tekemään vaikutuksen?'}</p>
+        </aside>
+      </div>
+    </section>
+  )
+}
