@@ -7,6 +7,7 @@ import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSe
 import DesignAndImplementationSection from '../components/sections/DesignAndImplementationSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
+import CallToActionSection from '../components/sections/CallToActionSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
@@ -71,6 +72,10 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, Astro.p
 
 			if (block._type === 'referenceSection') {
 				return <ReferenceSection {...block} />;
+			}
+
+			if (block._type === 'callToActionSection') {
+				return <CallToActionSection {...block} />;
 			}
 
 			return null;
