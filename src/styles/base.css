@@ -151,7 +151,6 @@ dl {
 }
 
 .page-section {
-  padding-inline: var(--section-padding-inline);
   padding-block-start: var(--section-padding-top);
   padding-block-end: var(--section-padding-bottom);
 }
