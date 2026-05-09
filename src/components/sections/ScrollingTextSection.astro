@@ -4,7 +4,7 @@ import SanityImage from '../SanityImage.astro'
 interface ScrollingItem {
   _key?: string
   text?: string
-  icon?: {alt?: string} | null
+  icon?: Record<string, unknown> | null
 }
 
 const {items = []} = Astro.props as {
@@ -17,21 +17,19 @@ const normalizedItems = items
     icon: item?.icon || null,
   }))
   .filter((item) => Boolean(item.text))
-
-const marqueeItems = [...normalizedItems, ...normalizedItems]
 ---
 
 {
   normalizedItems.length > 0 && (
-    <section class="scrolling-text" aria-label="Palvelut">
-      <div class="scrolling-text__track" role="list">
-        {marqueeItems.map((item, index) => (
-          <div class="scrolling-text__item" role="listitem" aria-hidden={index >= normalizedItems.length}>
-            {
-              item.icon ? (
+    <section class="scrolling-text" aria-hidden="true" data-scrolling-text>
+      <div class="scrolling-text__track" data-scrolling-track>
+        <div class="scrolling-text__set" role="list" data-scrolling-set>
+          {normalizedItems.map((item) => (
+            <div class="scrolling-text__item" role="listitem">
+              {item.icon && (
                 <SanityImage
                   image={item.icon}
-                  alt={item.icon?.alt || ''}
+                  alt=""
                   width={24}
                   height={24}
                   class="scrolling-text__icon"
@@ -39,21 +37,61 @@ const marqueeItems = [...normalizedItems, ...normalizedItems]
                   widths={[24, 48]}
                   loading="lazy"
                 />
-              ) : (
-                <span class="scrolling-text__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.5" />
-                    <circle cx="9.5" cy="10" r="0.85" fill="currentColor" />
-                    <circle cx="14.5" cy="10" r="0.85" fill="currentColor" />
-                    <path d="M8.5 14C9.2 15.2 10.5 16 12 16C13.5 16 14.8 15.2 15.5 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
-                  </svg>
-                </span>
-              )
-            }
-            <span class="scrolling-text__label">{item.text}</span>
-          </div>
-        ))}
+              )}
+              <span class="scrolling-text__label">{item.text}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )
 }
+
+<script>
+  const sections = document.querySelectorAll('[data-scrolling-text]')
+
+  for (const section of sections) {
+    const track = section.querySelector('[data-scrolling-track]')
+    const originalSet = section.querySelector('[data-scrolling-set]')
+
+    if (!(track instanceof HTMLElement) || !(originalSet instanceof HTMLElement)) continue
+
+    const build = () => {
+      const clones = track.querySelectorAll('[data-scrolling-clone="true"]')
+      for (const clone of clones) clone.remove()
+
+      const setWidth = originalSet.getBoundingClientRect().width
+      if (!setWidth) return
+
+      const trackStyles = window.getComputedStyle(track)
+      const trackGap = Number.parseFloat(trackStyles.columnGap || trackStyles.gap || '0') || 0
+      const unitWidth = setWidth + trackGap
+
+      const viewportWidth = section.getBoundingClientRect().width
+      const minimumTrackWidth = Math.max(viewportWidth * 2, unitWidth * 2)
+      const neededSets = Math.max(2, Math.ceil(minimumTrackWidth / unitWidth))
+
+      for (let i = 1; i < neededSets; i += 1) {
+        const clone = originalSet.cloneNode(true)
+        if (clone instanceof HTMLElement) {
+          clone.setAttribute('data-scrolling-clone', 'true')
+          clone.setAttribute('aria-hidden', 'true')
+          track.appendChild(clone)
+        }
+      }
+
+      section.style.setProperty('--scrolling-loop-distance', `${unitWidth}px`)
+      const speed = 90
+      const duration = Math.max(12, unitWidth / speed)
+      section.style.setProperty('--scrolling-duration', `${duration}s`)
+    }
+
+    build()
+
+    const resizeObserver = new ResizeObserver(() => {
+      build()
+    })
+
+    resizeObserver.observe(section)
+  }
+</script>
