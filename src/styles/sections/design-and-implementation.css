@@ -28,6 +28,11 @@
   max-width: 40.0625rem;
 }
 
+.design-implementation__text-wrap {
+  display: grid;
+  gap: var(--space-4);
+}
+
 .design-implementation__heading-group {
   display: grid;
   gap: var(--space-1);
@@ -125,7 +130,6 @@
     gap: var(--space-6);
     max-width: 72rem;
     margin-inline: auto;
-    align-items: center;
   }
 
   .design-implementation__image-wrap {
@@ -159,7 +163,6 @@
 
   .design-implementation__image-wrap {
     max-width: 30rem;
-    margin-inline: auto;
   }
 
   .design-implementation__image {
@@ -167,9 +170,7 @@
   }
 
   .design-implementation__content {
-    gap: var(--space-4);
     max-width: 30rem;
-    margin-inline: auto;
   }
 
   .design-implementation__step-title {
@@ -180,7 +181,6 @@
   .design-implementation__sparkle {
     top: -3.5rem;
     left: 62%;
-    right: auto;
     width: 5.5rem;
     height: auto;
   }

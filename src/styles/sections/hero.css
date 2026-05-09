@@ -136,10 +136,6 @@
 }
 
 @media (min-width: 80rem) {
-  .hero-block {
-    --hero-copy-offset-bottom: var(--space-10);
-  }
-
   .hero-block__title {
     font-size: clamp(3.5rem, 7.2vw, 5.5rem);
   }
@@ -164,9 +160,6 @@
     grid-template-columns: minmax(0, 1fr) minmax(22rem, 28rem);
   }
 
-  .hero-block__copy {
-    --hero-copy-offset-bottom: var(--space-10);
-  }
 }
 
 @media (max-width: 63.999rem) {
@@ -191,6 +184,5 @@
 
   .hero-block__image {
     aspect-ratio: 4 / 5;
-    height: auto;
   }
 }

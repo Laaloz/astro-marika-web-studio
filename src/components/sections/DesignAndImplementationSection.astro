@@ -69,19 +69,21 @@ const stepItems = steps.filter(
     </div>
 
     <div class="design-implementation__content">
-      <div class="design-implementation__heading-group">
-        <p class="design-implementation__eyebrow">{eyebrow}</p>
+      <div class="design-implementation__text-wrap">
+        <div class="design-implementation__heading-group">
+          <p class="design-implementation__eyebrow">{eyebrow}</p>
 
-        <h2 class="design-implementation__title">
-          {titlePrefix}
-          {' '}
-          <span class="design-implementation__title-accent">{titleEmphasis}</span>
-          {titleSuffix}
-        </h2>
-      </div>
+          <h2 class="design-implementation__title">
+            {titlePrefix}
+            {' '}
+            <span class="design-implementation__title-accent">{titleEmphasis}</span>
+            {titleSuffix}
+          </h2>
+        </div>
 
-      <div class="design-implementation__intro rich-text">
-        <PortableText value={introBlocks} />
+        <div class="design-implementation__intro rich-text">
+          <PortableText value={introBlocks} />
+        </div>
       </div>
 
       <div class="design-implementation__steps">
