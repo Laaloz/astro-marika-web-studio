@@ -6,6 +6,7 @@ import ScrollingTextSection from '../components/sections/ScrollingTextSection.as
 import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
 import DesignAndImplementationSection from '../components/sections/DesignAndImplementationSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
+import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]][0]{
@@ -19,6 +20,18 @@ const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]
       image {
         ...,
         alt
+      }
+    },
+    _type == "referenceSection" => {
+      ...,
+      references[]-> {
+        _id,
+        title,
+        slug,
+        image {
+          ...,
+          alt
+        }
       }
     }
   }
@@ -49,6 +62,10 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 
 			if (block._type === 'aboutDesignerSection') {
 				return <AboutDesignerSection {...block} />;
+			}
+
+			if (block._type === 'referenceSection') {
+				return <ReferenceSection {...block} />;
 			}
 
 			return null;

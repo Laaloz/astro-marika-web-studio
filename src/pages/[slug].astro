@@ -4,6 +4,9 @@ import MainLayout from '../layouts/main.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import ScrollingTextSection from '../components/sections/ScrollingTextSection.astro';
 import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
+import DesignAndImplementationSection from '../components/sections/DesignAndImplementationSection.astro';
+import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
+import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
@@ -17,6 +20,18 @@ const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
       image {
         ...,
         alt
+      }
+    },
+    _type == "referenceSection" => {
+      ...,
+      references[]-> {
+        _id,
+        title,
+        slug,
+        image {
+          ...,
+          alt
+        }
       }
     }
   }
@@ -44,6 +59,18 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, Astro.p
 
 			if (block._type === 'serviceHighlightsSection') {
 				return <ServiceHighlightsSection {...block} />;
+			}
+
+			if (block._type === 'designAndImplementationSection') {
+				return <DesignAndImplementationSection {...block} />;
+			}
+
+			if (block._type === 'aboutDesignerSection') {
+				return <AboutDesignerSection {...block} />;
+			}
+
+			if (block._type === 'referenceSection') {
+				return <ReferenceSection {...block} />;
 			}
 
 			return null;

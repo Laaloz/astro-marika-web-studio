@@ -1,0 +1,61 @@
+---
+import type {SanityDocument} from '@sanity/client'
+import {sanityClient} from 'sanity:client'
+import MainLayout from '../../layouts/main.astro'
+import SanityImage from '../../components/SanityImage.astro'
+
+const REFERENCE_QUERY = `*[_type == "reference" && slug.current == $slug][0]{
+  _id,
+  title,
+  slug,
+  areas,
+  image {
+    ...,
+    alt
+  }
+}`
+
+export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
+  return await sanityClient.fetch(`*[_type == "reference" && defined(slug.current)]{
+    "params": {"slug": slug.current}
+  }`)
+}
+
+const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUERY, Astro.params)
+---
+
+<MainLayout content={{title: `${reference?.title || 'Referenssi'} | Marika Web Studio`, image: reference?.image}}>
+  <main class="page-shell">
+    <section class="surface-panel surface-panel--hero">
+      <div class="actions-row">
+        <a class="button button--secondary" href="/references">Takaisin referensseihin</a>
+      </div>
+      <div class="section-head">
+        <p class="eyebrow">Portfolio</p>
+        <h1>{reference?.title || 'Referenssi'}</h1>
+      </div>
+      {Array.isArray(reference?.areas) && reference.areas.length > 0 && (
+        <div class="pill-list">
+          {reference.areas.map((area: string) => (
+            <span class="pill">{area}</span>
+          ))}
+        </div>
+      )}
+      {reference?.image && (
+        <SanityImage
+          image={reference.image}
+          alt={reference.image?.alt || reference.title || ''}
+          width={1100}
+          height={700}
+          fit="crop"
+          widths={[480, 768, 1100, 1440]}
+          class="aspect-video w-full rounded-[32px] object-cover"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          sizes="(min-width: 72rem) 72rem, 100vw"
+        />
+      )}
+    </section>
+  </main>
+</MainLayout>

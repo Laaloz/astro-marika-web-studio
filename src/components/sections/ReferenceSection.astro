@@ -1,0 +1,79 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+interface ReferenceItem {
+  _id?: string
+  title?: string
+  slug?: {current?: string}
+  image?: {alt?: string}
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  ctaLabel,
+  ctaHref,
+  references = [],
+} = Astro.props as {
+  eyebrow?: string
+  title?: string
+  description?: string
+  ctaLabel?: string
+  ctaHref?: string
+  references?: ReferenceItem[]
+}
+
+const cards = references.filter((item) => item?.title)
+const hasCta = Boolean(ctaLabel && ctaHref)
+---
+
+{
+  cards.length > 0 && (
+    <section class="page-section reference-section" aria-label={eyebrow || title || 'Portfolio'}>
+      <div class="site-container reference-section__container">
+        <div class="reference-section__heading">
+          {eyebrow && <p class="reference-section__eyebrow">{eyebrow}</p>}
+          {title && <h2 class="reference-section__title">{title}</h2>}
+          {description && <p class="reference-section__description">{description}</p>}
+        </div>
+
+        <div class="reference-section__grid">
+          {cards.map((item) => (
+            <article class="reference-card">
+              <div class="reference-card__image-wrap">
+                {item.image ? (
+                  <SanityImage
+                    image={item.image}
+                    alt={item.image.alt || item.title || ''}
+                    width={421}
+                    height={482}
+                    fit="crop"
+                    widths={[320, 421, 600]}
+                    class="reference-card__image"
+                    sizes="(min-width: 80rem) 26.3rem, (min-width: 56rem) 31vw, 100vw"
+                  />
+                ) : (
+                  <div class="reference-card__image reference-card__image--placeholder"></div>
+                )}
+              </div>
+              <h3 class="reference-card__title">{item.title}</h3>
+            </article>
+          ))}
+        </div>
+
+        {hasCta && (
+          <div class="reference-section__cta-wrap">
+            <a class="button--link-secondary reference-section__cta" href={ctaHref}>
+              <span>{ctaLabel}</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12H17" />
+                <path d="M12 7L17 12L12 17" />
+              </svg>
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,73 @@
+---
+import type {SanityDocument} from '@sanity/client'
+import {sanityClient} from 'sanity:client'
+import MainLayout from '../../layouts/main.astro'
+import SanityImage from '../../components/SanityImage.astro'
+
+const REFERENCES_QUERY = `*[_type == "reference" && defined(slug.current)]|order(_createdAt desc){
+  _id,
+  title,
+  slug,
+  areas,
+  image {
+    ...,
+    alt
+  }
+}`
+
+const references = await sanityClient.fetch<SanityDocument[]>(REFERENCES_QUERY)
+---
+
+<MainLayout content={{title: 'Referenssit | Marika Web Studio', description: 'Tutustu valikoituihin asiakasreferensseihin ja toteutusalueisiin.'}}>
+  <main class="page-shell">
+    <section class="surface-panel surface-panel--hero">
+      <div class="section-head">
+        <p class="eyebrow">Portfolio</p>
+        <h1>Referenssit</h1>
+        <p class="lede">Näistä projekteista näkee, mitä yhdessä voimme saada aikaan.</p>
+      </div>
+      <div class="actions-row">
+        <a class="button button--secondary" href="/">Etusivu</a>
+      </div>
+    </section>
+
+    <section class="surface-panel">
+      {
+        references.length > 0 ? (
+          <div class="reference-section__grid">
+            {references.map((item) => (
+              <a class="reference-card post-link-card" href={`/references/${item.slug.current}`}>
+                <div class="reference-card__image-wrap">
+                  {item.image ? (
+                    <SanityImage
+                      image={item.image}
+                      alt={item.image?.alt || item.title || ''}
+                      width={421}
+                      height={482}
+                      fit="crop"
+                      widths={[320, 421, 600]}
+                      class="reference-card__image"
+                      sizes="(min-width: 80rem) 26.3rem, (min-width: 56rem) 31vw, 100vw"
+                    />
+                  ) : (
+                    <div class="reference-card__image reference-card__image--placeholder"></div>
+                  )}
+                </div>
+                <h2 class="reference-card__title">{item.title}</h2>
+                {Array.isArray(item.areas) && item.areas.length > 0 && (
+                  <div class="pill-list">
+                    {item.areas.map((area: string) => (
+                      <span class="pill">{area}</span>
+                    ))}
+                  </div>
+                )}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p>Referenssejä ei löytynyt vielä.</p>
+        )
+      }
+    </section>
+  </main>
+</MainLayout>
