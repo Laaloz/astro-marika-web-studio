@@ -1,0 +1,57 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+interface ScrollingItem {
+  _key?: string
+  text?: string
+}
+
+const {icon, items = []} = Astro.props as {
+  icon?: {alt?: string} | null
+  items?: ScrollingItem[]
+}
+
+const normalizedItems = items
+  .map((item) => item?.text?.trim())
+  .filter((item): item is string => Boolean(item))
+
+const marqueeItems = [...normalizedItems, ...normalizedItems]
+const iconAlt = icon?.alt || ''
+---
+
+{
+  normalizedItems.length > 0 && (
+    <section class="scrolling-text" aria-label="Palvelut">
+      <div class="scrolling-text__track" role="list">
+        {marqueeItems.map((text, index) => (
+          <div class="scrolling-text__item" role="listitem" aria-hidden={index >= normalizedItems.length}>
+            {
+              icon ? (
+                <SanityImage
+                  image={icon}
+                  alt={iconAlt}
+                  width={24}
+                  height={24}
+                  class="scrolling-text__icon"
+                  fit="crop"
+                  widths={[24, 48]}
+                  loading="lazy"
+                />
+              ) : (
+                <span class="scrolling-text__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.5" />
+                    <circle cx="9.5" cy="10" r="0.85" fill="currentColor" />
+                    <circle cx="14.5" cy="10" r="0.85" fill="currentColor" />
+                    <path d="M8.5 14C9.2 15.2 10.5 16 12 16C13.5 16 14.8 15.2 15.5 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                  </svg>
+                </span>
+              )
+            }
+            <span class="scrolling-text__label">{text}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
