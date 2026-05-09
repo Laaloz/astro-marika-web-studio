@@ -1,4 +1,3 @@
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 
 import sanity from "@sanity/astro";
@@ -16,9 +15,6 @@ export default defineConfig({
       protocol: "https",
       hostname: "cdn.sanity.io",
     }],
-  },
-  vite: {
-    plugins: [tailwindcss()],
   },
   integrations: [
     // 👇 update these lines

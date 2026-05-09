@@ -1,5 +1,5 @@
 .hero-block {
-  --section-padding-inline: clamp(1rem, 4vw, 4rem);
+  --section-padding-inline: 0;
   --section-padding-top: clamp(3.5rem, 8vw, 5rem);
   --section-padding-bottom: 0;
   --hero-layout-gap: clamp(2.5rem, 5vw, 8.75rem);
@@ -35,7 +35,6 @@
   position: absolute;
   top: -5.25rem;
   left: 37.25%;
-  width: min(68.25rem, 75vw);
   height: auto;
   pointer-events: none;
 }
@@ -59,6 +58,7 @@
 
 .hero-block__copy {
   gap: var(--hero-copy-gap);
+  padding-bottom: var(--hero-copy-offset-bottom);
 }
 
 .hero-block__eyebrow {
@@ -70,7 +70,7 @@
 .hero-block__title {
   gap: 0;
   color: var(--color-white);
-  font-size: clamp(3.5rem, 7.2vw, 5.5rem);
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
   line-height: 1.015;
   letter-spacing: -0.02em;
 }
@@ -132,11 +132,15 @@
     linear-gradient(180deg, #74514c 0%, #3f2b27 100%);
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 80rem) {
   .hero-block {
-    --section-padding-inline: clamp(2rem, 4vw, 4rem);
-    --section-padding-top: 5rem;
+    --section-padding-inline: 0;
+    --section-padding-top: calc(5rem + 72px);
     --hero-copy-offset-bottom: clamp(4rem, 8vw, 7.5rem);
+  }
+
+  .hero-block__title {
+    font-size: clamp(3.5rem, 7.2vw, 5.5rem);
   }
 
   .hero-block__container {
@@ -146,13 +150,13 @@
 
   .hero-block__copy {
     max-width: 40.25rem;
-    padding-bottom: var(--hero-copy-offset-bottom);
     padding-inline: 0;
   }
 }
 
 @media (min-width: 64rem) and (max-width: 79.999rem) {
   .hero-block {
+    --section-padding-top: calc(5rem + 72px);
     --hero-layout-gap: clamp(2.5rem, 3vw, 4.5rem);
   }
 
@@ -167,7 +171,7 @@
 
 @media (max-width: 63.999rem) {
   .hero-block {
-    --section-padding-top: 3rem;
+    --section-padding-top: calc(3rem + var(--mobile-header-height, 72px));
     --hero-layout-gap: 2.5rem;
     --hero-copy-gap: 2rem;
     --hero-actions-gap: 1.25rem 2rem;

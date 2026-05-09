@@ -1,0 +1,182 @@
+.button {
+  --button-brand-bg: #d9defd;
+  --button-brand-fg: #3B2115;
+  --button-brand-border: transparent;
+  --button-brand-hover-fill: #ffc3dc;
+  --button-brand-hover-fg: var(--button-brand-fg);
+  --button-brand-hover-border: var(--button-brand-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  gap: 0.5rem;
+  padding: var(--space-1-5) var(--space-3);
+  border: 1px solid var(--button-brand-border);
+  border-radius: var(--radius-button-lg);
+  background: var(--button-brand-bg);
+  color: var(--button-brand-fg);
+  font-size: var(--text-button-large);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--leading-button-large);
+  text-decoration: none;
+  transition: border-color 160ms ease, opacity 160ms ease, color 160ms ease;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--button-brand-hover-fill);
+  transform: translateX(-101%);
+  transition: transform 220ms ease;
+  z-index: -1;
+}
+
+.button:hover::before,
+.button:focus-visible::before {
+  transform: translateX(0);
+}
+
+.button:hover,
+.button:focus-visible {
+  color: var(--button-brand-hover-fg);
+  border-color: var(--button-brand-hover-border);
+}
+
+.button--primary {
+  background: var(--color-brand-accent-strong);
+  color: var(--color-white);
+  box-shadow: var(--shadow-button-accent);
+}
+
+.button--secondary {
+  background: rgb(255 255 255 / 0.85);
+  border-color: rgb(59 33 21 / 0.12);
+  color: var(--color-heading);
+}
+
+.button--secondary::before {
+  display: none;
+}
+
+.button--primary-brand {}
+
+.button--primary-accent,
+.button--primary-brand--accent {
+  --button-brand-bg: #d53a0b;
+  --button-brand-fg: #fffefb;
+  --button-brand-border: transparent;
+  --button-brand-hover-fill: #ba3008;
+  --button-brand-hover-fg: #fffefb;
+  --button-brand-hover-border: #322221;
+}
+
+.button--primary-accent::before,
+.button--primary-brand--accent::before {
+  background: var(--color-background);
+}
+
+.button--primary-accent:hover,
+.button--primary-accent:focus-visible,
+.button--primary-brand--accent:hover,
+.button--primary-brand--accent:focus-visible {
+  color: var(--color-heading);
+}
+
+.button--primary-outline,
+.button--primary-brand--outline {
+  --button-brand-bg: #fffefb;
+  --button-brand-fg: #181818;
+  --button-brand-border: #322221;
+  --button-brand-hover-fill: var(--color-brand-secondary-dark);
+  --button-brand-hover-fg: #fffefb;
+  --button-brand-hover-border: #322221;
+}
+
+.button--primary-outline::before,
+.button--primary-brand--outline::before {
+  display: block;
+}
+
+.button--primary-outline:hover,
+.button--primary-outline:focus-visible,
+.button--primary-brand--outline:hover,
+.button--primary-brand--outline:focus-visible {
+  color: #fffefb;
+}
+
+.button--primary-brand svg,
+.button--primary-accent svg,
+.button--primary-outline svg,
+.button--primary-brand--accent svg,
+.button--primary-brand--outline svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.button--primary-brand svg path,
+.button--primary-accent svg path,
+.button--primary-outline svg path,
+.button--primary-brand--accent svg path,
+.button--primary-brand--outline svg path {
+  fill: currentColor;
+}
+
+.button-link svg,
+.button--link-secondary svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button-link,
+.button--link-secondary {
+  display: flex;
+  min-height: auto;
+  gap: var(--space-1);
+  padding: 0.5rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 0;
+  color: rgb(255 248 242 / 0.92);
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.button-link svg,
+.button--link-secondary svg {
+  color: var(--color-brand-secondary);
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.button-link::before,
+.button--link-secondary::before {
+  display: none;
+}
+
+.button-link:hover,
+.button-link:focus-visible,
+.button--link-secondary:hover,
+.button--link-secondary:focus-visible {
+  color: var(--color-brand-secondary-hover);
+}
+
+.button-link:hover svg,
+.button-link:focus-visible svg,
+.button--link-secondary:hover svg,
+.button--link-secondary:focus-visible svg {
+  transform: translateX(var(--space-1));
+}

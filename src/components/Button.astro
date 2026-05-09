@@ -1,6 +1,17 @@
 ---
 const { href, variant = 'primary', type = 'button' } = Astro.props;
-const className = `button ${variant === 'secondary' ? 'button--secondary' : 'button--primary'}`;
+
+const variantClassMap = {
+	primary: 'button--primary',
+	secondary: 'button-link',
+	'primary-brand': 'button--primary-brand',
+	'primary-accent': 'button--primary-accent',
+	'primary-outline': 'button--primary-outline',
+	'primary-brand--accent': 'button--primary-accent',
+	'primary-brand--outline': 'button--primary-outline',
+};
+
+const className = `button ${variantClassMap[variant] || 'button--primary'}`;
 ---
 
 {href ? (

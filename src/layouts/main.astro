@@ -134,7 +134,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 		<a class="skip-link" href="#main-content">Siirry pääsisältöön</a>
 		<header class="site-header" role="banner">
 			<div class="site-header__desktop">
-				<div class="site-header__desktop-inner">
+				<div class="site-container site-header__desktop-inner">
 					<a class="site-header__logo site-header__logo--desktop" href={logoHref} aria-label="Etusivu">
 						{logoDesktopUrl ? (
 							<img
@@ -209,7 +209,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 			</div>
 
 			<div class="site-header__mobile" data-mobile-nav>
-				<div class="site-header__mobile-bar">
+				<div class="site-container site-header__mobile-bar">
 					<span class="site-header__logo site-header__logo--mobile">
 						{logoMobileUrl ? (
 							<img
@@ -242,7 +242,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 					</button>
 				</div>
 				<nav id="mobile-menu" class="mobile-nav" aria-label="Päävalikko mobiili" hidden>
-					<ul class="mobile-nav__list">
+					<ul class="mobile-nav__list site-container">
 						<li>
 							<a class="mobile-nav__link" href={logoHref} aria-current={isCurrentPath(logoHref) ? 'page' : undefined}>
 								Etusivu
@@ -324,9 +324,11 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 				const hideThreshold = 10;
 				const showThreshold = 3;
 				const hideStartOffset = 120;
+				const scrolledThreshold = 8;
 
 				const updateHeaderVisibility = () => {
 					const currentY = window.scrollY;
+					header.classList.toggle('site-header--scrolled', currentY > scrolledThreshold);
 					if (document.documentElement.classList.contains('mobile-nav-open')) {
 						header.classList.remove('site-header--hidden');
 						previousY = currentY;
@@ -362,6 +364,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 						ticking = true;
 					}
 				}, {passive: true});
+				updateHeaderVisibility();
 			}
 
 			const alignDesktopSubmenus = () => {
@@ -441,7 +444,9 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 				const setMobileHeaderHeight = () => {
 					const mobileBar = mobileNav.querySelector('.site-header__mobile-bar');
 					if (!(mobileBar instanceof HTMLElement)) return;
-					mobileNav.style.setProperty('--mobile-header-height', `${Math.ceil(mobileBar.getBoundingClientRect().height)}px`);
+					const mobileHeaderHeight = `${Math.ceil(mobileBar.getBoundingClientRect().height)}px`;
+					mobileNav.style.setProperty('--mobile-header-height', mobileHeaderHeight);
+					document.documentElement.style.setProperty('--mobile-header-height', mobileHeaderHeight);
 				};
 				setExpanded();
 				setMobileHeaderHeight();
