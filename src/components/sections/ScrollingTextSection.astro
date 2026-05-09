@@ -63,15 +63,25 @@ const normalizedItems = items
       const setWidth = originalSet.getBoundingClientRect().width
       if (!setWidth) return
 
-      const trackStyles = window.getComputedStyle(track)
-      const trackGap = Number.parseFloat(trackStyles.columnGap || trackStyles.gap || '0') || 0
-      const unitWidth = setWidth + trackGap
+      const probeClone = originalSet.cloneNode(true)
+      if (!(probeClone instanceof HTMLElement)) return
+      probeClone.setAttribute('data-scrolling-clone', 'true')
+      probeClone.setAttribute('aria-hidden', 'true')
+      track.appendChild(probeClone)
+
+      const firstSetRect = originalSet.getBoundingClientRect()
+      const probeRect = probeClone.getBoundingClientRect()
+      const unitWidth = probeRect.left - firstSetRect.left
+      if (!unitWidth) {
+        probeClone.remove()
+        return
+      }
 
       const viewportWidth = section.getBoundingClientRect().width
       const minimumTrackWidth = Math.max(viewportWidth * 2, unitWidth * 2)
       const neededSets = Math.max(2, Math.ceil(minimumTrackWidth / unitWidth))
 
-      for (let i = 1; i < neededSets; i += 1) {
+      for (let i = 2; i < neededSets; i += 1) {
         const clone = originalSet.cloneNode(true)
         if (clone instanceof HTMLElement) {
           clone.setAttribute('data-scrolling-clone', 'true')
@@ -84,12 +94,20 @@ const normalizedItems = items
       const speed = 90
       const duration = Math.max(12, unitWidth / speed)
       section.style.setProperty('--scrolling-duration', `${duration}s`)
+
+      track.style.animation = 'none'
+      track.getBoundingClientRect()
+      track.style.animation = ''
     }
 
     build()
 
+    let resizeRaf = 0
     const resizeObserver = new ResizeObserver(() => {
-      build()
+      if (resizeRaf) cancelAnimationFrame(resizeRaf)
+      resizeRaf = requestAnimationFrame(() => {
+        build()
+      })
     })
 
     resizeObserver.observe(section)

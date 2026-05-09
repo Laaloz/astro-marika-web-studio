@@ -75,12 +75,16 @@
   --text-h6: 1.25rem;
   --leading-h6: 1.5rem;
 
-  --page-padding: clamp(1rem, 4vw, 4rem);
+  --grid-gutter: 1rem;
+  --grid-margin: 1rem;
+  --page-padding: var(--grid-margin);
   --content-width: 90rem;
 }
 
 @media (min-width: 80rem) {
   :root {
+    --grid-gutter: 1.5rem;
+    --grid-margin: 4rem;
     --text-body-large: 1.25rem;
     --leading-body-large: 1.75rem;
     --text-body-medium: 1.125rem;

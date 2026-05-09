@@ -1,0 +1,83 @@
+---
+import {PortableText} from 'astro-portabletext'
+
+interface ServiceItem {
+  _key?: string
+  title?: string
+  body?: unknown[]
+  buttonLabel?: string
+  buttonHref?: string
+  backgroundColor?: string
+}
+
+const {
+  eyebrow,
+  title,
+  body,
+  secondaryLinkLabel,
+  secondaryLinkHref,
+  items = [],
+} = Astro.props as {
+  eyebrow?: string
+  title?: string
+  body?: unknown[]
+  secondaryLinkLabel?: string
+  secondaryLinkHref?: string
+  items?: ServiceItem[]
+}
+
+const hasSecondaryLink = Boolean(secondaryLinkLabel && secondaryLinkHref)
+const cards = items.filter((item) => item?.title && item?.buttonLabel && item?.buttonHref)
+---
+
+{
+  cards.length > 0 && (
+    <section class="page-section service-highlights" aria-label={eyebrow || title || 'Palvelut'}>
+      <div class="site-container service-highlights__container">
+        <div class="service-highlights__intro">
+          <div class="service-highlights__text-stack">
+            <div class="service-highlights__heading-group">
+              {eyebrow && <p class="service-highlights__eyebrow">{eyebrow}</p>}
+              {title && <h2 class="service-highlights__title">{title}</h2>}
+            </div>
+            {Array.isArray(body) && body.length > 0 && (
+              <div class="service-highlights__body rich-text">
+                <PortableText value={body} />
+              </div>
+            )}
+          </div>
+          {hasSecondaryLink && (
+            <a class="button--link-secondary service-highlights__secondary-link" href={secondaryLinkHref}>
+              <span>{secondaryLinkLabel}</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12H17" />
+                <path d="M12 7L17 12L12 17" />
+              </svg>
+            </a>
+          )}
+        </div>
+
+        <div class="service-highlights__grid">
+          {cards.map((item) => (
+            <article class="service-card" style={`--service-card-bg: ${item.backgroundColor || '#c7d8ff'}`}>
+              <div class="service-card__content">
+                <h3 class="service-card__title">{item.title}</h3>
+                {Array.isArray(item.body) && item.body.length > 0 && (
+                  <div class="service-card__body rich-text">
+                    <PortableText value={item.body} />
+                  </div>
+                )}
+              </div>
+              <a class="button button--primary-outline" href={item.buttonHref}>
+                <span>{item.buttonLabel}</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
+                </svg>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -3,6 +3,7 @@ import type {SanityDocument} from '@sanity/client';
 import MainLayout from '../layouts/main.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import ScrollingTextSection from '../components/sections/ScrollingTextSection.astro';
+import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]][0]{
@@ -34,6 +35,10 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 
 			if (block._type === 'scrollingTextSection') {
 				return <ScrollingTextSection {...block} />;
+			}
+
+			if (block._type === 'serviceHighlightsSection') {
+				return <ServiceHighlightsSection {...block} />;
 			}
 
 			return null;
