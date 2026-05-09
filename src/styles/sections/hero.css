@@ -3,8 +3,8 @@
   --section-padding-top: clamp(3.5rem, 8vw, 5rem);
   --section-padding-bottom: 0;
   --hero-layout-gap: clamp(2.5rem, 5vw, 8.75rem);
-  --hero-copy-gap: 3.5rem;
-  --hero-copy-offset-bottom: 0;
+  --hero-copy-gap: var(--space-6);
+  --hero-copy-offset-bottom: var(--space-10);
   --hero-actions-gap: 2.125rem;
   --hero-body-gap: 1rem;
   position: relative;
@@ -52,13 +52,18 @@
 
 .hero-block__copy,
 .hero-block__body,
-.hero-block__title {
+.hero-block__title,
+.hero-block__headline-group {
   display: grid;
 }
 
 .hero-block__copy {
   gap: var(--hero-copy-gap);
   padding-bottom: var(--hero-copy-offset-bottom);
+}
+
+.hero-block__headline-group {
+  gap: var(--space-1);
 }
 
 .hero-block__eyebrow {
@@ -136,7 +141,7 @@
   .hero-block {
     --section-padding-inline: 0;
     --section-padding-top: calc(5rem + 72px);
-    --hero-copy-offset-bottom: clamp(4rem, 8vw, 7.5rem);
+    --hero-copy-offset-bottom: var(--space-10);
   }
 
   .hero-block__title {
@@ -165,7 +170,7 @@
   }
 
   .hero-block__copy {
-    --hero-copy-offset-bottom: clamp(3rem, 5vw, 5rem);
+    --hero-copy-offset-bottom: var(--space-10);
   }
 }
 
@@ -174,6 +179,7 @@
     --section-padding-top: calc(3rem + var(--mobile-header-height, 72px));
     --hero-layout-gap: 2.5rem;
     --hero-copy-gap: 2rem;
+    --hero-copy-offset-bottom: 0;
     --hero-actions-gap: 1.25rem 2rem;
     background-size: 3rem 3rem, auto;
     min-height: auto;
