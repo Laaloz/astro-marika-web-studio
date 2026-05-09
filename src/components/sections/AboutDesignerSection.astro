@@ -2,7 +2,7 @@
 import SanityImage from '../SanityImage.astro';
 import {PortableText} from 'astro-portabletext';
 import type {PortableTextBlock} from '@portabletext/types';
-import cakeIcon from '../../assets/about-designer-cake.svg';
+import cakeIcon from '../../assets/about-designer-cake.svg?url';
 
 const {
   eyebrow,
@@ -72,7 +72,9 @@ const hasCta = Boolean(ctaLabel && ctaHref);
       }
     </figure>
 
-    <img class="about-designer__cake" src={cakeIcon} alt="" aria-hidden="true" />
+    <span class="about-designer__cake" aria-hidden="true">
+      <img class="about-designer__cake-icon" src={cakeIcon} alt="" />
+    </span>
   </div>
 </section>
   )
