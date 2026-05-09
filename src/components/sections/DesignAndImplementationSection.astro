@@ -1,12 +1,13 @@
 ---
 import SanityImage from '../SanityImage.astro'
+import {PortableText} from 'astro-portabletext'
 
 const sparkleAsset = 'http://localhost:3845/assets/1a0c4c0cdcdea13091cf4dbb23d2d0096fe223b1.svg'
 
 interface StepItem {
   _key?: string
   title?: string
-  description?: string
+  description?: unknown[]
 }
 
 const {
@@ -14,8 +15,7 @@ const {
   titlePrefix,
   titleEmphasis,
   titleSuffix,
-  introFirstParagraph,
-  introSecondParagraph,
+  intro,
   steps = [],
   ctaLabel,
   ctaHref,
@@ -25,17 +25,16 @@ const {
   titlePrefix?: string
   titleEmphasis?: string
   titleSuffix?: string
-  introFirstParagraph?: string
-  introSecondParagraph?: string
+  intro?: unknown[]
   steps?: StepItem[]
   ctaLabel?: string
   ctaHref?: string
   image?: {alt?: string}
 }
 
-const hasRequiredContent = Boolean(eyebrow && titlePrefix && titleEmphasis && introFirstParagraph && introSecondParagraph)
+const hasRequiredContent = Boolean(eyebrow && titlePrefix && titleEmphasis && Array.isArray(intro) && intro.length > 0)
 const hasCta = Boolean(ctaLabel && ctaHref)
-const stepItems = steps.filter((step) => step?.title && step?.description)
+const stepItems = steps.filter((step) => step?.title && Array.isArray(step?.description) && step.description.length > 0)
 ---
 
 {
@@ -74,16 +73,17 @@ const stepItems = steps.filter((step) => step?.title && step?.description)
         </h2>
       </div>
 
-      <div class="design-implementation__intro">
-        <p>{introFirstParagraph}</p>
-        <p>{introSecondParagraph}</p>
+      <div class="design-implementation__intro rich-text">
+        <PortableText value={intro} />
       </div>
 
       <div class="design-implementation__steps">
         {stepItems.map((step) => (
           <article class="design-implementation__step">
             <h3 class="design-implementation__step-title">{step.title}</h3>
-            <p>{step.description}</p>
+            <div class="design-implementation__step-description rich-text">
+              <PortableText value={step.description} />
+            </div>
           </article>
         ))}
       </div>
