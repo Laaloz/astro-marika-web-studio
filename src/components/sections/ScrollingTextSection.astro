@@ -94,10 +94,14 @@ const normalizedItems = items
         }
       }
 
-      section.style.setProperty('--scrolling-loop-distance', `${unitWidth}px`)
+      if (section instanceof HTMLElement) {
+        section.style.setProperty('--scrolling-loop-distance', `${unitWidth}px`)
+      }
       const speed = 90
       const duration = Math.max(12, unitWidth / speed)
-      section.style.setProperty('--scrolling-duration', `${duration}s`)
+      if (section instanceof HTMLElement) {
+        section.style.setProperty('--scrolling-duration', `${duration}s`)
+      }
 
       track.style.animation = 'none'
       track.getBoundingClientRect()
