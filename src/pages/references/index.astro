@@ -4,7 +4,7 @@ import {sanityClient} from 'sanity:client'
 import MainLayout from '../../layouts/main.astro'
 import SanityImage from '../../components/SanityImage.astro'
 
-const REFERENCES_QUERY = `*[_type == "reference" && defined(slug.current)]|order(_createdAt desc){
+const REFERENCES_QUERY = `*[_type == "portfolioReference" && defined(slug.current)]|order(_createdAt desc){
   _id,
   title,
   slug,
