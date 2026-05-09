@@ -1,12 +1,10 @@
 .hero-block {
-  --section-padding-inline: 0;
-  --section-padding-top: clamp(3.5rem, 8vw, 5rem);
-  --section-padding-bottom: 0;
   --hero-layout-gap: clamp(2.5rem, 5vw, 8.75rem);
   --hero-copy-gap: var(--space-6);
   --hero-copy-offset-bottom: var(--space-10);
   --hero-actions-gap: 2.125rem;
   --hero-body-gap: 1rem;
+  padding-bottom: 0;
   position: relative;
   overflow: hidden;
   min-height: min(50rem, 100vh);
@@ -139,8 +137,6 @@
 
 @media (min-width: 80rem) {
   .hero-block {
-    --section-padding-inline: 0;
-    --section-padding-top: calc(5rem + 72px);
     --hero-copy-offset-bottom: var(--space-10);
   }
 
@@ -161,7 +157,6 @@
 
 @media (min-width: 64rem) and (max-width: 79.999rem) {
   .hero-block {
-    --section-padding-top: calc(5rem + 72px);
     --hero-layout-gap: clamp(2.5rem, 3vw, 4.5rem);
   }
 
@@ -176,7 +171,6 @@
 
 @media (max-width: 63.999rem) {
   .hero-block {
-    --section-padding-top: calc(3rem + var(--mobile-header-height, 72px));
     --hero-layout-gap: 2.5rem;
     --hero-copy-gap: 2rem;
     --hero-copy-offset-bottom: 0;

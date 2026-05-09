@@ -1,8 +1,3 @@
-.service-highlights {
-  --section-padding-top: var(--space-10);
-  --section-padding-bottom: var(--space-8);
-}
-
 .service-highlights__container {
   display: grid;
   gap: var(--space-6);
@@ -104,11 +99,6 @@
 }
 
 @media (max-width: 48rem) {
-  .service-highlights {
-    --section-padding-top: var(--space-8);
-    --section-padding-bottom: var(--space-7);
-  }
-
   .service-highlights__grid {
     grid-template-columns: 1fr;
     gap: var(--space-5);
