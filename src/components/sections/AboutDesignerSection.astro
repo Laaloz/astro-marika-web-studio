@@ -30,13 +30,15 @@ const hasCta = Boolean(ctaLabel && ctaHref);
 <section class="page-section has-background about-designer" aria-label={eyebrow}>
   <div class="site-container about-designer__container">
     <div class="about-designer__content">
-      <div class="about-designer__heading">
-        <p class="about-designer__eyebrow">{eyebrow}</p>
-        <h2 class="about-designer__title">{title}</h2>
-      </div>
+      <div class="about-designer__text-wrap">
+        <div class="about-designer__heading">
+          <p class="about-designer__eyebrow">{eyebrow}</p>
+          <h2 class="about-designer__title">{title}</h2>
+        </div>
 
-      <div class="about-designer__body">
-        <PortableText value={body} />
+        <div class="about-designer__body">
+          <PortableText value={body} />
+        </div>
       </div>
 
       {hasCta && (
