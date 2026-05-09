@@ -56,6 +56,9 @@ const normalizedItems = items
 
     if (!(track instanceof HTMLElement) || !(originalSet instanceof HTMLElement)) continue
 
+    let lastUnitWidth = 0
+    let resizeTimer = 0
+
     const build = () => {
       const clones = track.querySelectorAll('[data-scrolling-clone="true"]')
       for (const clone of clones) clone.remove()
@@ -71,11 +74,33 @@ const normalizedItems = items
 
       const firstSetRect = originalSet.getBoundingClientRect()
       const probeRect = probeClone.getBoundingClientRect()
-      const unitWidth = probeRect.left - firstSetRect.left
+      const rawUnitWidth = probeRect.left - firstSetRect.left
+      const dpr = window.devicePixelRatio || 1
+      const unitWidth = Math.round(rawUnitWidth * dpr) / dpr
       if (!unitWidth) {
         probeClone.remove()
         return
       }
+
+      if (lastUnitWidth && Math.abs(unitWidth - lastUnitWidth) < 0.5) {
+        const viewportWidth = section.getBoundingClientRect().width
+        const minimumTrackWidth = Math.max(viewportWidth * 2, unitWidth * 2)
+        const neededSets = Math.max(2, Math.ceil(minimumTrackWidth / unitWidth))
+
+        for (let i = 2; i < neededSets; i += 1) {
+          const clone = originalSet.cloneNode(true)
+          if (clone instanceof HTMLElement) {
+            clone.setAttribute('data-scrolling-clone', 'true')
+            clone.setAttribute('aria-hidden', 'true')
+            track.appendChild(clone)
+          }
+        }
+
+        probeClone.remove()
+        return
+      }
+
+      lastUnitWidth = unitWidth
 
       const viewportWidth = section.getBoundingClientRect().width
       const minimumTrackWidth = Math.max(viewportWidth * 2, unitWidth * 2)
@@ -102,12 +127,21 @@ const normalizedItems = items
 
     build()
 
-    let resizeRaf = 0
-    const resizeObserver = new ResizeObserver(() => {
-      if (resizeRaf) cancelAnimationFrame(resizeRaf)
-      resizeRaf = requestAnimationFrame(() => {
+    if ('fonts' in document && typeof document.fonts?.ready?.then === 'function') {
+      document.fonts.ready.then(() => {
         build()
       })
+    }
+
+    let resizeRaf = 0
+    const resizeObserver = new ResizeObserver(() => {
+      if (resizeTimer) window.clearTimeout(resizeTimer)
+      resizeTimer = window.setTimeout(() => {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf)
+        resizeRaf = requestAnimationFrame(() => {
+          build()
+        })
+      }, 120)
     })
 
     resizeObserver.observe(section)
