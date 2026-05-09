@@ -10,8 +10,12 @@
 .reference-section__heading {
   display: grid;
   justify-items: center;
-  gap: var(--space-3);
+  gap: 0;
   text-align: center;
+}
+
+.reference-section__eyebrow + .reference-section__title {
+  margin-top: var(--space-1);
 }
 
 .reference-section__eyebrow {
@@ -29,6 +33,7 @@
 }
 
 .reference-section__description {
+  margin-top: var(--space-3);
   max-width: 53.625rem;
   color: #3b2115;
   font-size: var(--text-body-normal);

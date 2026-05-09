@@ -27,7 +27,7 @@ const normalizedItems = items
           {normalizedItems.map((item) => (
             <div class="scrolling-text__item" role="listitem">
               {item.icon && (
-                <span aria-hidden="true">
+                <span class="scrolling-text__icon-wrap" aria-hidden="true">
                   <SanityImage
                     image={item.icon}
                     alt=""

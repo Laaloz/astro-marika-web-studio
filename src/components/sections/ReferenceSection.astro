@@ -24,13 +24,13 @@ const {
   references?: ReferenceItem[]
 }
 
-const cards = references.filter((item) => item?.title)
+const cards = references.filter((item) => item?.title && item?.slug?.current)
 const hasCta = Boolean(ctaLabel && ctaHref)
 ---
 
 {
   cards.length > 0 && (
-    <section class="page-section reference-section" aria-label={eyebrow || title || 'Portfolio'}>
+    <section class="page-section has-background reference-section" aria-label={eyebrow || title || 'Portfolio'}>
       <div class="site-container reference-section__container">
         <div class="reference-section__heading">
           {eyebrow && <p class="reference-section__eyebrow">{eyebrow}</p>}
@@ -40,7 +40,7 @@ const hasCta = Boolean(ctaLabel && ctaHref)
 
         <div class="reference-section__grid">
           {cards.map((item) => (
-            <article class="reference-card">
+            <a class="reference-card" href={`/referenssit/${item.slug?.current}`}>
               <div class="reference-card__image-wrap">
                 {item.image ? (
                   <SanityImage
@@ -58,7 +58,7 @@ const hasCta = Boolean(ctaLabel && ctaHref)
                 )}
               </div>
               <h3 class="reference-card__title">{item.title}</h3>
-            </article>
+            </a>
           ))}
         </div>
 

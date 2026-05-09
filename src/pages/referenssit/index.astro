@@ -36,7 +36,7 @@ const references = await sanityClient.fetch<SanityDocument[]>(REFERENCES_QUERY)
         references.length > 0 ? (
           <div class="reference-section__grid">
             {references.map((item) => (
-              <a class="reference-card post-link-card" href={`/references/${item.slug.current}`}>
+              <a class="reference-card post-link-card" href={`/referenssit/${item.slug.current}`}>
                 <div class="reference-card__image-wrap">
                   {item.image ? (
                     <SanityImage

@@ -36,10 +36,19 @@
   color: var(--scrolling-text-color);
 }
 
+.scrolling-text__icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  max-height: 1.5rem;
+  line-height: 0;
+}
+
 .scrolling-text__icon {
   display: inline-flex;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: auto;
+  height: auto;
+  max-width: 1.5rem;
+  max-height: 1.5rem;
   color: currentColor;
   flex: 0 0 auto;
 }
@@ -50,9 +59,11 @@
 }
 
 .scrolling-text__label {
+  display: inline-flex;
+  align-items: center;
   color: currentColor;
   font-size: var(--text-button-large);
-  line-height: var(--leading-button-large);
+  line-height: 1;
   white-space: nowrap;
 }
 
