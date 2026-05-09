@@ -161,7 +161,7 @@ const normalizeFooterContactContent = (value: unknown): PortableTextBlock[] => {
 		.filter((block): block is PortableTextBlock => Boolean(block));
 };
 
-const footerContactContent =
+const footerContactContentRaw =
 	normalizeFooterContactContent(siteSettings?.footerContactLines).length > 0
 		? normalizeFooterContactContent(siteSettings?.footerContactLines)
 		: [
@@ -185,11 +185,45 @@ const footerContactContent =
 					_key: 'fallback-contact-3',
 					children: [{_type: 'span', text: '+358408971399, myös whatsapp', marks: ['phone']}],
 					markDefs: [{_key: 'phone', _type: 'link', href: 'tel:+358408971399'}],
-				},
+			},
 		  ];
+const footerContactContent = normalizePortableTextLinks(footerContactContentRaw);
 const footerCopyright = siteSettings?.footerCopyright || '© Finding Design, 2026.';
 const footerPrivacyLabel = siteSettings?.footerPrivacyLabel || 'Tietosuojaseloste';
 const footerPrivacyHref = siteSettings?.footerPrivacyHref || '/tietosuojaseloste';
+
+function normalizeCmsHref(href?: string) {
+	if (!href) return '#';
+	if (
+		href.startsWith('/') ||
+		href.startsWith('http') ||
+		href.startsWith('mailto:') ||
+		href.startsWith('tel:') ||
+		href.startsWith('#')
+	) {
+		return href;
+	}
+	return `/${href}`;
+}
+
+function normalizePortableTextLinks(blocks: PortableTextBlock[]) {
+	return blocks.map((block) => {
+		const markDefs = Array.isArray((block as {markDefs?: unknown[]}).markDefs)
+			? ((block as {markDefs?: Array<{_type?: string; href?: string}>}).markDefs || []).map((markDef) => {
+				if (markDef?._type !== 'link') return markDef;
+				return {
+					...markDef,
+					href: normalizeCmsHref(markDef.href),
+				};
+			})
+			: [];
+
+		return {
+			...block,
+			markDefs,
+		};
+	});
+}
 
 const normalizePath = (path: string) => {
 	const plainPath = path.split('#')[0]?.split('?')[0] || '/';
@@ -198,8 +232,14 @@ const normalizePath = (path: string) => {
 };
 
 const currentPath = normalizePath(Astro.url.pathname);
-const isInternalPath = (href?: string) => typeof href === 'string' && href.startsWith('/');
-const isCurrentPath = (href?: string) => isInternalPath(href) && normalizePath(href as string) === currentPath;
+const isInternalPath = (href?: string) => {
+	const normalizedHref = normalizeCmsHref(href);
+	return normalizedHref.startsWith('/');
+};
+const isCurrentPath = (href?: string) => {
+	const normalizedHref = normalizeCmsHref(href);
+	return isInternalPath(normalizedHref) && normalizePath(normalizedHref) === currentPath;
+};
 const menuItemId = (item: NavigationItem) => {
 	const source = `${item.label || 'section'}-${item.href || ''}`;
 	return source.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'section';
@@ -254,7 +294,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 		<header class="site-header" role="banner">
 			<div class="site-header__desktop">
 				<div class="site-container site-header__desktop-inner">
-					<a class="site-header__logo site-header__logo--desktop" href={logoHref} aria-label="Etusivu">
+					<a class="site-header__logo site-header__logo--desktop" href={normalizeCmsHref(logoHref)} aria-label="Etusivu">
 						{logoDesktopUrl ? (
 							<img
 								src={logoDesktopUrl}
@@ -287,7 +327,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 										<a
 											id={currentAnchorId}
 											class:list={{ 'site-nav__link': true, 'site-nav__link--active': itemActive }}
-											href={item.href || '#'}
+											href={normalizeCmsHref(item.href)}
 											aria-current={isCurrentPath(item.href) ? 'page' : undefined}
 										>
 											<span>{item.label || 'Linkki'}</span>
@@ -309,7 +349,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 														<li>
 															<a
 																class="site-subnav__link"
-																href={subitem.href || '#'}
+														href={normalizeCmsHref(subitem.href)}
 																aria-current={isCurrentPath(subitem.href) ? 'page' : undefined}
 															>
 																{subitem.label || 'Alalinkki'}
@@ -363,7 +403,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 				<nav id="mobile-menu" class="mobile-nav" aria-label="Päävalikko mobiili" hidden>
 					<ul class="mobile-nav__list site-container">
 						<li>
-							<a class="mobile-nav__link" href={logoHref} aria-current={isCurrentPath(logoHref) ? 'page' : undefined}>
+							<a class="mobile-nav__link" href={normalizeCmsHref(logoHref)} aria-current={isCurrentPath(logoHref) ? 'page' : undefined}>
 								Etusivu
 							</a>
 						</li>
@@ -384,7 +424,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 										<a
 											id={currentAnchorId}
 											class:list={{ 'mobile-nav__link': true, 'mobile-nav__link--active': itemActive }}
-											href={item.href || '#'}
+											href={normalizeCmsHref(item.href)}
 											aria-current={isCurrentPath(item.href) ? 'page' : undefined}
 										>
 											{item.label || 'Linkki'}
@@ -416,7 +456,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 												<li>
 													<a
 														class="mobile-subnav__link"
-														href={subitem.href || '#'}
+														href={normalizeCmsHref(subitem.href)}
 														aria-current={isCurrentPath(subitem.href) ? 'page' : undefined}
 													>
 														{subitem.label || 'Alalinkki'}
@@ -449,7 +489,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 									const iconAlt = item.icon?.alt || item.label || 'Some';
 									return (
 										<li>
-											<a class="site-footer__social-link" href={item.href || '#'} aria-label={item.label || undefined}>
+											<a class="site-footer__social-link" href={normalizeCmsHref(item.href)} aria-label={item.label || undefined}>
 												{iconUrl && <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" />}
 												<span class="sr-only">{item.label || 'Some'}</span>
 											</a>
@@ -465,7 +505,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 						<ul class="site-footer__links" role="list">
 							{footerNavigation.map((item) => (
 								<li>
-									<a href={item.href || '#'}>{item.label || 'Linkki'}</a>
+									<a href={normalizeCmsHref(item.href)}>{item.label || 'Linkki'}</a>
 								</li>
 							))}
 						</ul>
@@ -480,7 +520,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 				</div>
 				<div class="site-footer__meta">
 					<p>{footerCopyright}</p>
-					<a href={footerPrivacyHref}>{footerPrivacyLabel}</a>
+					<a href={normalizeCmsHref(footerPrivacyHref)}>{footerPrivacyLabel}</a>
 				</div>
 			</div>
 		</footer>
