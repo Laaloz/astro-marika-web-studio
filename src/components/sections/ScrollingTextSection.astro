@@ -4,6 +4,7 @@ import SanityImage from '../SanityImage.astro'
 interface ScrollingItem {
   _key?: string
   text?: string
+  icon?: {alt?: string} | null
 }
 
 const {icon, items = []} = Astro.props as {
@@ -12,24 +13,27 @@ const {icon, items = []} = Astro.props as {
 }
 
 const normalizedItems = items
-  .map((item) => item?.text?.trim())
-  .filter((item): item is string => Boolean(item))
+  .map((item) => ({
+    text: item?.text?.trim() || '',
+    icon: item?.icon || null,
+  }))
+  .filter((item) => Boolean(item.text))
 
 const marqueeItems = [...normalizedItems, ...normalizedItems]
-const iconAlt = icon?.alt || ''
+const sectionIconAlt = icon?.alt || ''
 ---
 
 {
   normalizedItems.length > 0 && (
     <section class="scrolling-text" aria-label="Palvelut">
       <div class="scrolling-text__track" role="list">
-        {marqueeItems.map((text, index) => (
+        {marqueeItems.map((item, index) => (
           <div class="scrolling-text__item" role="listitem" aria-hidden={index >= normalizedItems.length}>
             {
-              icon ? (
+              item.icon || icon ? (
                 <SanityImage
-                  image={icon}
-                  alt={iconAlt}
+                  image={item.icon || icon}
+                  alt={item.icon?.alt || sectionIconAlt}
                   width={24}
                   height={24}
                   class="scrolling-text__icon"
@@ -48,7 +52,7 @@ const iconAlt = icon?.alt || ''
                 </span>
               )
             }
-            <span class="scrolling-text__label">{text}</span>
+            <span class="scrolling-text__label">{item.text}</span>
           </div>
         ))}
       </div>

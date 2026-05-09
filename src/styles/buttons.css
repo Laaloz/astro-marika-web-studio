@@ -162,6 +162,15 @@
   transition: transform 180ms ease, color 180ms ease;
 }
 
+.button--link-secondary {
+  border-bottom-color: rgb(59 33 21 / 0.9);
+  color: #3b2115;
+}
+
+.button--link-secondary svg {
+  color: #d5370b;
+}
+
 .button-link::before,
 .button--link-secondary::before {
   display: none;
