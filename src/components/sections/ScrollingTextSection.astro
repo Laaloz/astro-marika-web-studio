@@ -56,7 +56,6 @@ const normalizedItems = items
 
     if (!(track instanceof HTMLElement) || !(originalSet instanceof HTMLElement)) continue
 
-    let lastUnitWidth = 0
     let resizeTimer = 0
 
     const build = () => {
@@ -81,26 +80,6 @@ const normalizedItems = items
         probeClone.remove()
         return
       }
-
-      if (lastUnitWidth && Math.abs(unitWidth - lastUnitWidth) < 0.5) {
-        const viewportWidth = section.getBoundingClientRect().width
-        const minimumTrackWidth = Math.max(viewportWidth * 2, unitWidth * 2)
-        const neededSets = Math.max(2, Math.ceil(minimumTrackWidth / unitWidth))
-
-        for (let i = 2; i < neededSets; i += 1) {
-          const clone = originalSet.cloneNode(true)
-          if (clone instanceof HTMLElement) {
-            clone.setAttribute('data-scrolling-clone', 'true')
-            clone.setAttribute('aria-hidden', 'true')
-            track.appendChild(clone)
-          }
-        }
-
-        probeClone.remove()
-        return
-      }
-
-      lastUnitWidth = unitWidth
 
       const viewportWidth = section.getBoundingClientRect().width
       const minimumTrackWidth = Math.max(viewportWidth * 2, unitWidth * 2)
@@ -145,5 +124,11 @@ const normalizedItems = items
     })
 
     resizeObserver.observe(section)
+    resizeObserver.observe(originalSet)
+
+    const iconImages = section.querySelectorAll('img')
+    for (const image of iconImages) {
+      image.addEventListener('load', build, {once: true})
+    }
   }
 </script>
