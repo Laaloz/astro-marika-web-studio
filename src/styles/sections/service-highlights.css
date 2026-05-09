@@ -32,7 +32,6 @@
 
 .service-highlights__title {
   color: var(--color-heading);
-  letter-spacing: -0.012em;
 }
 
 .service-highlights__body {
@@ -73,7 +72,6 @@
   color: var(--color-heading);
   font-size: var(--text-h3);
   line-height: var(--leading-h3);
-  letter-spacing: -0.012em;
 }
 
 .service-card__body {

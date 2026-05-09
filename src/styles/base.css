@@ -88,6 +88,8 @@ h6 {
   color: var(--color-heading);
   font-family: var(--font-heading);
   font-weight: 400;
+  font-style: normal;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
 }
 
 h1 {
@@ -98,11 +100,13 @@ h1 {
 h2 {
   font-size: var(--text-h2);
   line-height: var(--leading-h2);
+  letter-spacing: -0.576px;
 }
 
 h3 {
   font-size: var(--text-h3);
   line-height: var(--leading-h3);
+  letter-spacing: -0.576px;
 }
 
 h4 {

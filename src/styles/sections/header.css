@@ -415,7 +415,7 @@ html:has(.site-header__mobile.is-open) .site-header {
   font-family: var(--font-heading);
   font-size: 2rem;
   line-height: 1.2;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.576px;
   width: fit-content;
   padding-bottom: 0.1rem;
 }

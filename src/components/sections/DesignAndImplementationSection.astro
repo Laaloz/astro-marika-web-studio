@@ -1,13 +1,13 @@
 ---
 import SanityImage from '../SanityImage.astro'
 import {PortableText} from 'astro-portabletext'
-
-const sparkleAsset = 'http://localhost:3845/assets/1a0c4c0cdcdea13091cf4dbb23d2d0096fe223b1.svg'
+import type {PortableTextBlock} from '@portabletext/types'
+import sparkleSvg from '../../assets/design-implementation-sparkle.svg?raw'
 
 interface StepItem {
   _key?: string
   title?: string
-  description?: unknown[]
+  description?: PortableTextBlock[]
 }
 
 const {
@@ -25,7 +25,7 @@ const {
   titlePrefix?: string
   titleEmphasis?: string
   titleSuffix?: string
-  intro?: unknown[]
+  intro?: PortableTextBlock[]
   steps?: StepItem[]
   ctaLabel?: string
   ctaHref?: string
@@ -34,7 +34,11 @@ const {
 
 const hasRequiredContent = Boolean(eyebrow && titlePrefix && titleEmphasis && Array.isArray(intro) && intro.length > 0)
 const hasCta = Boolean(ctaLabel && ctaHref)
-const stepItems = steps.filter((step) => step?.title && Array.isArray(step?.description) && step.description.length > 0)
+const introBlocks: PortableTextBlock[] = Array.isArray(intro) ? intro : []
+const stepItems = steps.filter(
+  (step): step is StepItem & {title: string; description: PortableTextBlock[]} =>
+    Boolean(step?.title && Array.isArray(step?.description) && step.description.length > 0),
+)
 ---
 
 {
@@ -60,6 +64,8 @@ const stepItems = steps.filter((step) => step?.title && Array.isArray(step?.desc
           <div class="design-implementation__image design-implementation__image--placeholder"></div>
         )
       }
+
+      <div class="design-implementation__sparkle" aria-hidden="true" set:html={sparkleSvg}></div>
     </div>
 
     <div class="design-implementation__content">
@@ -68,13 +74,13 @@ const stepItems = steps.filter((step) => step?.title && Array.isArray(step?.desc
 
         <h2 class="design-implementation__title">
           {titlePrefix}
-          <span class="design-implementation__title-accent"> {titleEmphasis}</span>
+          <span class="design-implementation__title-accent">{titleEmphasis}</span>
           {titleSuffix}
         </h2>
       </div>
 
       <div class="design-implementation__intro rich-text">
-        <PortableText value={intro} />
+        <PortableText value={introBlocks} />
       </div>
 
       <div class="design-implementation__steps">
@@ -97,8 +103,6 @@ const stepItems = steps.filter((step) => step?.title && Array.isArray(step?.desc
       </a>
       )}
     </div>
-
-    <img class="design-implementation__sparkle" src={sparkleAsset} alt="" aria-hidden="true" />
   </div>
 </section>
   )

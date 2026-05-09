@@ -27,16 +27,18 @@ const normalizedItems = items
           {normalizedItems.map((item) => (
             <div class="scrolling-text__item" role="listitem">
               {item.icon && (
-                <SanityImage
-                  image={item.icon}
-                  alt=""
-                  width={24}
-                  height={24}
-                  class="scrolling-text__icon"
-                  fit="crop"
-                  widths={[24, 48]}
-                  loading="lazy"
-                />
+                <span aria-hidden="true">
+                  <SanityImage
+                    image={item.icon}
+                    alt=""
+                    width={24}
+                    height={24}
+                    class="scrolling-text__icon"
+                    fit="crop"
+                    widths={[24, 48]}
+                    loading="lazy"
+                  />
+                </span>
               )}
               <span class="scrolling-text__label">{item.text}</span>
             </div>
