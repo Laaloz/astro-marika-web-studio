@@ -450,7 +450,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 									return (
 										<li>
 											<a class="site-footer__social-link" href={item.href || '#'} aria-label={item.label || undefined}>
-												{iconUrl ? <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" /> : <span aria-hidden="true">•</span>}
+												{iconUrl && <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" />}
 												<span class="sr-only">{item.label || 'Some'}</span>
 											</a>
 										</li>

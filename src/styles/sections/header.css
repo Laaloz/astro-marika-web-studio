@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   z-index: 20;
-  --nav-underline-thickness: 1.5px;
+  --nav-underline-thickness: 1px;
   --nav-underline-offset: -0.12rem;
   --desktop-header-height: 72px;
   --header-surface: transparent;
@@ -147,8 +147,9 @@
   height: var(--nav-underline-thickness);
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: 0 50%;
   transition: transform 180ms ease;
+  will-change: transform;
 }
 
 .site-nav__link:hover::after,

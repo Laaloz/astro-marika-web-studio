@@ -90,6 +90,9 @@
   line-height: 1.42;
   font-weight: 300;
   color: #fffefa;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
 }
 
 .site-footer__links {
@@ -104,43 +107,47 @@
   color: #fffefa;
 }
 
-.site-footer__contact :global(p) {
+.site-footer__contact p {
   margin: 0;
 }
 
-.site-footer__contact :global(p + p) {
+.site-footer__contact p + p {
   margin-top: var(--space-2);
 }
 
-.site-footer__contact :global(strong) {
+.site-footer__contact strong {
   font-weight: 600;
 }
 
-.site-footer__contact :global(a) {
+.site-footer__contact a {
   text-decoration: none;
   position: relative;
 }
 
-.site-footer__contact :global(a::after) {
+.site-footer__contact a::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: -0.08rem;
   height: 1px;
-  background: currentColor;
+  background: #fffefa;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 180ms ease;
 }
 
-.site-footer__contact :global(a:hover::after),
-.site-footer__contact :global(a:focus-visible::after) {
+.site-footer__contact a:hover::after,
+.site-footer__contact a:focus-visible::after {
   transform: scaleX(1);
 }
 
 .site-footer__links a,
 .site-footer__meta a {
+  text-decoration: none;
+}
+
+.site-footer a {
   text-decoration: none;
 }
 
@@ -159,15 +166,14 @@
 }
 
 .site-footer__links a::after,
-.site-footer__meta a::after,
-.site-footer__social-link::after {
+.site-footer__meta a::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: -0.08rem;
   height: 1px;
-  background: currentColor;
+  background: #fffefa;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 180ms ease;
@@ -183,9 +189,24 @@
 .site-footer__links a:focus-visible::after,
 .site-footer__meta a:hover::after,
 .site-footer__meta a:focus-visible::after,
-.site-footer__social-link:hover::after,
-.site-footer__social-link:focus-visible::after {
+.site-footer__contact a:hover::after,
+.site-footer__contact a:focus-visible::after {
   transform: scaleX(1);
+}
+
+.site-footer__links a,
+.site-footer__meta a,
+.site-footer__contact a {
+  transition: color 180ms ease;
+}
+
+.site-footer__links a:focus-visible,
+.site-footer__meta a:focus-visible,
+.site-footer__social-link:focus-visible,
+.site-footer__contact a:focus-visible {
+  outline: 2px solid rgb(255 254 250 / 0.75);
+  outline-offset: 3px;
+  border-radius: 0.2rem;
 }
 
 @media (min-width: 64rem) {
