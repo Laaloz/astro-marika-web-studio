@@ -27,6 +27,7 @@
     "styled-components": "^6.4.1"
   },
   "devDependencies": {
+    "@astrojs/netlify": "^7.0.8",
     "@portabletext/types": "^4.0.2"
   }
 }

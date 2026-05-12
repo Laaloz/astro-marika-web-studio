@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import netlify from "@astrojs/netlify";
 
 import sanity from "@sanity/astro";
 
@@ -10,6 +11,9 @@ const site =
 // https://astro.build/config
 export default defineConfig({
   site,
+  adapter: netlify({
+    middlewareMode: "edge",
+  }),
   image: {
     remotePatterns: [{
       protocol: "https",
