@@ -263,6 +263,19 @@ const socialImagePath =
 		? socialImageSource
 		: urlFor(socialImageSource)?.width(1200).height(630).fit('crop').url();
 const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).href : undefined;
+
+// Preload LCP hero image if it's a Sanity image (not a plain string)
+const lcpImageSource = content.image && typeof content.image !== 'string' ? content.image : null;
+const lcpPreloadWidths = [320, 420, 527, 640];
+const lcpPreloadSrcset = lcpImageSource
+	? lcpPreloadWidths
+			.map((w) => {
+				const h = Math.round(791 * w / 527);
+				return `${urlFor(lcpImageSource)?.width(w).height(h).fit('crop').quality(50).url()} ${w}w`;
+			})
+			.filter(Boolean)
+			.join(', ')
+	: null;
 ---
 
 
@@ -271,6 +284,15 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+		{lcpPreloadSrcset && (
+			<link
+				rel="preload"
+				as="image"
+				imagesrcset={lcpPreloadSrcset}
+				imagesizes="(min-width: 64rem) 38rem, 100vw"
+				fetchpriority="high"
+			/>
+		)}
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		{canonical && <link rel="canonical" href={canonical} />}

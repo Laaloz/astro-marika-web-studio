@@ -1,5 +1,4 @@
 ---
-import {Image} from 'astro:assets'
 import type {SanityImageSource} from '@sanity/image-url'
 import {type SanityImageFit, urlFor} from '../lib/sanityImage'
 
@@ -9,7 +8,6 @@ interface Props {
   width: number
   height?: number
   fit?: SanityImageFit
-  format?: 'avif' | 'webp' | 'png' | 'jpg' | 'jpeg'
   quality?: number
   widths?: number[]
   class?: string
@@ -25,7 +23,6 @@ const {
   width,
   height,
   fit,
-  format = 'avif',
   quality = 50,
   widths,
   class: className,
@@ -35,30 +32,40 @@ const {
   sizes,
 } = Astro.props
 
-const imageBuilder = image ? urlFor(image)?.width(width) : null
-const imageUrl = imageBuilder
-  ? (height ? imageBuilder.height(height) : imageBuilder)
-      [fit ? 'fit' : 'url']?.(fit as never) ?? null
-  : null
+function buildUrl(source: SanityImageSource, w: number, h?: number): string | null {
+  let b = urlFor(source)?.width(w)
+  if (!b) return null
+  if (h) b = b.height(h)
+  if (fit) b = b.fit(fit)
+  return b.quality(quality).url()
+}
 
-const resolvedUrl = imageUrl && typeof imageUrl !== 'string' ? imageUrl.url() : imageUrl
+const resolvedUrl = image ? buildUrl(image, width, height) : null
+const srcSet = widths && image
+  ? widths
+      .map((w) => {
+        const scaledHeight = height ? Math.round(height * w / width) : undefined
+        const url = buildUrl(image, w, scaledHeight)
+        return url ? `${url} ${w}w` : null
+      })
+      .filter((v): v is string => Boolean(v))
+      .join(', ')
+  : undefined
 ---
 
 {
   resolvedUrl && (
-    <Image
+    <img
       src={resolvedUrl}
       alt={alt}
       width={width}
       height={height}
-      format={format}
-      quality={quality}
-      widths={widths}
       class={className}
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
       sizes={sizes}
+      srcset={srcSet}
     />
   )
 }
