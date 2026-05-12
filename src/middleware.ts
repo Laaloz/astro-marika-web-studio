@@ -15,6 +15,16 @@ function getNetlifyEnv(key: string): string | undefined {
   return netlifyGlobal.Netlify?.env?.get(key);
 }
 
+function normalizeCredential(value: string | undefined): string | undefined {
+  return value?.trim();
+}
+
+function logIfNetlify(message: string) {
+  if (typeof Netlify !== "undefined") {
+    console.log(message);
+  }
+}
+
 function isProtectedRequest(pathname: string): boolean {
   return ![
     "/favicon.svg",
@@ -37,10 +47,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  const expectedUser = getNetlifyEnv(BASIC_AUTH_USER_KEY);
-  const expectedPassword = getNetlifyEnv(BASIC_AUTH_PASSWORD_KEY);
+  const expectedUser = normalizeCredential(getNetlifyEnv(BASIC_AUTH_USER_KEY));
+  const expectedPassword = normalizeCredential(getNetlifyEnv(BASIC_AUTH_PASSWORD_KEY));
 
   if (!expectedUser || !expectedPassword) {
+    logIfNetlify("Basic auth is not configured for edge middleware");
     return import.meta.env.DEV ? next() : unauthorizedResponse();
   }
 
@@ -63,10 +74,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return unauthorizedResponse();
   }
 
-  const user = decodedCredentials.slice(0, separatorIndex);
-  const password = decodedCredentials.slice(separatorIndex + 1);
+  const user = normalizeCredential(decodedCredentials.slice(0, separatorIndex));
+  const password = normalizeCredential(decodedCredentials.slice(separatorIndex + 1));
 
   if (user !== expectedUser || password !== expectedPassword) {
+    logIfNetlify("Basic auth rejected a request for protected content");
     return unauthorizedResponse();
   }
 
