@@ -25,6 +25,16 @@ function logIfNetlify(message: string) {
   }
 }
 
+function isNetlifyEdgeRuntime(context: { locals?: unknown }) {
+  const locals = context.locals as {
+    netlify?: {
+      context?: unknown;
+    };
+  } | undefined;
+
+  return Boolean(locals?.netlify?.context);
+}
+
 function isProtectedRequest(pathname: string): boolean {
   return ![
     "/favicon.svg",
@@ -43,6 +53,10 @@ function unauthorizedResponse() {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  if (!isNetlifyEdgeRuntime(context)) {
+    return next();
+  }
+
   if (!isProtectedRequest(context.url.pathname)) {
     return next();
   }
