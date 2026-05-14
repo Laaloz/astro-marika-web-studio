@@ -1,0 +1,83 @@
+.subpage-hero {
+  position: relative;
+  overflow: hidden;
+  background: #f3f2f1;
+  color: var(--color-heading);
+  --section-padding-top: clamp(4.5rem, 8vw, 7.25rem);
+  --section-padding-bottom: clamp(4.25rem, 9vw, 6.75rem);
+}
+
+.subpage-hero__curve {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: max(72rem, 100%);
+  min-width: 100%;
+  height: auto;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.subpage-hero__container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  max-width: 38rem;
+  padding-bottom: clamp(3rem, 8vw, 6rem);
+}
+
+.subpage-hero__title {
+  color: #3b2115;
+  font-size: clamp(2.75rem, 7.2vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.subpage-hero__body {
+  color: rgb(59 33 21 / 0.9);
+  max-width: 32rem;
+}
+
+.subpage-hero__body :where(p, li) {
+  font-size: clamp(1.125rem, 2vw, 1.875rem);
+  line-height: 1.35;
+}
+
+@media (max-width: 63.999rem) {
+  .subpage-hero {
+    --section-padding-top: clamp(3.5rem, 13vw, 5rem);
+    --section-padding-bottom: clamp(3rem, 10vw, 4.5rem);
+  }
+
+  .subpage-hero__curve {
+    width: 85rem;
+    left: 42%;
+  }
+
+  .subpage-hero__container {
+    padding-bottom: clamp(2.5rem, 9vw, 4rem);
+  }
+
+  .subpage-hero__title {
+    max-width: 18rem;
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .subpage-hero__body :where(p, li) {
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 40rem) {
+  .subpage-hero__curve {
+    width: 72rem;
+    left: 39%;
+  }
+
+  .subpage-hero__body :where(p, li) {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+}
