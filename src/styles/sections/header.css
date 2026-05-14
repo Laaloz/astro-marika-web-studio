@@ -7,6 +7,10 @@
   --nav-underline-thickness: 1px;
   --nav-underline-offset: -0.12rem;
   --desktop-header-height: 72px;
+  --header-surface: linear-gradient(90deg, #3b2521 0%, #37231f 45%, #2f1f1c 100%);
+}
+
+.site-header.site-header--home {
   --header-surface: transparent;
 }
 
@@ -137,8 +141,7 @@
 .site-nav__link::after,
 .site-subnav__link::after,
 .mobile-nav__link::after,
-.mobile-subnav__link::after,
-.mobile-subnav__summary::after {
+.mobile-subnav__link::after {
   content: '';
   position: absolute;
   left: 0;
@@ -160,15 +163,12 @@
 .mobile-nav__link:focus-visible::after,
 .mobile-subnav__link:hover::after,
 .mobile-subnav__link:focus-visible::after,
-.mobile-subnav__summary:hover::after,
-.mobile-subnav__summary:focus-visible::after,
 .site-nav__link--active::after,
 .site-nav__link[aria-current='page']::after,
 .site-subnav__link[aria-current='page']::after,
 .mobile-nav__link--active::after,
 .mobile-nav__link[aria-current='page']::after,
-.mobile-subnav__link[aria-current='page']::after,
-.mobile-subnav__summary--active::after {
+.mobile-subnav__link[aria-current='page']::after {
   transform: scaleX(1);
 }
 
@@ -221,8 +221,10 @@
 
 .site-subnav__link {
   color: #3b2115;
-  font-size: 1.05rem;
-  line-height: 1.35;
+  font-family: var(--font-body);
+  font-size: var(--text-body-large);
+  line-height: var(--leading-body-large);
+  font-weight: 400;
   text-decoration: none;
   position: relative;
   padding-bottom: 0.15rem;
@@ -410,8 +412,7 @@ html:has(.site-header__mobile.is-open) .site-header {
 }
 
 .mobile-nav__link,
-.mobile-subnav__summary,
-.mobile-subnav__link {
+.mobile-subnav__summary {
   color: #3b2115;
   font-family: var(--font-heading);
   font-size: 2rem;
@@ -425,6 +426,7 @@ html:has(.site-header__mobile.is-open) .site-header {
   position: relative;
   display: grid;
   gap: 0;
+  align-items: center;
 }
 
 .mobile-subnav > summary {
@@ -437,6 +439,11 @@ html:has(.site-header__mobile.is-open) .site-header {
 
 .mobile-subnav[open] > summary {
   color: #6d620f;
+}
+
+.mobile-subnav__parent-link {
+  color: inherit;
+  text-decoration: none;
 }
 
 .mobile-subnav > summary::-webkit-details-marker {
@@ -456,7 +463,6 @@ html:has(.site-header__mobile.is-open) .site-header {
   display: none;
   gap: var(--grid-gutter);
   padding-top: var(--grid-gutter);
-  padding-bottom: var(--grid-gutter);
   padding-left: 0;
 }
 
@@ -486,7 +492,14 @@ html:has(.site-header__mobile.is-open) .site-header {
 }
 
 .mobile-subnav__link {
-  font-size: 1.5rem;
+  color: #3b2115;
+  font-family: var(--font-body);
+  font-size: var(--text-body-large);
+  line-height: var(--leading-body-large);
+  font-weight: 400;
+  letter-spacing: normal;
+  width: fit-content;
+  padding-bottom: 0.1rem;
 }
 
 .mobile-subnav__skip {

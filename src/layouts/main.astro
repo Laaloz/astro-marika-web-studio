@@ -232,6 +232,7 @@ const normalizePath = (path: string) => {
 };
 
 const currentPath = normalizePath(Astro.url.pathname);
+const isHomepage = currentPath === '/';
 const isInternalPath = (href?: string) => {
 	const normalizedHref = normalizeCmsHref(href);
 	return normalizedHref.startsWith('/');
@@ -313,7 +314,7 @@ const lcpPreloadSrcset = lcpImageSource
 	</head>
 	<body>
 		<a class="skip-link" href="#main-content">Siirry pääsisältöön</a>
-		<header class="site-header" role="banner">
+		<header class:list={{ 'site-header': true, 'site-header--home': isHomepage }} role="banner">
 			<div class="site-header__desktop">
 				<div class="site-container site-header__desktop-inner">
 					<a class="site-header__logo site-header__logo--desktop" href={normalizeCmsHref(logoHref)} aria-label="Etusivu">
@@ -463,7 +464,13 @@ const lcpPreloadSrcset = lcpImageSource
 											class:list={{ 'mobile-subnav__summary': true, 'mobile-subnav__summary--active': itemActive }}
 											aria-controls={submenuId}
 										>
-											<span>{item.label || 'Alavalikko'}</span>
+											<a
+												class:list={{ 'mobile-nav__link': true, 'mobile-nav__link--active': itemActive, 'mobile-subnav__parent-link': true }}
+												href={normalizeCmsHref(item.href)}
+												aria-current={isCurrentPath(item.href) ? 'page' : undefined}
+											>
+												{item.label || 'Alavalikko'}
+											</a>
 											<svg class="mobile-subnav__caret" viewBox="0 0 24 24" aria-hidden="true">
 												<path d="M6 9L12 15L18 9" />
 											</svg>
@@ -692,6 +699,18 @@ const lcpPreloadSrcset = lcpImageSource
 				}
 				mobileSubmenus.forEach((submenu) => {
 					if (!(submenu instanceof HTMLDetailsElement)) return;
+					const summary = submenu.querySelector('summary');
+					if (summary instanceof HTMLElement) {
+						summary.addEventListener('click', (event) => {
+							const target = event.target;
+							if (!(target instanceof Element)) return;
+							const parentLink = target.closest('.mobile-subnav__parent-link');
+							if (!(parentLink instanceof HTMLAnchorElement)) return;
+							event.preventDefault();
+							event.stopPropagation();
+							window.location.href = parentLink.href;
+						});
+					}
 					submenu.addEventListener('toggle', () => {
 						if (!submenu.open) return;
 						mobileSubmenus.forEach((other) => {

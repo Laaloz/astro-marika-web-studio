@@ -1,5 +1,7 @@
 .call-to-action {
   --cta-card-bg: #cedefd;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .call-to-action__container {
