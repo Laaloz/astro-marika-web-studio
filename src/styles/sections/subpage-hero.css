@@ -4,7 +4,8 @@
   background: transparent;
   color: var(--color-heading);
   --section-padding-top: calc(var(--space-10) + 72px);
-  --section-padding-bottom: clamp(4.25rem, 9vw, 6.75rem);
+  --section-padding-bottom: 0;
+  margin-bottom: var(--space-10);
   min-height: clamp(26rem, 38vw, 32rem);
 }
 
@@ -49,7 +50,6 @@
 @media (max-width: 63.999rem) {
   .subpage-hero {
     --section-padding-top: calc(var(--space-10) + var(--mobile-header-height, 72px));
-    --section-padding-bottom: clamp(3rem, 10vw, 4.5rem);
     min-height: 26rem;
   }
 

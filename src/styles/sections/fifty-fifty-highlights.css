@@ -1,0 +1,111 @@
+.fifty-fifty-highlights {
+  --section-padding-top: var(--space-9);
+  --section-padding-bottom: var(--space-10);
+}
+
+.fifty-fifty-highlights__container {
+  display: grid;
+  gap: clamp(3.5rem, 8vw, 6rem);
+}
+
+.fifty-fifty-highlights__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4.4vw, 4.8rem);
+  align-items: flex-start;
+}
+
+.fifty-fifty-highlights__row--image-left .fifty-fifty-highlights__content {
+  order: 2;
+}
+
+.fifty-fifty-highlights__row--image-left .fifty-fifty-highlights__media {
+  order: 1;
+}
+
+.fifty-fifty-highlights__content {
+  display: grid;
+  justify-items: start;
+}
+
+.fifty-fifty-highlights__copy {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.fifty-fifty-highlights__title {
+  font-size: var(--text-h3);
+  line-height: var(--leading-h3);
+  letter-spacing: -0.576px;
+  color: #3b2115;
+}
+
+.fifty-fifty-highlights__body {
+  max-width: 36rem;
+  color: #2f2a26;
+}
+
+.fifty-fifty-highlights__body :where(p, li) {
+  font-size: var(--text-body-normal);
+  line-height: var(--leading-body-normal);
+}
+
+.fifty-fifty-highlights__divider {
+  width: 100%;
+  max-width: 36rem;
+  border-top: 1px solid rgb(59 33 21 / 0.5);
+}
+
+.fifty-fifty-highlights__note {
+  color: rgb(59 33 21 / 0.72);
+  font-family: var(--font-body);
+  font-size: var(--text-body-medium);
+  line-height: var(--leading-body-medium);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.fifty-fifty-highlights__cta-wrap {
+  margin-top: var(--space-6);
+}
+
+.fifty-fifty-highlights__media {
+  justify-self: center;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+}
+
+.fifty-fifty-highlights__image {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  border-radius: 0.15rem;
+  box-shadow: 0 4px 0 rgb(0 0 0 / 0.04), 0 10px 20px rgb(0 0 0 / 0.05);
+}
+
+@media (max-width: 63.999rem) {
+  .fifty-fifty-highlights__row,
+  .fifty-fifty-highlights__row--image-left {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .fifty-fifty-highlights__row--image-left .fifty-fifty-highlights__content,
+  .fifty-fifty-highlights__row--image-left .fifty-fifty-highlights__media {
+    order: initial;
+  }
+
+  .fifty-fifty-highlights__title {
+    font-size: var(--text-h3);
+  }
+
+  .fifty-fifty-highlights__note {
+    font-size: var(--text-body-medium);
+  }
+
+  .fifty-fifty-highlights__media {
+    width: 100%;
+  }
+}

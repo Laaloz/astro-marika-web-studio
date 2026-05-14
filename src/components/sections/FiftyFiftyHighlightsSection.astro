@@ -1,0 +1,68 @@
+---
+import {PortableText} from 'astro-portabletext';
+import type {PortableTextBlock} from '@portabletext/types';
+import SanityImage from '../SanityImage.astro';
+
+type HighlightItem = {
+  title?: string;
+  body?: PortableTextBlock[];
+  note?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  imageSide?: 'left' | 'right';
+  image?: {
+    alt?: string;
+  };
+};
+
+const {items = []} = Astro.props as {items?: HighlightItem[]};
+const rows = items.filter((item) => item?.title && Array.isArray(item.body) && item.body.length > 0 && item?.ctaLabel && item?.ctaHref && item?.image);
+---
+
+{
+  rows.length > 0 && (
+    <section class="page-section fifty-fifty-highlights" aria-label="Content highlights">
+      <div class="site-container fifty-fifty-highlights__container">
+        {rows.map((item, index) => {
+          const imageOnLeft = item.imageSide === 'left';
+          return (
+            <article class:list={{ 'fifty-fifty-highlights__row': true, 'fifty-fifty-highlights__row--image-left': imageOnLeft }}>
+              <div class="fifty-fifty-highlights__content">
+                <div class="fifty-fifty-highlights__copy">
+                  <h2 class="fifty-fifty-highlights__title">{item.title}</h2>
+                  <div class="fifty-fifty-highlights__body rich-text">
+                    <PortableText value={item.body} />
+                  </div>
+                  <div class="fifty-fifty-highlights__divider"></div>
+                  {item.note && <p class="fifty-fifty-highlights__note">{item.note}</p>}
+                </div>
+                <div class="fifty-fifty-highlights__cta-wrap">
+                  <a class="button button--primary-accent" href={item.ctaHref}>
+                    <span>{item.ctaLabel}</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              <div class="fifty-fifty-highlights__media">
+                <SanityImage
+                  image={item.image}
+                  alt={item.image?.alt || ''}
+                  width={460}
+                  height={320}
+                  fit="crop"
+                  widths={[320, 420, 460, 640]}
+                  class="fifty-fifty-highlights__image"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  sizes="(min-width: 64rem) 29rem, (min-width: 48rem) 40vw, 100vw"
+                />
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  )
+}
