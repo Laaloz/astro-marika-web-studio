@@ -1,0 +1,53 @@
+---
+import {PortableText} from 'astro-portabletext'
+import type {PortableTextBlock} from '@portabletext/types'
+import SanityImage from '../SanityImage.astro'
+
+type Step = {
+  title?: string
+  body?: PortableTextBlock[]
+}
+
+const {title, stepIcon, steps = []} = Astro.props as {title?: string; stepIcon?: {alt?: string}; steps?: Step[]}
+const validSteps = steps.filter((step) => step?.title && Array.isArray(step.body) && step.body.length > 0)
+---
+
+{
+  validSteps.length > 0 && (
+    <section class="page-section project-steps" aria-label={title || 'Projektin vaiheet'}>
+      <div class="site-container project-steps__container">
+        {title && <h2 class="project-steps__title">{title}</h2>}
+        <ol class="project-steps__list">
+          {validSteps.map((step, index) => {
+            const number = String(index + 1).padStart(2, '0')
+            return (
+              <li class="project-step">
+                <div class="project-step__badge" aria-hidden="true">
+                  {stepIcon && (
+                    <SanityImage
+                      image={stepIcon}
+                      alt=""
+                      width={51}
+                      height={49}
+                      fit="crop"
+                      widths={[51, 102]}
+                      class="project-step__badge-icon"
+                      loading="lazy"
+                      decoding="async"
+                      sizes="51px"
+                    />
+                  )}
+                  <span>{number}</span>
+                </div>
+                <h3 class="project-step__title">{step.title}</h3>
+                <div class="project-step__body rich-text">
+                  <PortableText value={step.body} />
+                </div>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+    </section>
+  )
+}

@@ -392,7 +392,7 @@ const lcpPreloadSrcset = lcpImageSource
 
 			<div class="site-header__mobile" data-mobile-nav>
 				<div class="site-container site-header__mobile-bar">
-					<span class="site-header__logo site-header__logo--mobile">
+					<a class="site-header__logo site-header__logo--mobile" href={normalizeCmsHref(logoHref)} aria-label="Etusivu">
 						{logoMobileUrl ? (
 							<img
 								src={logoMobileUrl}
@@ -407,7 +407,7 @@ const lcpPreloadSrcset = lcpImageSource
 						) : (
 							<span class="site-header__logo-fallback">SM</span>
 						)}
-					</span>
+					</a>
 					<button
 						type="button"
 						class="site-header__mobile-trigger"

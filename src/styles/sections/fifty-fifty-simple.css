@@ -1,6 +1,6 @@
 .fifty-fifty-simple {
-  --section-padding-top: var(--space-8);
-  --section-padding-bottom: var(--space-8);
+  --section-padding-top: var(--space-10);
+  --section-padding-bottom: var(--space-10);
 }
 
 .fifty-fifty-simple__row {

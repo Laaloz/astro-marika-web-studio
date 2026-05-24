@@ -8,6 +8,7 @@ import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSe
 import DesignAndImplementationSection from '../components/sections/DesignAndImplementationSection.astro';
 import FiftyFiftyHighlightsSection from '../components/sections/FiftyFiftyHighlightsSection.astro';
 import FiftyFiftySimpleSection from '../components/sections/FiftyFiftySimpleSection.astro';
+import ProjectStepsSection from '../components/sections/ProjectStepsSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import CallToActionSection from '../components/sections/CallToActionSection.astro';
@@ -80,6 +81,10 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {slug: 
 
 			if (block._type === 'fiftyFiftySimpleSection') {
 				return <FiftyFiftySimpleSection {...block} />;
+			}
+
+			if (block._type === 'projectStepsSection') {
+				return <ProjectStepsSection {...block} />;
 			}
 
 			if (block._type === 'aboutDesignerSection') {
