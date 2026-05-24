@@ -1,0 +1,118 @@
+.faq-section {
+  --section-padding-top: var(--space-10);
+  --section-padding-bottom: var(--space-10);
+  --faq-divider-color: rgb(50 34 33 / 0.3);
+}
+
+.faq-section__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 3.1875rem);
+  align-items: start;
+}
+
+.faq-section__intro {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.faq-section__title {
+  max-width: 30rem;
+  color: var(--color-heading);
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+  letter-spacing: -0.576px;
+}
+
+.faq-section__body {
+  max-width: 39rem;
+  color: var(--color-text);
+  display: grid;
+  gap: 0;
+}
+
+.faq-section__body :where(p, li) {
+  font-size: var(--text-body-normal);
+  line-height: 1.4;
+}
+
+.faq-section__body :where(p + p) {
+  margin-top: 0;
+}
+
+.faq-section__accordion-list {
+  display: grid;
+  gap: 0;
+}
+
+.faq-section__accordion-item {
+  border-top: 1px solid var(--faq-divider-color);
+}
+
+.faq-section__accordion-item:last-child {
+  border-bottom: 1px solid var(--faq-divider-color);
+}
+
+.faq-section__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  list-style: none;
+  cursor: pointer;
+  padding: 1.25rem 0;
+}
+
+.faq-section__summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-section__summary-label {
+  color: var(--color-heading);
+  font-size: var(--text-body-large);
+  line-height: var(--leading-body-large);
+}
+
+.faq-section__summary-icon {
+  flex-shrink: 0;
+  width: 2.375rem;
+  height: 2.375rem;
+  transition: transform 160ms ease;
+}
+
+.faq-section__summary-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.faq-section__accordion-item[open] .faq-section__summary-icon {
+  transform: rotate(45deg);
+}
+
+.faq-section__answer {
+  padding: 0 0 1.25rem;
+  color: var(--color-text);
+}
+
+.faq-section__answer :where(p, li) {
+  font-size: var(--text-body-normal);
+  line-height: 1.4;
+}
+
+@media (max-width: 63.999rem) {
+  .faq-section__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .faq-section__title,
+  .faq-section__body {
+    max-width: none;
+  }
+
+  .faq-section__title {
+    font-size: clamp(2rem, 6vw, var(--text-h2));
+    line-height: 1.15;
+  }
+}

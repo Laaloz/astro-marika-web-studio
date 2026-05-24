@@ -1,0 +1,34 @@
+---
+import {PortableText} from 'astro-portabletext'
+import type {PortableTextBlock} from '@portabletext/types'
+
+const {title, body, backgroundStyle = 'none'} = Astro.props as {
+  title?: string
+  body?: PortableTextBlock[]
+  backgroundStyle?: 'none' | 'brown'
+}
+
+const hasContent = Boolean(title && Array.isArray(body) && body.length > 0)
+const hasBackground = backgroundStyle === 'brown'
+---
+
+{
+  hasContent && (
+    <section
+      class:list={{
+        'page-section two-column-content': true,
+        'two-column-content--brown has-background': hasBackground,
+      }}
+      aria-label={title || 'Kaksipalstainen sisältö'}
+    >
+      <div class="site-container two-column-content__container">
+        <div class="two-column-content__grid">
+          <h2 class="two-column-content__title">{title}</h2>
+          <div class="two-column-content__body rich-text">
+            <PortableText value={body} />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
