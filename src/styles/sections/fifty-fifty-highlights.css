@@ -172,12 +172,15 @@
   .fifty-fifty-highlights__row,
   .fifty-fifty-highlights__row--image-left {
     grid-template-columns: 1fr;
-    gap: var(--space-4);
+    gap: var(--space-6);
   }
 
-  .fifty-fifty-highlights__row--image-left .fifty-fifty-highlights__content,
-  .fifty-fifty-highlights__row--image-left .fifty-fifty-highlights__media {
-    order: initial;
+  .fifty-fifty-highlights__content {
+    order: 2;
+  }
+
+  .fifty-fifty-highlights__media {
+    order: 1;
   }
 
   .fifty-fifty-highlights__title {
