@@ -6,6 +6,7 @@ import ScrollingTextSection from '../components/sections/ScrollingTextSection.as
 import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
 import DesignAndImplementationSection from '../components/sections/DesignAndImplementationSection.astro';
 import FiftyFiftyHighlightsSection from '../components/sections/FiftyFiftyHighlightsSection.astro';
+import FiftyFiftySimpleSection from '../components/sections/FiftyFiftySimpleSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import CallToActionSection from '../components/sections/CallToActionSection.astro';
@@ -64,6 +65,10 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 
 			if (block._type === 'fiftyFiftyHighlightsSection') {
 				return <FiftyFiftyHighlightsSection {...block} />;
+			}
+
+			if (block._type === 'fiftyFiftySimpleSection') {
+				return <FiftyFiftySimpleSection {...block} />;
 			}
 
 			if (block._type === 'aboutDesignerSection') {

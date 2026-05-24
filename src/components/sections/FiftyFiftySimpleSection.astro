@@ -1,0 +1,47 @@
+---
+import {PortableText} from 'astro-portabletext';
+import type {PortableTextBlock} from '@portabletext/types';
+import SanityImage from '../SanityImage.astro';
+
+const {title, body, image, imageSide = 'left'} = Astro.props as {
+  title?: string;
+  body?: PortableTextBlock[];
+  image?: {alt?: string};
+  imageSide?: 'left' | 'right';
+};
+
+const hasContent = Boolean(title && Array.isArray(body) && body.length > 0 && image);
+const imageOnLeft = imageSide === 'left';
+---
+
+{
+  hasContent && (
+    <section class="page-section fifty-fifty-simple" aria-label={title || '50/50 content'}>
+      <div class="site-container fifty-fifty-simple__container">
+        <article class:list={{'fifty-fifty-simple__row': true, 'fifty-fifty-simple__row--image-left': imageOnLeft}}>
+          <div class="fifty-fifty-simple__content">
+            <h2 class="fifty-fifty-simple__title">{title}</h2>
+            <div class="fifty-fifty-simple__body rich-text">
+              <PortableText value={body} />
+            </div>
+          </div>
+
+          <div class="fifty-fifty-simple__media">
+            <SanityImage
+              image={image}
+              alt={image?.alt || ''}
+              width={530}
+              height={663}
+              fit="crop"
+              widths={[360, 460, 530, 720]}
+              class="fifty-fifty-simple__image"
+              loading="lazy"
+              decoding="async"
+              sizes="(min-width: 80rem) 33.125rem, (min-width: 48rem) 40vw, 100vw"
+            />
+          </div>
+        </article>
+      </div>
+    </section>
+  )
+}
