@@ -24,7 +24,8 @@
     "react-is": "^19.2.5",
     "sanity": "^5.24.0",
     "sharp": "^0.34.5",
-    "styled-components": "^6.4.1"
+    "styled-components": "^6.4.1",
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "@astrojs/netlify": "^7.0.8",

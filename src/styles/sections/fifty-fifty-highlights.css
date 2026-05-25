@@ -152,8 +152,11 @@
 
 .fifty-fifty-highlights__summary-label {
   color: #2f2a26;
-  font-size: var(--text-body-large);
-  line-height: var(--leading-body-large);
+  font-family: var(--font-body);
+  font-size: var(--font-size-large, 20px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--font-lineheight-large, 26px);
 }
 
 .fifty-fifty-highlights__accordion-body {

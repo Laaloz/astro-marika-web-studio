@@ -4,7 +4,7 @@ import {sanityClient} from 'sanity:client'
 import MainLayout from '../../layouts/main.astro'
 import SanityImage from '../../components/SanityImage.astro'
 
-const REFERENCE_QUERY = `*[_type == "reference" && slug.current == $slug][0]{
+const REFERENCE_QUERY = `*[_type == "referenceItem" && slug.current == $slug][0]{
   _id,
   title,
   slug,
@@ -16,7 +16,7 @@ const REFERENCE_QUERY = `*[_type == "reference" && slug.current == $slug][0]{
 }`
 
 export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
-  return await sanityClient.fetch(`*[_type == "reference" && defined(slug.current)]{
+  return await sanityClient.fetch(`*[_type == "referenceItem" && defined(slug.current)]{
     "params": {"slug": slug.current}
   }`)
 }

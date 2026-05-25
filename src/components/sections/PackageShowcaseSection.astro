@@ -1,0 +1,210 @@
+---
+import {PortableText} from 'astro-portabletext'
+import type {PortableTextBlock} from '@portabletext/types'
+import SanityImage from '../SanityImage.astro'
+
+type DeliveryItem = {
+  _key?: string
+  label?: string
+  text?: string
+}
+
+type PackageImage = {
+  _key?: string
+  alt?: string
+}
+
+const {
+  _key,
+  title,
+  priceText,
+  introBody,
+  deliveryHeading,
+  deliveryItems = [],
+  ctaLabel,
+  ctaHref,
+  questionTitle,
+  questionSubtitle,
+  detailsLabel,
+  detailsContent,
+  images = [],
+} = Astro.props as {
+  _key?: string
+  title?: string
+  priceText?: string
+  introBody?: PortableTextBlock[]
+  deliveryHeading?: string
+  deliveryItems?: DeliveryItem[]
+  ctaLabel?: string
+  ctaHref?: string
+  questionTitle?: string
+  questionSubtitle?: string
+  detailsLabel?: string
+  detailsContent?: PortableTextBlock[]
+  images?: PackageImage[]
+}
+
+const validImages = images.filter((item) => Boolean(item))
+const hasMultipleImages = validImages.length > 1
+const validDeliveryItems = deliveryItems.filter((item) => item?.label && item?.text)
+const hasRequiredContent =
+  validImages.length > 0 &&
+  Boolean(title && priceText && deliveryHeading && ctaLabel && ctaHref && questionTitle && detailsLabel) &&
+  Array.isArray(introBody) &&
+  introBody.length > 0 &&
+  Array.isArray(detailsContent) &&
+  detailsContent.length > 0 &&
+  validDeliveryItems.length > 0
+
+const sliderId = `package-showcase-${_key || 'section'}`
+---
+
+{
+  hasRequiredContent && (
+    <section class="page-section package-showcase" aria-label={title || 'Package'}>
+      <div class="site-container package-showcase__container">
+        <div class="package-showcase__media" data-slider-id={sliderId}>
+          {hasMultipleImages ? (
+            <swiper-container class="package-showcase__swiper" init="false">
+              {validImages.map((image, index) => (
+                <swiper-slide>
+                  <SanityImage
+                    image={image}
+                    alt={image.alt || title || ''}
+                    width={643}
+                    height={804}
+                    fit="crop"
+                    widths={[420, 560, 643, 860]}
+                    class="package-showcase__image"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    sizes="(min-width: 80rem) 40rem, (min-width: 64rem) 50vw, 100vw"
+                  />
+                </swiper-slide>
+              ))}
+            </swiper-container>
+          ) : (
+            validImages.map((image, index) => (
+              <div class="package-showcase__single-image">
+                <SanityImage
+                  image={image}
+                  alt={image.alt || title || ''}
+                  width={643}
+                  height={804}
+                  fit="crop"
+                  widths={[420, 560, 643, 860]}
+                  class="package-showcase__image"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  sizes="(min-width: 80rem) 40rem, (min-width: 64rem) 50vw, 100vw"
+                />
+              </div>
+            ))
+          )}
+          {hasMultipleImages && (
+            <div class="package-showcase__controls" aria-label="Image controls">
+              <button class="package-showcase__nav-button package-showcase__nav-button--prev" type="button" aria-label="Previous image">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M14.5 5L7.5 12L14.5 19" />
+                </svg>
+              </button>
+              <div class="package-showcase__pagination" aria-hidden="true"></div>
+              <button class="package-showcase__nav-button package-showcase__nav-button--next" type="button" aria-label="Next image">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M9.5 5L16.5 12L9.5 19" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div class="package-showcase__content">
+          <h2 class="package-showcase__title">{title}</h2>
+          <p class="package-showcase__price">{priceText}</p>
+
+          <div class="package-showcase__intro rich-text">
+            <PortableText value={introBody} />
+          </div>
+
+          <div class="package-showcase__delivery">
+            <h3 class="package-showcase__delivery-title">{deliveryHeading}</h3>
+            <div class="package-showcase__delivery-items">
+              {validDeliveryItems.map((item) => (
+                <div class="package-showcase__delivery-item">
+                  <p class="package-showcase__delivery-label">{item.label}</p>
+                  <p class="package-showcase__delivery-text">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <a class="button package-showcase__cta" href={ctaHref}>
+            <span>{ctaLabel}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12H17" />
+              <path d="M12 7L17 12L12 17" />
+            </svg>
+          </a>
+
+          <div class="package-showcase__questions">
+            <h4 class="package-showcase__questions-title">{questionTitle}</h4>
+            {questionSubtitle && <p class="package-showcase__questions-subtitle">{questionSubtitle}</p>}
+            <details class="package-showcase__details">
+              <summary class="package-showcase__summary">
+                <span class="package-showcase__summary-label">{detailsLabel}</span>
+                <span class="package-showcase__summary-icon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                    <path d="M0 8.09473C0 7.83489 0.0847488 7.6202 0.254246 7.4507C0.424507 7.28044 0.639611 7.19531 0.899455 7.19531H7.19531V0.899455C7.19531 0.639611 7.28044 0.424507 7.4507 0.254246C7.6202 0.0847488 7.83489 0 8.09473 0C8.35457 0 8.56967 0.0847488 8.73993 0.254246C8.90943 0.424507 8.99418 0.639611 8.99418 0.899455V7.19531H15.29C15.5499 7.19531 15.7645 7.28044 15.934 7.4507C16.1043 7.6202 16.1895 7.83489 16.1895 8.09473C16.1895 8.35457 16.1043 8.56967 15.934 8.73993C15.7645 8.90943 15.5499 8.99418 15.29 8.99418H8.99418V15.29C8.99418 15.5499 8.90943 15.765 8.73993 15.9352C8.56967 16.1047 8.35457 16.1895 8.09473 16.1895C7.83489 16.1895 7.6202 16.1047 7.4507 15.9352C7.28044 15.765 7.19531 15.5499 7.19531 15.29V8.99418H0.899455C0.639611 8.99418 0.424507 8.90943 0.254246 8.73993C0.0847488 8.56967 0 8.35457 0 8.09473Z" fill="#3B2115" />
+                  </svg>
+                </span>
+              </summary>
+              <div class="package-showcase__details-content rich-text">
+                <PortableText value={detailsContent} />
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  import { register } from 'swiper/element/bundle'
+
+  register()
+
+  const sliderRoots = document.querySelectorAll('.package-showcase__media[data-slider-id]')
+
+  sliderRoots.forEach((rootElement) => {
+    const sliderElement = rootElement.querySelector('.package-showcase__swiper')
+    if (!sliderElement) return
+
+    const previousButton = rootElement.querySelector('.package-showcase__nav-button--prev')
+    const nextButton = rootElement.querySelector('.package-showcase__nav-button--next')
+    const paginationElement = rootElement.querySelector('.package-showcase__pagination')
+
+    Object.assign(sliderElement, {
+      speed: 260,
+      slidesPerView: 1,
+      spaceBetween: 0,
+      allowTouchMove: true,
+      grabCursor: true,
+      navigation:
+        previousButton && nextButton
+          ? {
+              prevEl: previousButton,
+              nextEl: nextButton,
+            }
+          : false,
+      pagination: paginationElement
+        ? {
+            el: paginationElement,
+            clickable: true,
+          }
+        : false,
+    })
+
+    sliderElement.initialize()
+  })
+</script>

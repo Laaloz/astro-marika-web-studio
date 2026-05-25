@@ -10,6 +10,7 @@ import FiftyFiftyHighlightsSection from '../components/sections/FiftyFiftyHighli
 import FiftyFiftySimpleSection from '../components/sections/FiftyFiftySimpleSection.astro';
 import TwoColumnContentSection from '../components/sections/TwoColumnContentSection.astro';
 import FaqSection from '../components/sections/FaqSection.astro';
+import PackageShowcaseSection from '../components/sections/PackageShowcaseSection.astro';
 import ProjectStepsSection from '../components/sections/ProjectStepsSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
@@ -91,6 +92,10 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {slug: 
 
 			if (block._type === 'faqSection') {
 				return <FaqSection {...block} />;
+			}
+
+			if (block._type === 'packageShowcaseSection') {
+				return <PackageShowcaseSection {...block} />;
 			}
 
 			if (block._type === 'projectStepsSection') {
