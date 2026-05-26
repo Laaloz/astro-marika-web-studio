@@ -10,16 +10,23 @@ const {message, links = []} = Astro.props as {
   links?: LinkItem[]
 }
 
+const hasMessage = Boolean(typeof message === 'string' && message.trim())
 const linksList = links.filter((item) => item?.label && item?.href)
-const hasContent = Boolean((typeof message === 'string' && message.trim()) || linksList.length > 0)
+const hasContent = Boolean(hasMessage || linksList.length > 0)
 ---
 
 {
   hasContent && (
-    <section class="page-section contact-links-section" aria-label="Contact links section">
+    <section
+      class:list={{
+        'page-section contact-links-section': true,
+        'contact-links-section--right-only': linksList.length > 0 && !hasMessage,
+      }}
+      aria-label="Contact links section"
+    >
       <div class="site-container contact-links-section__container">
         <div class="contact-links-section__layout">
-          {message && <p class="contact-links-section__message">{message}</p>}
+          {hasMessage && <p class="contact-links-section__message">{message}</p>}
 
           {linksList.length > 0 && (
             <div class="contact-links-section__links" role="navigation" aria-label="Quick links">

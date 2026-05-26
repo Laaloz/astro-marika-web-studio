@@ -31,6 +31,8 @@
 
 .two-column-content__body {
   max-width: 39rem;
+  width: 100%;
+  justify-self: end;
   color: var(--color-text);
   display: grid;
   gap: var(--space-1);
@@ -83,6 +85,10 @@
   .two-column-content__left,
   .two-column-content__body {
     max-width: none;
+  }
+
+  .two-column-content__body {
+    justify-self: start;
   }
 
   .two-column-content--right-only .two-column-content__body {
