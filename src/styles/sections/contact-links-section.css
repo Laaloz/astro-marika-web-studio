@@ -18,7 +18,7 @@
 
 .contact-links-section__message {
   margin: 0;
-  max-width: 22.5rem;
+  max-width: var(--section-title-max-width);
   color: #181818;
   font-size: var(--text-h4);
   line-height: var(--leading-h4);

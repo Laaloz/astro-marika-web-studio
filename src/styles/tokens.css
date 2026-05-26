@@ -126,6 +126,7 @@
   --grid-margin: var(--spacing-gutter-grid-margin);
   --page-padding: var(--grid-margin);
   --content-width: 90rem;
+  --section-title-max-width: 30rem;
 }
 
 @media (min-width: 80rem) {
