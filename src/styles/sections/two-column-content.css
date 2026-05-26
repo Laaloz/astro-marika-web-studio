@@ -10,6 +10,12 @@
   align-items: start;
 }
 
+.two-column-content__left {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+
 .two-column-content__title {
   max-width: 30rem;
   color: var(--color-heading);
@@ -19,7 +25,7 @@
 }
 
 .two-column-content__body {
-  max-width: 39rem;
+  max-width: 30rem;
   color: var(--color-text);
   display: grid;
   gap: var(--space-1);
@@ -32,6 +38,19 @@
 
 .two-column-content__body :where(p + p) {
   margin-top: 0;
+}
+
+.two-column-content__body :where(.portable-text-image) {
+  margin: 0;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.two-column-content__body :where(.portable-text-image__img) {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .two-column-content--brown {

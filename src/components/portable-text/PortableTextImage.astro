@@ -1,0 +1,45 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+const {node, isInline = false} = Astro.props as {
+  node?: {alt?: string}
+  isInline?: boolean
+}
+
+const hasImage = Boolean(node)
+---
+
+{
+  hasImage &&
+    (isInline ? (
+      <span class="portable-text-image portable-text-image--inline">
+        <SanityImage
+          image={node}
+          alt={node?.alt || ''}
+          width={320}
+          height={240}
+          fit="crop"
+          widths={[160, 240, 320, 480]}
+          class="portable-text-image__img"
+          loading="lazy"
+          decoding="async"
+          sizes="320px"
+        />
+      </span>
+    ) : (
+      <figure class="portable-text-image">
+        <SanityImage
+          image={node}
+          alt={node?.alt || ''}
+          width={960}
+          height={640}
+          fit="crop"
+          widths={[480, 640, 800, 960, 1200]}
+          class="portable-text-image__img"
+          loading="lazy"
+          decoding="async"
+          sizes="(min-width: 64rem) 30rem, 100vw"
+        />
+      </figure>
+    ))
+}

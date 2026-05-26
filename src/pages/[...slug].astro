@@ -11,6 +11,7 @@ import FiftyFiftySimpleSection from '../components/sections/FiftyFiftySimpleSect
 import TwoColumnContentSection from '../components/sections/TwoColumnContentSection.astro';
 import FaqSection from '../components/sections/FaqSection.astro';
 import PackageShowcaseSection from '../components/sections/PackageShowcaseSection.astro';
+import LargeImageSection from '../components/sections/LargeImageSection.astro';
 import ProjectStepsSection from '../components/sections/ProjectStepsSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
@@ -122,6 +123,10 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 
 			if (block._type === 'packageShowcaseSection') {
 				return <PackageShowcaseSection {...block} />;
+			}
+
+			if (block._type === 'largeImageSection') {
+				return <LargeImageSection {...block} />;
 			}
 
 			if (block._type === 'projectStepsSection') {

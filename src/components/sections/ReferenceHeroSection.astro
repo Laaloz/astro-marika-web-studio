@@ -1,0 +1,79 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+const {
+  title,
+  image,
+  area,
+  heroExternalLink,
+  heroExternalLinkLabel,
+} = Astro.props as {
+  title?: string
+  image?: {alt?: string}
+  area?: string
+  heroExternalLink?: string
+  heroExternalLinkLabel?: string
+}
+
+const titleText = typeof title === 'string' ? title.trim() : ''
+const areaLabels: Record<string, string> = {
+  verkkosivusto: 'Nettisivut',
+  verkkokauppa: 'Verkkokauppa',
+  'brandi-ilme': 'Brandi-ilme',
+  sisalto: 'Sisalto',
+  yllapito: 'Yllapito',
+}
+
+const areaKey = typeof area === 'string' ? area.trim() : ''
+const categoryLabel = areaLabels[areaKey] || areaKey || 'Referenssi'
+const linkHref = typeof heroExternalLink === 'string' ? heroExternalLink.trim() : ''
+const linkLabel =
+  typeof heroExternalLinkLabel === 'string' && heroExternalLinkLabel.trim().length > 0
+    ? heroExternalLinkLabel.trim()
+    : `${categoryLabel} linkki`
+const hasExternalLink = Boolean(linkHref)
+---
+
+{
+  titleText && (
+    <section class="page-section reference-hero" aria-label={titleText}>
+      <div class="site-container reference-hero__container">
+        <div class="reference-hero__grid">
+          <div class="reference-hero__image-wrap">
+            {image ? (
+              <SanityImage
+                image={image}
+                alt={image.alt || titleText}
+                width={524}
+                height={524}
+                fit="crop"
+                widths={[320, 524, 720, 900]}
+                class="reference-hero__image"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                sizes="(min-width: 80rem) 32.75rem, (min-width: 56rem) 42vw, 100vw"
+              />
+            ) : (
+              <div class="reference-hero__image reference-hero__image--placeholder"></div>
+            )}
+          </div>
+
+          <div class="reference-hero__content">
+            {categoryLabel && <p class="reference-hero__eyebrow">{categoryLabel}</p>}
+            <h1 class="reference-hero__title">{titleText}</h1>
+            {hasExternalLink && (
+              <a class="reference-hero__link" href={linkHref} target="_blank" rel="noopener noreferrer">
+                <span>{linkLabel}</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M9 7H17V15" />
+                </svg>
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

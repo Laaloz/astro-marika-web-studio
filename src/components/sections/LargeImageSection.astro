@@ -1,0 +1,30 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+const {image} = Astro.props as {
+  image?: {alt?: string}
+}
+
+const hasImage = Boolean(image)
+---
+
+{
+  hasImage && (
+    <section class="page-section large-image-section" aria-label="Large image section">
+      <div class="large-image-section__media-wrap">
+        <SanityImage
+          image={image}
+          alt={image?.alt || ''}
+          width={1440}
+          height={720}
+          fit="crop"
+          widths={[768, 1024, 1280, 1440, 1920]}
+          class="large-image-section__image"
+          loading="lazy"
+          decoding="async"
+          sizes="100vw"
+        />
+      </div>
+    </section>
+  )
+}

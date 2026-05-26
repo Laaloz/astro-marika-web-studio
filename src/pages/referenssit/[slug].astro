@@ -2,6 +2,7 @@
 import type {SanityDocument} from '@sanity/client'
 import {sanityClient} from 'sanity:client'
 import MainLayout from '../../layouts/main.astro'
+import ReferenceHeroSection from '../../components/sections/ReferenceHeroSection.astro'
 import HeroSection from '../../components/sections/HeroSection.astro'
 import SubpageHeroSection from '../../components/sections/SubpageHeroSection.astro'
 import ScrollingTextSection from '../../components/sections/ScrollingTextSection.astro'
@@ -12,6 +13,7 @@ import FiftyFiftySimpleSection from '../../components/sections/FiftyFiftySimpleS
 import TwoColumnContentSection from '../../components/sections/TwoColumnContentSection.astro'
 import FaqSection from '../../components/sections/FaqSection.astro'
 import PackageShowcaseSection from '../../components/sections/PackageShowcaseSection.astro'
+import LargeImageSection from '../../components/sections/LargeImageSection.astro'
 import ProjectStepsSection from '../../components/sections/ProjectStepsSection.astro'
 import AboutDesignerSection from '../../components/sections/AboutDesignerSection.astro'
 import ReferenceSection from '../../components/sections/ReferenceSection.astro'
@@ -23,6 +25,8 @@ const REFERENCE_QUERY = `*[_type == "referenceItem" && slug.current == $slug][0]
   title,
   slug,
   areas,
+  heroExternalLink,
+  heroExternalLinkLabel,
   image {
     ...,
     alt
@@ -87,6 +91,14 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
   }}
 >
   <main class="page-shell page-shell--builder page-shell--hero">
+    <ReferenceHeroSection
+      title={reference?.title}
+      image={reference?.image}
+      area={reference?.areas?.[0]}
+      heroExternalLink={reference?.heroExternalLink}
+      heroExternalLinkLabel={reference?.heroExternalLinkLabel}
+    />
+
     {(reference?.pageBuilder || []).map((block: SanityDocument) => {
       if (block._type === 'subpageHeroSection') {
         return <SubpageHeroSection {...block} />
@@ -126,6 +138,10 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
 
       if (block._type === 'packageShowcaseSection') {
         return <PackageShowcaseSection {...block} />
+      }
+
+      if (block._type === 'largeImageSection') {
+        return <LargeImageSection {...block} />
       }
 
       if (block._type === 'projectStepsSection') {

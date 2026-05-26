@@ -1,5 +1,6 @@
 @import './hero.css';
 @import './subpage-hero.css';
+@import './reference-hero.css';
 @import './header.css';
 @import './scrolling-text.css';
 @import './service-highlights.css';
@@ -9,6 +10,7 @@
 @import './two-column-content.css';
 @import './faq-section.css';
 @import './package-showcase.css';
+@import './large-image-section.css';
 @import './contact-form.css';
 @import './project-steps.css';
 @import './about-designer.css';

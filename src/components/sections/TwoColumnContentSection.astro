@@ -1,6 +1,7 @@
 ---
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
+import PortableTextImage from '../portable-text/PortableTextImage.astro'
 
 const {title, body, backgroundStyle = 'none'} = Astro.props as {
   title?: string
@@ -8,8 +9,16 @@ const {title, body, backgroundStyle = 'none'} = Astro.props as {
   backgroundStyle?: 'none' | 'brown'
 }
 
-const hasContent = Boolean(title && Array.isArray(body) && body.length > 0)
+const hasTitle = Boolean(typeof title === 'string' && title.trim())
+const hasBody = Array.isArray(body) && body.length > 0
+const hasContent = Boolean(hasTitle || hasBody)
 const hasBackground = backgroundStyle === 'brown'
+
+const bodyPortableTextComponents = {
+  type: {
+    image: PortableTextImage,
+  },
+}
 ---
 
 {
@@ -23,9 +32,13 @@ const hasBackground = backgroundStyle === 'brown'
     >
       <div class="site-container two-column-content__container">
         <div class="two-column-content__grid">
-          <h2 class="two-column-content__title">{title}</h2>
-          <div class="two-column-content__body rich-text">
-            <PortableText value={body} />
+          <div class="two-column-content__left">
+            {hasTitle && <h2 class="two-column-content__title">{title}</h2>}
+            {hasBody && (
+              <div class="two-column-content__body rich-text">
+                <PortableText value={body} components={bodyPortableTextComponents} />
+              </div>
+            )}
           </div>
         </div>
       </div>
