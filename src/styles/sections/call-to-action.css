@@ -108,35 +108,6 @@
   box-shadow: none;
 }
 
-.call-to-action__badge {
-  position: absolute;
-  left: 6.25rem;
-  top: -4.25rem;
-  width: 11.53rem;
-  min-height: 11.53rem;
-  border-radius: 50%;
-  background: #71650b;
-  color: #fffefb;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  transform: rotate(-4.5deg);
-  padding: 1rem;
-}
-
-.call-to-action__badge-top {
-  font-size: 1rem;
-  line-height: 1.375rem;
-}
-
-.call-to-action__badge-bottom {
-  margin-top: 0.3rem;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 1;
-  font-variation-settings: 'SOFT' 0, 'WONK' 1;
-}
-
 @media (max-width: 63.999rem) {
   .call-to-action__card {
     padding: var(--space-6) var(--grid-margin);
@@ -180,19 +151,5 @@
 
   .call-to-action__button {
     margin-top: 0;
-  }
-
-  .call-to-action__badge {
-    left: auto;
-    right: 2.25rem;
-    top: -3.5rem;
-    width: 9.75rem;
-    min-height: 9.75rem;
-    transform: rotate(-4.44deg);
-  }
-
-  .call-to-action__badge-bottom {
-    font-size: 1.125rem;
-    line-height: 1.1;
   }
 }

@@ -18,7 +18,7 @@ import CallToActionSection from '../components/sections/CallToActionSection.astr
 import ContactFormSection from '../components/sections/ContactFormSection.astro';
 import {sanityClient} from 'sanity:client';
 
-const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
+const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeading, $slugWithTrailing]][0]{
   title,
   "metaDescription": pageBuilder[_type == "heroSection"][0].description,
   "metaImage": pageBuilder[_type == "heroSection"][0].image,
@@ -62,15 +62,23 @@ export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
     `*[_type == "page" && defined(slug.current)]{ "slug": slug.current }`
   )
 
-  const slugs = pages
-    .map((page) => (typeof page.slug === 'string' ? page.slug.trim() : ''))
-    .filter(Boolean)
+  const slugs = Array.from(
+    new Set(
+      pages
+        .map((page) => (typeof page.slug === 'string' ? page.slug.trim().replace(/^\/+|\/+$/g, '') : ''))
+        .filter(Boolean)
+    )
+  )
 
   return slugs.map((slug) => ({params: {slug}}))
 }
 
-const routeSlug = Astro.params.slug;
-const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {slug: routeSlug});
+const routeSlug = typeof Astro.params.slug === 'string' ? Astro.params.slug.trim().replace(/^\/+|\/+$/g, '') : ''
+const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
+  slug: routeSlug,
+  slugWithLeading: `/${routeSlug}`,
+  slugWithTrailing: `${routeSlug}/`,
+});
 ---
 
 <MainLayout content={{title: `${page?.title || 'Page'} | Marika Web Studio`, description: page?.metaDescription, image: page?.metaImage}}>

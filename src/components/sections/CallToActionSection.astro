@@ -11,8 +11,6 @@ const {
   body,
   ctaLabel,
   ctaHref,
-  badgeTopLine,
-  badgeBottomLine,
   introIcon,
 } = Astro.props as {
   eyebrow?: string
@@ -20,8 +18,6 @@ const {
   body?: PortableTextBlock[]
   ctaLabel?: string
   ctaHref?: string
-  badgeTopLine?: string
-  badgeBottomLine?: string
   introIcon?: unknown
 }
 
@@ -101,11 +97,6 @@ const hasRequiredContent = Boolean(
             </a>
           </div>
         </div>
-
-        <aside class="call-to-action__badge" aria-hidden="true">
-          <p class="call-to-action__badge-top">{badgeTopLine || 'Valmis'}</p>
-          <p class="call-to-action__badge-bottom">{badgeBottomLine || 'tekemään vaikutuksen?'}</p>
-        </aside>
       </div>
     </section>
   )
