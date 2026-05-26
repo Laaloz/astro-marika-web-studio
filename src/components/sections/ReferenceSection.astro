@@ -12,6 +12,7 @@ const {
   eyebrow,
   title,
   description,
+  textAlignment,
   ctaLabel,
   ctaHref,
   references = [],
@@ -19,6 +20,7 @@ const {
   eyebrow?: string
   title?: string
   description?: string
+  textAlignment?: 'center' | 'left'
   ctaLabel?: string
   ctaHref?: string
   references?: ReferenceItem[]
@@ -29,13 +31,14 @@ const hasCta = Boolean(ctaLabel && ctaHref)
 const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
 const descriptionText = typeof description === 'string' ? description.trim() : ''
 const titleText = typeof title === 'string' ? title.trim() : ''
+const headingAlignmentClass = textAlignment === 'left' ? 'reference-section__heading--left' : ''
 ---
 
 {
   cards.length > 0 && (
     <section class="page-section reference-section" aria-label={eyebrowText || titleText || 'Portfolio'}>
       <div class="site-container reference-section__container">
-        <div class="reference-section__heading">
+        <div class:list={['reference-section__heading', headingAlignmentClass]}>
           {eyebrowText && <p class="reference-section__eyebrow">{eyebrowText}</p>}
           {titleText && <h2 class="reference-section__title">{titleText}</h2>}
           {descriptionText && <p class="reference-section__description">{descriptionText}</p>}

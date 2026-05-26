@@ -22,7 +22,7 @@
   max-width: 39rem;
   color: var(--color-text);
   display: grid;
-  gap: 0;
+  gap: var(--space-1);
 }
 
 .two-column-content__body :where(p, li) {
