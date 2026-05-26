@@ -26,16 +26,19 @@ const {
 
 const cards = references.filter((item) => item?.title && item?.slug?.current)
 const hasCta = Boolean(ctaLabel && ctaHref)
+const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
+const descriptionText = typeof description === 'string' ? description.trim() : ''
+const titleText = typeof title === 'string' ? title.trim() : ''
 ---
 
 {
   cards.length > 0 && (
-    <section class="page-section has-background reference-section" aria-label={eyebrow || title || 'Portfolio'}>
+    <section class="page-section reference-section" aria-label={eyebrowText || titleText || 'Portfolio'}>
       <div class="site-container reference-section__container">
         <div class="reference-section__heading">
-          {eyebrow && <p class="reference-section__eyebrow">{eyebrow}</p>}
-          {title && <h2 class="reference-section__title">{title}</h2>}
-          {description && <p class="reference-section__description">{description}</p>}
+          {eyebrowText && <p class="reference-section__eyebrow">{eyebrowText}</p>}
+          {titleText && <h2 class="reference-section__title">{titleText}</h2>}
+          {descriptionText && <p class="reference-section__description">{descriptionText}</p>}
         </div>
 
         <div class="reference-section__grid">

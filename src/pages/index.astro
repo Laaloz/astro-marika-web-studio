@@ -31,15 +31,26 @@ const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]
     },
     _type == "referenceSection" => {
       ...,
-      references[]-> {
-        _id,
-        title,
-        slug,
-        image {
-          ...,
-          alt
+      "references": select(
+        referenceSelectionMode == "automatic" => *[_type == "referenceItem" && defined(slug.current)] | order(_createdAt desc) {
+          _id,
+          title,
+          slug,
+          image {
+            ...,
+            alt
+          }
+        },
+        references[]-> {
+          _id,
+          title,
+          slug,
+          image {
+            ...,
+            alt
+          }
         }
-      }
+      )
     }
   }
 }`;

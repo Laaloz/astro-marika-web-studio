@@ -33,23 +33,40 @@ const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
     },
     _type == "referenceSection" => {
       ...,
-      references[]-> {
-        _id,
-        title,
-        slug,
-        image {
-          ...,
-          alt
+      "references": select(
+        referenceSelectionMode == "automatic" => *[_type == "referenceItem" && defined(slug.current)] | order(_createdAt desc) {
+          _id,
+          title,
+          slug,
+          image {
+            ...,
+            alt
+          }
+        },
+        references[]-> {
+          _id,
+          title,
+          slug,
+          image {
+            ...,
+            alt
+          }
         }
-      }
+      )
     }
   }
 }`;
 
 export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
-  return await sanityClient.fetch(`*[_type == "page" && defined(slug.current)]{
-    "params": {"slug": slug.current}
-  }`);
+  const pages = await sanityClient.fetch<Array<{slug?: string}>>(
+    `*[_type == "page" && defined(slug.current)]{ "slug": slug.current }`
+  )
+
+  const slugs = pages
+    .map((page) => (typeof page.slug === 'string' ? page.slug.trim() : ''))
+    .filter(Boolean)
+
+  return slugs.map((slug) => ({params: {slug}}))
 }
 
 const routeSlug = Astro.params.slug;
