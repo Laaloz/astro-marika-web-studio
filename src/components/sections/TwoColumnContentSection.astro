@@ -3,20 +3,40 @@ import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import PortableTextImage from '../portable-text/PortableTextImage.astro'
 
-const {title, leftBody, body, backgroundStyle = 'none'} = Astro.props as {
+const {
+  title,
+  rightTitle,
+  leftBody,
+  body,
+  leftCtaLabel,
+  leftCtaHref,
+  rightCtaLabel,
+  rightCtaHref,
+  backgroundStyle = 'none',
+} = Astro.props as {
   title?: string
+  rightTitle?: string
   leftBody?: PortableTextBlock[]
   body?: PortableTextBlock[]
+  leftCtaLabel?: string
+  leftCtaHref?: string
+  rightCtaLabel?: string
+  rightCtaHref?: string
   backgroundStyle?: 'none' | 'brown'
 }
 
 const hasTitle = Boolean(typeof title === 'string' && title.trim())
+const hasRightTitle = Boolean(typeof rightTitle === 'string' && rightTitle.trim())
 const hasLeftBody = Array.isArray(leftBody) && leftBody.length > 0
 const hasBody = Array.isArray(body) && body.length > 0
-const hasContent = Boolean(hasTitle || hasLeftBody || hasBody)
+const hasLeftCta = Boolean(leftCtaLabel && leftCtaHref)
+const hasRightCta = Boolean(rightCtaLabel && rightCtaHref)
+const hasLeftContent = Boolean(hasTitle || hasLeftBody || hasLeftCta)
+const hasRightContent = Boolean(hasRightTitle || hasBody || hasRightCta)
+const hasContent = Boolean(hasLeftContent || hasRightContent)
 const hasBackground = backgroundStyle === 'brown'
 
-const bodyPortableTextComponents = {
+const portableTextComponents = {
   type: {
     image: PortableTextImage,
   },
@@ -29,23 +49,51 @@ const bodyPortableTextComponents = {
       class:list={{
         'page-section two-column-content': true,
         'two-column-content--brown has-background': hasBackground,
-        'two-column-content--right-only': hasBody && !hasTitle && !hasLeftBody,
+        'two-column-content--right-only': hasRightContent && !hasLeftContent,
       }}
-      aria-label={title || 'Kaksipalstainen sisältö'}
+      aria-label={title || rightTitle || 'Kaksipalstainen sisältö'}
     >
       <div class="site-container two-column-content__container">
         <div class="two-column-content__grid">
-          <div class="two-column-content__left">
-            {hasTitle && <h2 class="two-column-content__title">{title}</h2>}
-            {hasLeftBody && (
-              <div class="two-column-content__left-body rich-text">
-                <PortableText value={leftBody} />
-              </div>
-            )}
-          </div>
-          {hasBody && (
+          {hasLeftContent && (
+            <div class="two-column-content__left">
+              {hasTitle && <h2 class="two-column-content__title">{title}</h2>}
+
+              {hasLeftBody && (
+                <div class="two-column-content__left-body rich-text">
+                  <PortableText value={leftBody} components={portableTextComponents} />
+                </div>
+              )}
+
+              {hasLeftCta && (
+                <a class="button button--primary-accent two-column-content__button" href={leftCtaHref}>
+                  <span>{leftCtaLabel}</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4.5 12H18" />
+                    <path d="M12.75 6.75L18 12L12.75 17.25" />
+                  </svg>
+                </a>
+              )}
+            </div>
+          )}
+
+          {hasRightContent && (
             <div class="two-column-content__body rich-text">
-              <PortableText value={body} components={bodyPortableTextComponents} />
+              {hasRightTitle && (
+                <h2 class="two-column-content__title two-column-content__title--right">{rightTitle}</h2>
+              )}
+
+              {hasBody && <PortableText value={body} components={portableTextComponents} />}
+
+              {hasRightCta && (
+                <a class="button button--primary-accent two-column-content__button" href={rightCtaHref}>
+                  <span>{rightCtaLabel}</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4.5 12H18" />
+                    <path d="M12.75 6.75L18 12L12.75 17.25" />
+                  </svg>
+                </a>
+              )}
             </div>
           )}
         </div>

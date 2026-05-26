@@ -29,6 +29,19 @@
   line-height: 1.4;
 }
 
+.two-column-content__left-body :where(.portable-text-image) {
+  margin: var(--space-2) 0 0;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.two-column-content__left-body :where(.portable-text-image__img) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .two-column-content__body {
   max-width: 39rem;
   width: 100%;
@@ -58,6 +71,42 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+.two-column-content__title--right {
+  max-width: var(--section-title-max-width);
+  margin-bottom: var(--space-3);
+}
+
+.two-column-content__button {
+  --button-brand-bg: #482613;
+  --button-brand-fg: #fffefb;
+  --button-brand-border: #322221;
+  --button-brand-hover-fill: #cec29f;
+  --button-brand-hover-fg: #3b2115;
+  --button-brand-hover-border: #322221;
+  justify-self: start;
+  margin-top: var(--space-3);
+  border-width: 0.85px;
+}
+
+.two-column-content__button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.two-column-content--brown .two-column-content__button {
+  --button-brand-bg: #fffefb;
+  --button-brand-fg: #322221;
+  --button-brand-border: #fffefb;
+  --button-brand-hover-fill: #ece59e;
+  --button-brand-hover-fg: #322221;
+  --button-brand-hover-border: #fffefb;
 }
 
 .two-column-content--right-only .two-column-content__body {

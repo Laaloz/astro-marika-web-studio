@@ -7,7 +7,6 @@ import HeroSection from '../../components/sections/HeroSection.astro'
 import SubpageHeroSection from '../../components/sections/SubpageHeroSection.astro'
 import ScrollingTextSection from '../../components/sections/ScrollingTextSection.astro'
 import ServiceHighlightsSection from '../../components/sections/ServiceHighlightsSection.astro'
-import DesignAndImplementationSection from '../../components/sections/DesignAndImplementationSection.astro'
 import FiftyFiftyHighlightsSection from '../../components/sections/FiftyFiftyHighlightsSection.astro'
 import FiftyFiftySimpleSection from '../../components/sections/FiftyFiftySimpleSection.astro'
 import TwoColumnContentSection from '../../components/sections/TwoColumnContentSection.astro'
@@ -116,10 +115,6 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
 
       if (block._type === 'serviceHighlightsSection') {
         return <ServiceHighlightsSection {...block} />
-      }
-
-      if (block._type === 'designAndImplementationSection') {
-        return <DesignAndImplementationSection {...block} />
       }
 
       if (block._type === 'fiftyFiftyHighlightsSection') {
