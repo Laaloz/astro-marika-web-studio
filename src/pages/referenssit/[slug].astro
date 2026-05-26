@@ -14,11 +14,13 @@ import TwoColumnContentSection from '../../components/sections/TwoColumnContentS
 import FaqSection from '../../components/sections/FaqSection.astro'
 import PackageShowcaseSection from '../../components/sections/PackageShowcaseSection.astro'
 import LargeImageSection from '../../components/sections/LargeImageSection.astro'
+import ImageGallerySection from '../../components/sections/ImageGallerySection.astro'
 import ProjectStepsSection from '../../components/sections/ProjectStepsSection.astro'
 import AboutDesignerSection from '../../components/sections/AboutDesignerSection.astro'
 import ReferenceSection from '../../components/sections/ReferenceSection.astro'
 import CallToActionSection from '../../components/sections/CallToActionSection.astro'
 import ContactFormSection from '../../components/sections/ContactFormSection.astro'
+import ContactLinksSection from '../../components/sections/ContactLinksSection.astro'
 
 const REFERENCE_QUERY = `*[_type == "referenceItem" && slug.current == $slug][0]{
   _id,
@@ -144,6 +146,10 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
         return <LargeImageSection {...block} />
       }
 
+      if (block._type === 'imageGallerySection') {
+        return <ImageGallerySection {...block} />
+      }
+
       if (block._type === 'projectStepsSection') {
         return <ProjectStepsSection {...block} />
       }
@@ -162,6 +168,10 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
 
       if (block._type === 'contactFormSection') {
         return <ContactFormSection {...block} />
+      }
+
+      if (block._type === 'contactLinksSection') {
+        return <ContactLinksSection {...block} />
       }
 
       return null

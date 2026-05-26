@@ -3,15 +3,17 @@ import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import PortableTextImage from '../portable-text/PortableTextImage.astro'
 
-const {title, body, backgroundStyle = 'none'} = Astro.props as {
+const {title, leftBody, body, backgroundStyle = 'none'} = Astro.props as {
   title?: string
+  leftBody?: PortableTextBlock[]
   body?: PortableTextBlock[]
   backgroundStyle?: 'none' | 'brown'
 }
 
 const hasTitle = Boolean(typeof title === 'string' && title.trim())
+const hasLeftBody = Array.isArray(leftBody) && leftBody.length > 0
 const hasBody = Array.isArray(body) && body.length > 0
-const hasContent = Boolean(hasTitle || hasBody)
+const hasContent = Boolean(hasTitle || hasLeftBody || hasBody)
 const hasBackground = backgroundStyle === 'brown'
 
 const bodyPortableTextComponents = {
@@ -27,6 +29,7 @@ const bodyPortableTextComponents = {
       class:list={{
         'page-section two-column-content': true,
         'two-column-content--brown has-background': hasBackground,
+        'two-column-content--right-only': hasBody && !hasTitle && !hasLeftBody,
       }}
       aria-label={title || 'Kaksipalstainen sisältö'}
     >
@@ -34,12 +37,17 @@ const bodyPortableTextComponents = {
         <div class="two-column-content__grid">
           <div class="two-column-content__left">
             {hasTitle && <h2 class="two-column-content__title">{title}</h2>}
-            {hasBody && (
-              <div class="two-column-content__body rich-text">
-                <PortableText value={body} components={bodyPortableTextComponents} />
+            {hasLeftBody && (
+              <div class="two-column-content__left-body rich-text">
+                <PortableText value={leftBody} />
               </div>
             )}
           </div>
+          {hasBody && (
+            <div class="two-column-content__body rich-text">
+              <PortableText value={body} components={bodyPortableTextComponents} />
+            </div>
+          )}
         </div>
       </div>
     </section>

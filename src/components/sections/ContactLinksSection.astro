@@ -1,0 +1,41 @@
+---
+interface LinkItem {
+  _key?: string
+  label?: string
+  href?: string
+}
+
+const {message, links = []} = Astro.props as {
+  message?: string
+  links?: LinkItem[]
+}
+
+const linksList = links.filter((item) => item?.label && item?.href)
+const hasContent = Boolean((typeof message === 'string' && message.trim()) || linksList.length > 0)
+---
+
+{
+  hasContent && (
+    <section class="page-section contact-links-section" aria-label="Contact links section">
+      <div class="site-container contact-links-section__container">
+        <div class="contact-links-section__layout">
+          {message && <p class="contact-links-section__message">{message}</p>}
+
+          {linksList.length > 0 && (
+            <div class="contact-links-section__links" role="navigation" aria-label="Quick links">
+              {linksList.map((item) => (
+                <a class="contact-links-section__link" href={item.href}>
+                  <span>{item.label}</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12H17" />
+                    <path d="M12 7L17 12L12 17" />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

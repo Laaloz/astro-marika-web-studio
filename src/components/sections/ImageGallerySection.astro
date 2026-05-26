@@ -1,0 +1,67 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+const {leftImage, topRightImage, bottomRightImage} = Astro.props as {
+  leftImage?: {alt?: string}
+  topRightImage?: {alt?: string}
+  bottomRightImage?: {alt?: string}
+}
+
+const hasAllImages = Boolean(leftImage && topRightImage && bottomRightImage)
+---
+
+{
+  hasAllImages && (
+    <section class="page-section image-gallery-section" aria-label="Image gallery">
+      <div class="site-container image-gallery-section__container">
+        <div class="image-gallery-section__grid">
+          <div class="image-gallery-section__left">
+            <SanityImage
+              image={leftImage}
+              alt={leftImage?.alt || ''}
+              width={639}
+              height={959}
+              fit="crop"
+              widths={[480, 639, 800, 960]}
+              class="image-gallery-section__image"
+              loading="lazy"
+              decoding="async"
+              sizes="(min-width: 80rem) 39.9375rem, (min-width: 56rem) 47vw, 100vw"
+            />
+          </div>
+
+          <div class="image-gallery-section__right">
+            <div class="image-gallery-section__right-item">
+              <SanityImage
+                image={topRightImage}
+                alt={topRightImage?.alt || ''}
+                width={637}
+                height={478}
+                fit="crop"
+                widths={[480, 637, 800, 960]}
+                class="image-gallery-section__image"
+                loading="lazy"
+                decoding="async"
+                sizes="(min-width: 80rem) 39.8125rem, (min-width: 56rem) 47vw, 100vw"
+              />
+            </div>
+            <div class="image-gallery-section__right-item">
+              <SanityImage
+                image={bottomRightImage}
+                alt={bottomRightImage?.alt || ''}
+                width={637}
+                height={478}
+                fit="crop"
+                widths={[480, 637, 800, 960]}
+                class="image-gallery-section__image"
+                loading="lazy"
+                decoding="async"
+                sizes="(min-width: 80rem) 39.8125rem, (min-width: 56rem) 47vw, 100vw"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
