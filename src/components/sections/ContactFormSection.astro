@@ -1,0 +1,212 @@
+---
+import {PortableText} from 'astro-portabletext'
+import type {PortableTextBlock} from '@portabletext/types'
+
+const {
+  heading,
+  introText,
+  formName = 'contact',
+  submitLabel = 'Lähetä',
+  fields = [],
+} = Astro.props as {
+  heading?: string
+  introText?: string
+  formName?: string
+  submitLabel?: string
+  fields?: Array<{
+    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'radio' | 'checkbox' | 'file'
+    name?: string
+    label?: string
+    linkLabel?: string
+    linkHref?: string
+    consentContent?: PortableTextBlock[]
+    placeholder?: string
+    required?: boolean
+    width?: 'half' | 'full'
+    rows?: number
+    options?: string[]
+  }>
+}
+
+const safeFormName = formName.trim() || 'contact'
+
+const defaultFields = [
+  {fieldType: 'text', name: 'firstName', label: 'Etunimi*', required: true, width: 'half'},
+  {fieldType: 'text', name: 'lastName', label: 'Sukunimi*', required: true, width: 'half'},
+  {fieldType: 'email', name: 'email', label: 'Sähköposti *', required: true, width: 'half'},
+  {fieldType: 'tel', name: 'phone', label: 'Puhelinnumero', required: false, width: 'half'},
+  {
+    fieldType: 'radio',
+    name: 'topic',
+    label: 'Mitä asiasi koskee? *',
+    required: true,
+    width: 'full',
+    options: ['Verkkosivut', 'Some', 'Digitaalinen kutsukortti', 'Jotain muuta'],
+  },
+  {fieldType: 'file', name: 'attachment', label: 'Liitä tiedosto', required: false, width: 'full'},
+  {fieldType: 'textarea', name: 'message', label: 'Viestisi', required: true, width: 'full', rows: 6},
+  {
+    fieldType: 'checkbox',
+    name: 'consent',
+    label: 'Hyväksyn, että tietojani käytetään',
+    linkLabel: 'tietosuojaselosteen',
+    linkHref: '/tietosuojaseloste',
+    required: true,
+    width: 'full',
+  },
+]
+
+const normalizeCmsHref = (href?: string) => {
+  if (!href) return '#'
+  if (
+    href.startsWith('/') ||
+    href.startsWith('http://') ||
+    href.startsWith('https://') ||
+    href.startsWith('mailto:') ||
+    href.startsWith('tel:') ||
+    href.startsWith('#')
+  ) {
+    return href
+  }
+
+  return `/${href}`
+}
+
+const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : defaultFields)
+  .map((field, index) => {
+    const fieldName = field.name?.trim() || `field-${index}`
+    const fieldLabel = field.label?.trim() || fieldName
+    const fieldType = field.fieldType || 'text'
+    const width = field.width === 'full' ? 'full' : 'half'
+
+    return {
+      ...field,
+      fieldName,
+      fieldLabel,
+      linkLabel: field.linkLabel?.trim() || '',
+      linkHref: field.linkHref?.trim() || '',
+      consentContent:
+        Array.isArray(field.consentContent) && field.consentContent.length > 0
+          ? field.consentContent
+          : undefined,
+      fieldType,
+      width,
+      rows: typeof field.rows === 'number' && field.rows > 1 ? field.rows : 6,
+      options: Array.isArray(field.options) ? field.options.filter(Boolean) : [],
+    }
+  })
+  .filter((field) => Boolean(field.fieldName && field.fieldLabel))
+
+const sectionHeading = heading || 'Yhteydenotto'
+const sectionIntro = introText || ''
+---
+
+<section class="page-section contact-form-section" aria-label={sectionHeading}>
+  <div class="site-container contact-form-section__container">
+    <div class="contact-form-section__intro">
+      <h2>{sectionHeading}</h2>
+      {sectionIntro && <p>{sectionIntro}</p>}
+    </div>
+
+    <form
+      class="contact-form"
+      name={safeFormName}
+      method="POST"
+      accept-charset="UTF-8"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      enctype="multipart/form-data"
+    >
+      <input type="hidden" name="form-name" value={safeFormName} />
+      <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
+
+      <div class="contact-form__grid contact-form__grid--builder">
+        {normalizedFields.map((field, index) => {
+          const fieldId = `${safeFormName}-${field.fieldName}-${index}`
+          const isFullWidth = field.width === 'full'
+          const fieldClassName = `contact-form__field contact-form__field--${isFullWidth ? 'full' : 'half'}`
+
+          if (field.fieldType === 'radio') {
+            return (
+              <fieldset class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}>
+                <legend>{field.fieldLabel}</legend>
+                <div class="contact-form__options">
+                  {field.options.map((option, optionIndex) => (
+                    <label class="contact-form__radio" for={`${fieldId}-${optionIndex}`}>
+                      <input
+                        id={`${fieldId}-${optionIndex}`}
+                        type="radio"
+                        name={field.fieldName}
+                        value={option}
+                        required={field.required === true && optionIndex === 0}
+                      />
+                      <span>{option}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )
+          }
+
+          if (field.fieldType === 'checkbox') {
+            const hasConsentLink = Boolean(field.linkLabel && field.linkHref)
+            const hasConsentRichText = Array.isArray(field.consentContent) && field.consentContent.length > 0
+            return (
+              <label class={`contact-form__consent ${isFullWidth ? 'contact-form__consent--full' : ''}`} for={fieldId}>
+                <input id={fieldId} name={field.fieldName} type="checkbox" required={field.required === true} />
+                <div class="contact-form__consent-copy">
+                  {hasConsentRichText ? (
+                    <PortableText value={field.consentContent} />
+                  ) : (
+                    <span>
+                      {field.fieldLabel}{' '}
+                      {hasConsentLink ? (
+                        <a href={normalizeCmsHref(field.linkHref)}>{field.linkLabel}</a>
+                      ) : null}
+                    </span>
+                  )}
+                </div>
+              </label>
+            )
+          }
+
+          if (field.fieldType === 'textarea') {
+            return (
+              <div class={fieldClassName}>
+                <label for={fieldId}>{field.fieldLabel}</label>
+                <div class="contact-form__control contact-form__control--textarea">
+                  <textarea
+                    id={fieldId}
+                    name={field.fieldName}
+                    rows={field.rows}
+                    placeholder={field.placeholder || undefined}
+                    required={field.required === true}
+                  ></textarea>
+                </div>
+              </div>
+            )
+          }
+
+          return (
+            <div class={fieldClassName}>
+              <label for={fieldId}>{field.fieldLabel}</label>
+              <div class="contact-form__control">
+                <input
+                  id={fieldId}
+                  name={field.fieldName}
+                  type={field.fieldType}
+                  placeholder={field.placeholder || undefined}
+                  required={field.required === true}
+                />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <button class="button button--primary-accent contact-form__submit" type="submit">
+        {submitLabel}
+      </button>
+    </form>
+  </div>
+</section>

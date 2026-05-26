@@ -15,6 +15,7 @@ import ProjectStepsSection from '../components/sections/ProjectStepsSection.astr
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import CallToActionSection from '../components/sections/CallToActionSection.astro';
+import ContactFormSection from '../components/sections/ContactFormSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
@@ -112,6 +113,10 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {slug: 
 
 			if (block._type === 'callToActionSection') {
 				return <CallToActionSection {...block} />;
+			}
+
+			if (block._type === 'contactFormSection') {
+				return <ContactFormSection {...block} />;
 			}
 
 			return null;
