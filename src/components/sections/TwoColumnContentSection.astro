@@ -66,11 +66,10 @@ const portableTextComponents = {
               )}
 
               {hasLeftCta && (
-                <a class="button button--primary-accent two-column-content__button" href={leftCtaHref}>
+                <a class="button button--primary-outline two-column-content__button" href={leftCtaHref}>
                   <span>{leftCtaLabel}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4.5 12H18" />
-                    <path d="M12.75 6.75L18 12L12.75 17.25" />
+                    <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
                   </svg>
                 </a>
               )}
@@ -78,19 +77,22 @@ const portableTextComponents = {
           )}
 
           {hasRightContent && (
-            <div class="two-column-content__body rich-text">
+            <div class="two-column-content__body">
               {hasRightTitle && (
                 <h2 class="two-column-content__title two-column-content__title--right">{rightTitle}</h2>
               )}
 
-              {hasBody && <PortableText value={body} components={portableTextComponents} />}
+              {hasBody && (
+                <div class="two-column-content__body-text rich-text">
+                  <PortableText value={body} components={portableTextComponents} />
+                </div>
+              )}
 
               {hasRightCta && (
-                <a class="button button--primary-accent two-column-content__button" href={rightCtaHref}>
+                <a class="button button--primary-outline two-column-content__button" href={rightCtaHref}>
                   <span>{rightCtaLabel}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4.5 12H18" />
-                    <path d="M12.75 6.75L18 12L12.75 17.25" />
+                    <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
                   </svg>
                 </a>
               )}

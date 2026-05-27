@@ -48,6 +48,11 @@
   justify-self: end;
   color: var(--color-text);
   display: grid;
+  gap: var(--space-3);
+}
+
+.two-column-content__body-text {
+  display: grid;
   gap: var(--space-1);
 }
 
@@ -79,25 +84,14 @@
 }
 
 .two-column-content__button {
-  --button-brand-bg: #482613;
+  --button-brand-bg: #3b2115;
   --button-brand-fg: #fffefb;
   --button-brand-border: #322221;
-  --button-brand-hover-fill: #cec29f;
+  --button-brand-hover-fill: var(--color-background);
   --button-brand-hover-fg: #3b2115;
   --button-brand-hover-border: #322221;
   justify-self: start;
   margin-top: var(--space-3);
-  border-width: 0.85px;
-}
-
-.two-column-content__button svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .two-column-content--brown .two-column-content__button {
@@ -107,6 +101,12 @@
   --button-brand-hover-fill: #ece59e;
   --button-brand-hover-fg: #322221;
   --button-brand-hover-border: #fffefb;
+}
+
+.two-column-content__button.button--primary-outline:hover,
+.two-column-content__button.button--primary-outline:focus-visible {
+  color: var(--button-brand-hover-fg);
+  border-color: var(--button-brand-hover-border);
 }
 
 .two-column-content--right-only .two-column-content__body {
