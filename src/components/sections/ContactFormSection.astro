@@ -216,8 +216,6 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
               <label
                 class={`contact-form__consent ${isFullWidth ? 'contact-form__consent--full' : ''}`}
                 for={fieldId}
-                data-submission-field="direct"
-                data-submission-name={cleanFieldLabel}
               >
                 <input id={fieldId} name={field.fieldName} type="checkbox" required={field.required === true} />
                 <div class="contact-form__consent-copy">
