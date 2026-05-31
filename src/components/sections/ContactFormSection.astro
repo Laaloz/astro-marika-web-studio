@@ -122,7 +122,6 @@ const sectionIntro = introText || ''
 const formStatus = Astro.url.searchParams.get('form-status')
 const showSuccessMessage = formStatus === 'success'
 const showErrorMessage = formStatus === 'error'
-const successActionPath = `${Astro.url.pathname}?form-status=success`
 ---
 
 <section class="page-section contact-form-section" aria-label={sectionHeading}>
@@ -136,15 +135,15 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
       class="contact-form"
       name={safeFormName}
       method="POST"
-      action={successActionPath}
+      action="/"
       accept-charset="UTF-8"
+      netlify
       data-netlify="true"
       netlify-honeypot="bot-field"
       data-recaptcha-v3={hasRecaptchaV3 ? 'true' : undefined}
       data-recaptcha-site-key={hasRecaptchaV3 ? recaptchaSiteKey : undefined}
     >
       <input type="hidden" name="form-name" value={safeFormName} />
-      <input type="hidden" name="redirect" value={successActionPath} />
       <input type="hidden" name="form-source" value="contact-section" />
       <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
       {hasRecaptchaV3 && <input type="hidden" name="g-recaptcha-response" data-recaptcha-response />}
@@ -345,8 +344,37 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
                   }
 
                   isSubmitting = true
+                  const submitPayload = new FormData(form)
+                  const encodedPayload = new URLSearchParams()
+                  submitPayload.forEach((value, key) => {
+                    if (typeof value === 'string') {
+                      encodedPayload.append(key, value)
+                    }
+                  })
+
+                  const submitResponse = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: encodedPayload.toString(),
+                  })
+
+                  if (!submitResponse.ok) {
+                    isSubmitting = false
+                    failSubmit('netlify_submit_failed')
+                    return
+                  }
+
                   window.sessionStorage.setItem(successFlagKey, '1')
-                  form.submit()
+                  if (successNotice instanceof HTMLElement) {
+                    successNotice.hidden = false
+                    successNotice.scrollIntoView({behavior: 'smooth', block: 'nearest'})
+                  }
+
+                  form.reset()
+                  responseInput.value = ''
+                  isSubmitting = false
                 })
                 .catch(() => {
                   failSubmit('execute_failed')
