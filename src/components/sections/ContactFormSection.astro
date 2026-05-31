@@ -363,18 +363,90 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           submitLabel.textContent = 'Lähetetään...'
         }
 
-        form.addEventListener('submit', () => {
-          syncGroupedFieldSummaries()
-          disableRawCheckboxGroupInputs()
-          window.sessionStorage.setItem(successFlagKey, '1')
-          setLoadingState()
-        })
-
-        window.addEventListener('pageshow', () => {
+        const resetLoadingState = () => {
           submitButton.disabled = false
           submitButton.classList.remove('is-loading')
           submitButton.removeAttribute('aria-busy')
           submitLabel.textContent = defaultText
+        }
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault()
+          syncGroupedFieldSummaries()
+          setLoadingState()
+
+          const payload = new URLSearchParams()
+
+          const appendField = (name, value) => {
+            if (typeof value !== 'string') return
+            payload.append(name, value)
+          }
+
+          appendField('form-name', form.getAttribute('name') || '')
+          appendField('redirect', form.querySelector('input[name="redirect"]')?.value || '')
+          appendField('form-source', form.querySelector('input[name="form-source"]')?.value || '')
+          appendField('bot-field', form.querySelector('input[name="bot-field"]')?.value || '')
+
+          const valuesByName = new Map()
+          const setValue = (name, value) => {
+            if (!name) return
+            valuesByName.set(name, value)
+          }
+
+          const fieldInputs = form.querySelectorAll('input, textarea, select')
+          fieldInputs.forEach((field) => {
+            if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) return
+            if (field.type === 'hidden') return
+            if (!field.name) return
+
+            if (field instanceof HTMLInputElement && field.hasAttribute('data-group-raw')) {
+              return
+            }
+
+            if (field instanceof HTMLInputElement && (field.type === 'radio' || field.type === 'checkbox')) {
+              if (!field.checked) return
+              setValue(field.name, field.value)
+              return
+            }
+
+            setValue(field.name, field.value)
+          })
+
+          const summaryTargets = form.querySelectorAll('input[type="hidden"][data-group-summary-target]')
+          summaryTargets.forEach((target) => {
+            if (!(target instanceof HTMLInputElement)) return
+            if (!target.name) return
+            setValue(target.name, target.value)
+          })
+
+          valuesByName.forEach((value, name) => appendField(name, value))
+
+          try {
+            const response = await fetch('/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: payload.toString(),
+            })
+
+            if (!response.ok) {
+              if (errorNotice instanceof HTMLElement) errorNotice.hidden = false
+              resetLoadingState()
+              return
+            }
+
+            window.sessionStorage.setItem(successFlagKey, '1')
+            const redirectUrl = form.querySelector('input[name="redirect"]')?.value || window.location.pathname
+            window.location.href = redirectUrl
+          } catch {
+            if (errorNotice instanceof HTMLElement) errorNotice.hidden = false
+            resetLoadingState()
+          }
+        })
+
+        window.addEventListener('pageshow', () => {
+          resetLoadingState()
         })
       })
 
