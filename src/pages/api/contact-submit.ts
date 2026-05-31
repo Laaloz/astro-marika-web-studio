@@ -1,5 +1,7 @@
 import type {APIRoute} from 'astro'
 
+export const prerender = false
+
 const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY?.trim() || ''
 const recaptchaMinScore = Number.parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5')
 
