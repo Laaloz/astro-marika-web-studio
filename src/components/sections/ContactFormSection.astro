@@ -122,6 +122,7 @@ const sectionIntro = introText || ''
 const formStatus = Astro.url.searchParams.get('form-status')
 const showSuccessMessage = formStatus === 'success'
 const showErrorMessage = formStatus === 'error'
+const successActionPath = `${Astro.url.pathname}?form-status=success`
 ---
 
 <section class="page-section contact-form-section" aria-label={sectionHeading}>
@@ -135,7 +136,7 @@ const showErrorMessage = formStatus === 'error'
       class="contact-form"
       name={safeFormName}
       method="POST"
-      action={hasRecaptchaV3 ? '/api/contact-submit' : undefined}
+      action={successActionPath}
       accept-charset="UTF-8"
       data-netlify="true"
       netlify-honeypot="bot-field"
@@ -264,6 +265,9 @@ const showErrorMessage = formStatus === 'error'
           Lomakkeen lähetys ei onnistunut. Tarkista tiedot ja yritä uudelleen.
         </p>
       )}
+      <p class="contact-form__status contact-form__status--error" data-recaptcha-error hidden>
+        Lomakkeen lähetys ei onnistunut. Tarkista tiedot ja yritä uudelleen.
+      </p>
     </form>
 
     {hasRecaptchaV3 && (
@@ -282,26 +286,47 @@ const showErrorMessage = formStatus === 'error'
           if (!siteKey || !(responseInput instanceof HTMLInputElement)) return
 
           let isSubmitting = false
+          const recaptchaError = form.querySelector('[data-recaptcha-error]')
 
           form.addEventListener('submit', (event) => {
             if (isSubmitting) return
             event.preventDefault()
+            if (recaptchaError instanceof HTMLElement) recaptchaError.hidden = true
+
+            const failSubmit = () => {
+              if (recaptchaError instanceof HTMLElement) recaptchaError.hidden = false
+            }
 
             const submitWithToken = () => {
               if (!window.grecaptcha || typeof window.grecaptcha.execute !== 'function') {
-                form.submit()
+                failSubmit()
                 return
               }
 
               window.grecaptcha
                 .execute(siteKey, {action: 'contact_form_submit'})
-                .then((token) => {
+                .then(async (token) => {
                   responseInput.value = token
+
+                  const verifyPayload = new FormData()
+                  verifyPayload.append('g-recaptcha-response', token)
+                  verifyPayload.append('bot-field', '')
+
+                  const verifyResponse = await fetch('/api/contact-submit', {
+                    method: 'POST',
+                    body: verifyPayload,
+                  })
+
+                  if (!verifyResponse.ok) {
+                    failSubmit()
+                    return
+                  }
+
                   isSubmitting = true
                   form.submit()
                 })
                 .catch(() => {
-                  form.submit()
+                  failSubmit()
                 })
             }
 
@@ -310,7 +335,7 @@ const showErrorMessage = formStatus === 'error'
               return
             }
 
-            form.submit()
+            failSubmit()
           })
         })
       </script>
