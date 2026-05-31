@@ -259,7 +259,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         <span class="contact-form__submit-spinner" aria-hidden="true"></span>
       </button>
 
-      <p class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
+      <p id="contact-form-status" class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
         {successMessage}
       </p>
       {showErrorMessage && (
@@ -280,11 +280,21 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
 
         const defaultText = submitLabel.textContent || 'Lähetä'
 
-        form.addEventListener('submit', () => {
+        const setLoadingState = () => {
           submitButton.disabled = true
           submitButton.classList.add('is-loading')
           submitButton.setAttribute('aria-busy', 'true')
           submitLabel.textContent = 'Lähetetään...'
+        }
+
+        form.addEventListener('submit', () => {
+          setLoadingState()
+        })
+
+        submitButton.addEventListener('click', () => {
+          if (form.checkValidity()) {
+            setLoadingState()
+          }
         })
 
         window.addEventListener('pageshow', () => {
@@ -294,6 +304,15 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           submitLabel.textContent = defaultText
         })
       })
+
+      if (window.location.search.includes('form-status=success')) {
+        const successStatus = document.getElementById('contact-form-status')
+        if (successStatus instanceof HTMLElement) {
+          requestAnimationFrame(() => {
+            successStatus.scrollIntoView({behavior: 'smooth', block: 'center'})
+          })
+        }
+      }
     </script>
   </div>
 </section>
