@@ -115,6 +115,10 @@ const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : 
   })
   .filter((field) => Boolean(field.fieldName && field.fieldLabel))
 
+const checkboxGroupFieldNames = normalizedFields
+  .filter((field) => field.fieldType === 'checkboxGroup')
+  .map((field) => field.fieldName)
+
 const sectionHeading = heading || 'Yhteydenotto'
 const sectionIntro = introText || ''
 const formStatus = Astro.url.searchParams.get('form-status')
@@ -144,6 +148,9 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
       <input type="hidden" name="redirect" value={successActionPath} />
       <input type="hidden" name="form-source" value="contact-section" />
       <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
+      {checkboxGroupFieldNames.map((name) => (
+        <input type="hidden" name={name} value="" data-checkbox-group-target={name} />
+      ))}
 
       <div class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
         {successMessage}
@@ -193,7 +200,8 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
                       <input
                         id={`${fieldId}-${optionIndex}`}
                         type="checkbox"
-                        name={field.fieldName}
+                        name={`${field.fieldName}[]`}
+                        data-checkbox-group-option={field.fieldName}
                         value={option}
                         required={field.required === true && optionIndex === 0}
                       />
@@ -285,6 +293,35 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         const defaultText = submitLabel.textContent || 'Lähetä'
         const successFlagKey = `form-success:${form.getAttribute('name') || 'contact'}:${window.location.pathname}`
 
+        const syncCheckboxGroups = () => {
+          const groups = new Map()
+          const checkedInputs = form.querySelectorAll('input[type="checkbox"][data-checkbox-group-option]:checked')
+          checkedInputs.forEach((input) => {
+            if (!(input instanceof HTMLInputElement)) return
+            const groupName = input.getAttribute('data-checkbox-group-option')
+            if (!groupName) return
+            const current = groups.get(groupName) || []
+            current.push(input.value)
+            groups.set(groupName, current)
+          })
+
+          const hiddenGroupTargets = form.querySelectorAll('input[type="hidden"][data-checkbox-group-target]')
+          hiddenGroupTargets.forEach((input) => {
+            if (!(input instanceof HTMLInputElement)) return
+            const key = input.getAttribute('data-checkbox-group-target') || ''
+            const values = groups.get(key)
+            input.value = Array.isArray(values) ? values.join(', ') : ''
+          })
+        }
+
+        const disableRawCheckboxGroupInputs = () => {
+          const rawGroupInputs = form.querySelectorAll('input[type="checkbox"][data-checkbox-group-option]')
+          rawGroupInputs.forEach((input) => {
+            if (!(input instanceof HTMLInputElement)) return
+            input.disabled = true
+          })
+        }
+
         if (window.sessionStorage.getItem(successFlagKey) === '1') {
           if (successNotice instanceof HTMLElement) successNotice.hidden = false
           if (errorNotice instanceof HTMLElement) errorNotice.hidden = true
@@ -300,6 +337,8 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         }
 
         form.addEventListener('submit', () => {
+          syncCheckboxGroups()
+          disableRawCheckboxGroupInputs()
           window.sessionStorage.setItem(successFlagKey, '1')
           setLoadingState()
         })

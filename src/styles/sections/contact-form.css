@@ -320,6 +320,10 @@
   color: rgb(121 23 23);
 }
 
+.contact-form [data-netlify-recaptcha='true'] {
+  margin-block: 0.9rem 1.1rem;
+}
+
 .contact-form__bot-field {
   position: absolute;
   width: 1px;
