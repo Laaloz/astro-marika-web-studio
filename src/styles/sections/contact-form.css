@@ -320,8 +320,13 @@
   color: rgb(121 23 23);
 }
 
-.contact-form [data-netlify-recaptcha='true'] {
-  margin-block: 0.9rem 1.1rem;
+.contact-form__recaptcha {
+  margin-top: 1.15rem;
+  margin-bottom: 1.15rem;
+}
+
+.contact-form__recaptcha .g-recaptcha {
+  display: inline-block;
 }
 
 .contact-form__bot-field {

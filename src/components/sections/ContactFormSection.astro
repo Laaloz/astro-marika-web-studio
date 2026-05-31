@@ -280,7 +280,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         })}
       </div>
 
-      <div data-netlify-recaptcha="true"></div>
+      <div class="contact-form__recaptcha" data-netlify-recaptcha="true"></div>
 
       <button class="button button--primary-accent contact-form__submit" type="submit" data-submit-button>
         <span data-submit-label>{submitLabel}</span>
@@ -341,6 +341,10 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           const rawGroupInputs = form.querySelectorAll('input[data-group-raw]')
           rawGroupInputs.forEach((input) => {
             if (!(input instanceof HTMLInputElement)) return
+            if (!input.dataset.originalName) {
+              input.dataset.originalName = input.name
+            }
+            input.removeAttribute('name')
             input.disabled = true
           })
         }
