@@ -252,11 +252,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         })}
       </div>
 
-      <button class="button button--primary-accent contact-form__submit" type="submit">
-        {submitLabel}
-      </button>
-
       <div data-netlify-recaptcha="true"></div>
+
+      <button class="button button--primary-accent contact-form__submit" type="submit" data-submit-button>
+        <span data-submit-label>{submitLabel}</span>
+        <span class="contact-form__submit-spinner" aria-hidden="true"></span>
+      </button>
 
       <p class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
         {successMessage}
@@ -267,5 +268,32 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         </p>
       )}
     </form>
+
+    <script is:inline>
+      const contactForms = document.querySelectorAll('.contact-form[data-netlify="true"]')
+
+      contactForms.forEach((form) => {
+        if (!(form instanceof HTMLFormElement)) return
+        const submitButton = form.querySelector('[data-submit-button]')
+        const submitLabel = form.querySelector('[data-submit-label]')
+        if (!(submitButton instanceof HTMLButtonElement) || !(submitLabel instanceof HTMLElement)) return
+
+        const defaultText = submitLabel.textContent || 'Lähetä'
+
+        form.addEventListener('submit', () => {
+          submitButton.disabled = true
+          submitButton.classList.add('is-loading')
+          submitButton.setAttribute('aria-busy', 'true')
+          submitLabel.textContent = 'Lähetetään...'
+        })
+
+        window.addEventListener('pageshow', () => {
+          submitButton.disabled = false
+          submitButton.classList.remove('is-loading')
+          submitButton.removeAttribute('aria-busy')
+          submitLabel.textContent = defaultText
+        })
+      })
+    </script>
   </div>
 </section>

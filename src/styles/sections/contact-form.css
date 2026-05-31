@@ -268,8 +268,36 @@
 }
 
 .contact-form__submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   justify-self: start;
   margin-top: 0.5rem;
+}
+
+.contact-form__submit-spinner {
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 2px solid rgb(255 255 255 / 0.45);
+  border-top-color: #fff;
+  border-radius: 999px;
+  opacity: 0;
+}
+
+.contact-form__submit.is-loading .contact-form__submit-spinner {
+  opacity: 1;
+  animation: contact-form-spin 700ms linear infinite;
+}
+
+.contact-form__submit:disabled {
+  opacity: 0.86;
+  cursor: wait;
+}
+
+@keyframes contact-form-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .contact-form__status {
