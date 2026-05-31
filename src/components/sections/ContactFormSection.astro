@@ -145,6 +145,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
       data-recaptcha-site-key={hasRecaptchaV3 ? recaptchaSiteKey : undefined}
     >
       <input type="hidden" name="form-name" value={safeFormName} />
+      <input type="hidden" name="redirect" value={successActionPath} />
       <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
       {hasRecaptchaV3 && <input type="hidden" name="g-recaptcha-response" data-recaptcha-response />}
 
@@ -259,7 +260,9 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         {submitLabel}
       </button>
 
-      {showSuccessMessage && <p class="contact-form__status contact-form__status--success">{successMessage}</p>}
+      <p class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
+        {successMessage}
+      </p>
       {showErrorMessage && (
         <p class="contact-form__status contact-form__status--error">
           Lomakkeen lähetys ei onnistunut. Tarkista tiedot ja yritä uudelleen.
@@ -286,10 +289,17 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
 
           const siteKey = form.getAttribute('data-recaptcha-site-key')
           const responseInput = form.querySelector('[data-recaptcha-response]')
+          const successNotice = form.querySelector('[data-form-success]')
+          const successFlagKey = `form-success:${form.getAttribute('name') || 'contact'}:${window.location.pathname}`
           if (!siteKey || !(responseInput instanceof HTMLInputElement)) return
 
           let isSubmitting = false
           const recaptchaError = form.querySelector('[data-recaptcha-error]')
+
+          if (successNotice instanceof HTMLElement && window.sessionStorage.getItem(successFlagKey) === '1') {
+            successNotice.hidden = false
+            window.sessionStorage.removeItem(successFlagKey)
+          }
 
           form.addEventListener('submit', (event) => {
             if (isSubmitting) return
@@ -334,6 +344,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
                   }
 
                   isSubmitting = true
+                  window.sessionStorage.setItem(successFlagKey, '1')
                   form.submit()
                 })
                 .catch(() => {
