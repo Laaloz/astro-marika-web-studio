@@ -7,12 +7,14 @@ const {
   introText,
   formName = 'contact',
   submitLabel = 'Lähetä',
+  successMessage = 'Kiitos viestistä! Palaan sinulle pian.',
   fields = [],
 } = Astro.props as {
   heading?: string
   introText?: string
   formName?: string
   submitLabel?: string
+  successMessage?: string
   fields?: Array<{
     fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'radio' | 'checkboxGroup' | 'checkbox' | 'file'
     name?: string
@@ -117,6 +119,9 @@ const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : 
 
 const sectionHeading = heading || 'Yhteydenotto'
 const sectionIntro = introText || ''
+const formStatus = Astro.url.searchParams.get('form-status')
+const showSuccessMessage = formStatus === 'success'
+const showErrorMessage = formStatus === 'error'
 ---
 
 <section class="page-section contact-form-section" aria-label={sectionHeading}>
@@ -252,6 +257,13 @@ const sectionIntro = introText || ''
       <button class="button button--primary-accent contact-form__submit" type="submit">
         {submitLabel}
       </button>
+
+      {showSuccessMessage && <p class="contact-form__status contact-form__status--success">{successMessage}</p>}
+      {showErrorMessage && (
+        <p class="contact-form__status contact-form__status--error">
+          Lomakkeen lähetys ei onnistunut. Tarkista tiedot ja yritä uudelleen.
+        </p>
+      )}
     </form>
 
     {hasRecaptchaV3 && (

@@ -272,6 +272,26 @@
   margin-top: 0.5rem;
 }
 
+.contact-form__status {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-body-normal);
+  line-height: var(--leading-body-normal);
+}
+
+.contact-form__status--success {
+  border: 1px solid rgb(39 115 72 / 0.35);
+  background: rgb(225 245 235 / 0.75);
+  color: rgb(26 90 53);
+}
+
+.contact-form__status--error {
+  border: 1px solid rgb(166 39 39 / 0.35);
+  background: rgb(255 233 233 / 0.8);
+  color: rgb(121 23 23);
+}
+
 .contact-form__bot-field {
   position: absolute;
   width: 1px;

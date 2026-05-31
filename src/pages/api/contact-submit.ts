@@ -14,11 +14,19 @@ type RecaptchaVerifyResponse = {
 
 const toStringValue = (value: FormDataEntryValue | null) => (typeof value === 'string' ? value : '')
 
+const withStatusParam = (targetUrl: string, status: 'success' | 'error') => {
+  const url = new URL(targetUrl)
+  url.searchParams.set('form-status', status)
+  return url.toString()
+}
+
 export const POST: APIRoute = async ({request, site}) => {
   const formData = await request.formData()
   const referer = request.headers.get('referer')
   const fallbackRedirect = site?.origin ? `${site.origin}/` : '/'
-  const successRedirect = referer || fallbackRedirect
+  const baseRedirect = referer || fallbackRedirect
+  const successRedirect = withStatusParam(baseRedirect, 'success')
+  const errorRedirect = withStatusParam(baseRedirect, 'error')
 
   const honeypotValue = toStringValue(formData.get('bot-field')).trim()
   if (honeypotValue) {
@@ -32,7 +40,12 @@ export const POST: APIRoute = async ({request, site}) => {
 
   const recaptchaToken = toStringValue(formData.get('g-recaptcha-response')).trim()
   if (!recaptchaSecretKey || !recaptchaToken) {
-    return new Response('reCAPTCHA verification failed.', {status: 400})
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: errorRedirect,
+      },
+    })
   }
 
   const verifyBody = new URLSearchParams({
@@ -49,7 +62,12 @@ export const POST: APIRoute = async ({request, site}) => {
   })
 
   if (!recaptchaResponse.ok) {
-    return new Response('reCAPTCHA verification failed.', {status: 400})
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: errorRedirect,
+      },
+    })
   }
 
   const recaptchaResult = (await recaptchaResponse.json()) as RecaptchaVerifyResponse
@@ -60,7 +78,12 @@ export const POST: APIRoute = async ({request, site}) => {
     recaptchaResult.score >= recaptchaMinScore
 
   if (!isValidToken) {
-    return new Response('reCAPTCHA verification failed.', {status: 400})
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: errorRedirect,
+      },
+    })
   }
 
   const forwardBody = new FormData()
@@ -79,7 +102,12 @@ export const POST: APIRoute = async ({request, site}) => {
   })
 
   if (!forwardResponse.ok) {
-    return new Response('Form submission failed.', {status: 502})
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: errorRedirect,
+      },
+    })
   }
 
   return new Response(null, {
