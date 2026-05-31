@@ -271,7 +271,10 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
     </form>
 
     {hasRecaptchaV3 && (
-      <script src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}></script>
+      <script
+        src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}
+        data-cookieconsent="ignore"
+      ></script>
     )}
 
     {hasRecaptchaV3 && (
@@ -293,13 +296,14 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
             event.preventDefault()
             if (recaptchaError instanceof HTMLElement) recaptchaError.hidden = true
 
-            const failSubmit = () => {
+            const failSubmit = (reason?: string) => {
               if (recaptchaError instanceof HTMLElement) recaptchaError.hidden = false
+              if (reason) console.warn('reCAPTCHA verification failed:', reason)
             }
 
             const submitWithToken = () => {
               if (!window.grecaptcha || typeof window.grecaptcha.execute !== 'function') {
-                failSubmit()
+                failSubmit('grecaptcha_unavailable')
                 return
               }
 
@@ -318,7 +322,14 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
                   })
 
                   if (!verifyResponse.ok) {
-                    failSubmit()
+                    let reason = 'verify_failed'
+                    try {
+                      const payload = await verifyResponse.json()
+                      reason = payload?.reason || reason
+                    } catch {
+                      reason = 'verify_failed'
+                    }
+                    failSubmit(reason)
                     return
                   }
 
@@ -326,7 +337,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
                   form.submit()
                 })
                 .catch(() => {
-                  failSubmit()
+                  failSubmit('execute_failed')
                 })
             }
 
