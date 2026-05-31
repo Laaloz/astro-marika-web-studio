@@ -306,7 +306,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
             event.preventDefault()
             if (recaptchaError instanceof HTMLElement) recaptchaError.hidden = true
 
-            const failSubmit = (reason?: string) => {
+            const failSubmit = (reason) => {
               if (recaptchaError instanceof HTMLElement) recaptchaError.hidden = false
               if (reason) console.warn('reCAPTCHA verification failed:', reason)
             }
