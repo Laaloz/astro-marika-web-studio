@@ -6,7 +6,6 @@
 }
 
 .two-column-content__left {
-  max-width: var(--section-title-max-width);
   display: grid;
   gap: var(--space-4);
 }
@@ -79,7 +78,6 @@
 }
 
 .two-column-content__title--right {
-  max-width: var(--section-title-max-width);
   margin-bottom: var(--space-3);
 }
 

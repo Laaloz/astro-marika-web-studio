@@ -35,16 +35,12 @@
 .fifty-fifty-simple__body {
   max-width: 35.25rem;
   color: var(--color-text);
-  gap: 0;
+  gap: var(--space-1);
 }
 
 .fifty-fifty-simple__body :where(p, li) {
   font-size: var(--text-body-normal);
   line-height: 1.4;
-}
-
-.fifty-fifty-simple__body :where(p + p) {
-  margin-top: 0;
 }
 
 .fifty-fifty-simple__media {

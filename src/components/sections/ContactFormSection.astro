@@ -14,7 +14,7 @@ const {
   formName?: string
   submitLabel?: string
   fields?: Array<{
-    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'radio' | 'checkbox' | 'file'
+    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'radio' | 'checkboxGroup' | 'checkbox' | 'file'
     name?: string
     label?: string
     linkLabel?: string
@@ -33,18 +33,34 @@ const safeFormName = formName.trim() || 'contact'
 const defaultFields = [
   {fieldType: 'text', name: 'firstName', label: 'Etunimi*', required: true, width: 'half'},
   {fieldType: 'text', name: 'lastName', label: 'Sukunimi*', required: true, width: 'half'},
-  {fieldType: 'email', name: 'email', label: 'Sähköposti *', required: true, width: 'half'},
+  {fieldType: 'email', name: 'email', label: 'Sähköposti*', required: true, width: 'half'},
+  {fieldType: 'text', name: 'company', label: 'Yritys', required: false, width: 'half'},
   {fieldType: 'tel', name: 'phone', label: 'Puhelinnumero', required: false, width: 'half'},
   {
-    fieldType: 'radio',
-    name: 'topic',
-    label: 'Mitä asiasi koskee? *',
-    required: true,
+    fieldType: 'checkboxGroup',
+    name: 'interestedIn',
+    label: 'Olet kiinnostunut?',
+    required: false,
     width: 'full',
     options: ['Verkkosivut', 'Some', 'Digitaalinen kutsukortti', 'Jotain muuta'],
   },
-  {fieldType: 'file', name: 'attachment', label: 'Liitä tiedosto', required: false, width: 'full'},
-  {fieldType: 'textarea', name: 'message', label: 'Viestisi', required: true, width: 'full', rows: 6},
+  {fieldType: 'textarea', name: 'description', label: 'Kuvaus', required: false, width: 'full', rows: 6},
+  {
+    fieldType: 'file',
+    name: 'attachment',
+    label: 'Tarjouspyyntö tai muu dokumentti',
+    required: false,
+    width: 'full',
+  },
+  {
+    fieldType: 'checkboxGroup',
+    name: 'preferredContact',
+    label: 'Toivottu tapa yhteydenottoon',
+    required: false,
+    width: 'full',
+    options: ['Sähköposti', 'Puhelin', 'WhatsApp', 'Tapaaminen'],
+  },
+  {fieldType: 'textarea', name: 'message', label: 'Lisätiedot', required: false, width: 'full', rows: 6},
   {
     fieldType: 'checkbox',
     name: 'consent',
@@ -125,17 +141,40 @@ const sectionIntro = introText || ''
           const fieldId = `${safeFormName}-${field.fieldName}-${index}`
           const isFullWidth = field.width === 'full'
           const fieldClassName = `contact-form__field contact-form__field--${isFullWidth ? 'full' : 'half'}`
+          const requiredMark = field.required === true ? ' *' : ''
 
           if (field.fieldType === 'radio') {
             return (
               <fieldset class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}>
-                <legend>{field.fieldLabel}</legend>
+                <legend>{field.fieldLabel}{requiredMark}</legend>
                 <div class="contact-form__options">
                   {field.options.map((option, optionIndex) => (
                     <label class="contact-form__radio" for={`${fieldId}-${optionIndex}`}>
                       <input
                         id={`${fieldId}-${optionIndex}`}
                         type="radio"
+                        name={field.fieldName}
+                        value={option}
+                        required={field.required === true && optionIndex === 0}
+                      />
+                      <span>{option}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )
+          }
+
+          if (field.fieldType === 'checkboxGroup') {
+            return (
+              <fieldset class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}>
+                <legend>{field.fieldLabel}{requiredMark}</legend>
+                <div class="contact-form__options">
+                  {field.options.map((option, optionIndex) => (
+                    <label class="contact-form__option" for={`${fieldId}-${optionIndex}`}>
+                      <input
+                        id={`${fieldId}-${optionIndex}`}
+                        type="checkbox"
                         name={field.fieldName}
                         value={option}
                         required={field.required === true && optionIndex === 0}
@@ -159,7 +198,7 @@ const sectionIntro = introText || ''
                     <PortableText value={field.consentContent} />
                   ) : (
                     <span>
-                      {field.fieldLabel}{' '}
+                      {field.fieldLabel}{requiredMark}{' '}
                       {hasConsentLink ? (
                         <a href={normalizeCmsHref(field.linkHref)}>{field.linkLabel}</a>
                       ) : null}
@@ -173,7 +212,7 @@ const sectionIntro = introText || ''
           if (field.fieldType === 'textarea') {
             return (
               <div class={fieldClassName}>
-                <label for={fieldId}>{field.fieldLabel}</label>
+                <label for={fieldId}>{field.fieldLabel}{requiredMark}</label>
                 <div class="contact-form__control contact-form__control--textarea">
                   <textarea
                     id={fieldId}
@@ -189,7 +228,7 @@ const sectionIntro = introText || ''
 
           return (
             <div class={fieldClassName}>
-              <label for={fieldId}>{field.fieldLabel}</label>
+              <label for={fieldId}>{field.fieldLabel}{requiredMark}</label>
               <div class="contact-form__control">
                 <input
                   id={fieldId}
