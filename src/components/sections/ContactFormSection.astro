@@ -130,6 +130,7 @@ const sectionIntro = introText || ''
       method="POST"
       accept-charset="UTF-8"
       data-netlify="true"
+      data-netlify-recaptcha="true"
       netlify-honeypot="bot-field"
       enctype="multipart/form-data"
     >
@@ -242,6 +243,8 @@ const sectionIntro = introText || ''
           )
         })}
       </div>
+
+      <div data-netlify-recaptcha="true"></div>
 
       <button class="button button--primary-accent contact-form__submit" type="submit">
         {submitLabel}
