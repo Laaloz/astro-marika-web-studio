@@ -115,37 +115,7 @@ const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : 
   })
   .filter((field) => Boolean(field.fieldName && field.fieldLabel))
 
-const resolveGroupSubmissionLabel = (fieldName: string, fieldLabel: string) => {
-  const normalizedName = fieldName.trim().toLowerCase()
-  const normalizedLabel = fieldLabel.replace(/\*/g, '').trim().toLowerCase()
-
-  if (
-    normalizedName === 'topic' ||
-    normalizedName === 'interestedin' ||
-    normalizedLabel.includes('asiasi koskee') ||
-    normalizedLabel.includes('olet kiinnostunut')
-  ) {
-    return 'Mitä asiasi koskee?'
-  }
-
-  if (
-    normalizedName === 'preferredcontact' ||
-    normalizedName === 'contactstatus' ||
-    normalizedLabel.includes('toivot yhteydenottoa') ||
-    normalizedLabel.includes('yhteydenottotapa')
-  ) {
-    return 'Toivot yhteydenottoa:'
-  }
-
-  return fieldLabel.replace(/\*/g, '').trim() || fieldName
-}
-
-const groupedSubmissionFields = normalizedFields
-  .filter((field) => field.fieldType === 'radio' || field.fieldType === 'checkboxGroup')
-  .map((field) => ({
-    key: field.fieldName,
-    label: resolveGroupSubmissionLabel(field.fieldName, field.fieldLabel),
-  }))
+const getGroupLegendLabel = (label: string) => label.replace(/\*/g, '').trim()
 
 const sectionHeading = heading || 'Yhteydenotto'
 const sectionIntro = introText || ''
@@ -176,14 +146,6 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
       <input type="hidden" name="redirect" value={successActionPath} />
       <input type="hidden" name="form-source" value="contact-section" />
       <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
-      {groupedSubmissionFields.map((field) => (
-        <input
-          type="hidden"
-          name={field.label}
-          value=""
-          data-group-summary-target={field.key}
-        />
-      ))}
 
       <div class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
         {successMessage}
@@ -203,13 +165,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           const cleanFieldLabel = field.fieldLabel.replace(/\*/g, '').trim() || field.fieldName
 
           if (field.fieldType === 'radio') {
-            const groupSubmissionName = resolveGroupSubmissionLabel(field.fieldName, field.fieldLabel)
+            const groupSubmissionName = getGroupLegendLabel(field.fieldLabel)
             return (
               <fieldset
                 class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}
                 data-submission-field="group"
                 data-submission-name={groupSubmissionName}
-                data-group-name={field.fieldName}
               >
                 <legend>{field.fieldLabel}{requiredMark}</legend>
                 <div class="contact-form__options">
@@ -233,13 +194,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           }
 
           if (field.fieldType === 'checkboxGroup') {
-            const groupSubmissionName = resolveGroupSubmissionLabel(field.fieldName, field.fieldLabel)
+            const groupSubmissionName = getGroupLegendLabel(field.fieldLabel)
             return (
               <fieldset
                 class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}
                 data-submission-field="group"
                 data-submission-name={groupSubmissionName}
-                data-group-name={field.fieldName}
               >
                 <legend>{field.fieldLabel}{requiredMark}</legend>
                 <div class="contact-form__options">
@@ -347,39 +307,6 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         const defaultText = submitLabel.textContent || 'Lähetä'
         const successFlagKey = `form-success:${form.getAttribute('name') || 'contact'}:${window.location.pathname}`
 
-        const syncGroupedFieldSummaries = () => {
-          const groupValues = new Map()
-          const rawGroupInputs = form.querySelectorAll('input[data-group-raw]')
-
-          rawGroupInputs.forEach((input) => {
-            if (!(input instanceof HTMLInputElement)) return
-            const groupName = input.getAttribute('data-group-raw') || ''
-            const kind = input.getAttribute('data-group-kind') || ''
-            if (!groupName || !kind) return
-
-            if (kind === 'radio') {
-              if (input.checked) {
-                groupValues.set(groupName, [input.value])
-              }
-              return
-            }
-
-            if (kind === 'checkboxGroup' && input.checked) {
-              const current = groupValues.get(groupName) || []
-              current.push(input.value)
-              groupValues.set(groupName, current)
-            }
-          })
-
-          const summaryTargets = form.querySelectorAll('input[type="hidden"][data-group-summary-target]')
-          summaryTargets.forEach((target) => {
-            if (!(target instanceof HTMLInputElement)) return
-            const key = target.getAttribute('data-group-summary-target') || ''
-            const values = groupValues.get(key)
-            target.value = Array.isArray(values) ? values.join(', ') : ''
-          })
-        }
-
         if (window.sessionStorage.getItem(successFlagKey) === '1') {
           if (successNotice instanceof HTMLElement) successNotice.hidden = false
           if (errorNotice instanceof HTMLElement) errorNotice.hidden = true
@@ -403,7 +330,6 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
 
         form.addEventListener('submit', async (event) => {
           event.preventDefault()
-          syncGroupedFieldSummaries()
           setLoadingState()
 
           const payload = new URLSearchParams()
@@ -426,10 +352,11 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
             if (!submissionName) return
 
             if (blockType === 'group') {
-              const groupName = block.getAttribute('data-group-name') || ''
-              const summaryTarget = form.querySelector(`input[data-group-summary-target="${groupName}"]`)
-              if (!(summaryTarget instanceof HTMLInputElement) || !summaryTarget.value) return
-              appendField(submissionName, summaryTarget.value)
+              const checkedOptions = Array.from(block.querySelectorAll('input[data-group-raw]:checked'))
+                .map((option) => (option instanceof HTMLInputElement ? option.value : ''))
+                .filter(Boolean)
+              if (checkedOptions.length === 0) return
+              appendField(submissionName, checkedOptions.join(', '))
               return
             }
 
