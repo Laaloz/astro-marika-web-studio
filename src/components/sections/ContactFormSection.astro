@@ -145,6 +145,15 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
       <input type="hidden" name="form-source" value="contact-section" />
       <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
 
+      <div class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
+        {successMessage}
+      </div>
+
+      <div class="contact-form__status contact-form__status--error" data-form-error hidden={!showErrorMessage}>
+        Lomakkeen lähetys ei onnistunut. Tarkista tiedot ja yritä uudelleen.
+      </div>
+
+      <div data-form-fields hidden={showSuccessMessage}>
       <div class="contact-form__grid contact-form__grid--builder">
         {normalizedFields.map((field, index) => {
           const fieldId = `${safeFormName}-${field.fieldName}-${index}`
@@ -258,15 +267,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         <span data-submit-label>{submitLabel}</span>
         <span class="contact-form__submit-spinner" aria-hidden="true"></span>
       </button>
-
-      <p id="contact-form-status" class="contact-form__status contact-form__status--success" data-form-success hidden={!showSuccessMessage}>
-        {successMessage}
-      </p>
-      {showErrorMessage && (
-        <p class="contact-form__status contact-form__status--error">
-          Lomakkeen lähetys ei onnistunut. Tarkista tiedot ja yritä uudelleen.
-        </p>
-      )}
+      </div>
     </form>
 
     <script is:inline>
@@ -276,9 +277,20 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         if (!(form instanceof HTMLFormElement)) return
         const submitButton = form.querySelector('[data-submit-button]')
         const submitLabel = form.querySelector('[data-submit-label]')
+        const successNotice = form.querySelector('[data-form-success]')
+        const errorNotice = form.querySelector('[data-form-error]')
+        const formFields = form.querySelector('[data-form-fields]')
         if (!(submitButton instanceof HTMLButtonElement) || !(submitLabel instanceof HTMLElement)) return
 
         const defaultText = submitLabel.textContent || 'Lähetä'
+        const successFlagKey = `form-success:${form.getAttribute('name') || 'contact'}:${window.location.pathname}`
+
+        if (window.sessionStorage.getItem(successFlagKey) === '1') {
+          if (successNotice instanceof HTMLElement) successNotice.hidden = false
+          if (errorNotice instanceof HTMLElement) errorNotice.hidden = true
+          if (formFields instanceof HTMLElement) formFields.hidden = true
+          window.sessionStorage.removeItem(successFlagKey)
+        }
 
         const setLoadingState = () => {
           submitButton.disabled = true
@@ -288,13 +300,8 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
         }
 
         form.addEventListener('submit', () => {
+          window.sessionStorage.setItem(successFlagKey, '1')
           setLoadingState()
-        })
-
-        submitButton.addEventListener('click', () => {
-          if (form.checkValidity()) {
-            setLoadingState()
-          }
         })
 
         window.addEventListener('pageshow', () => {
@@ -306,8 +313,11 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
       })
 
       if (window.location.search.includes('form-status=success')) {
-        const successStatus = document.getElementById('contact-form-status')
+        const successStatus = document.querySelector('[data-form-success]')
+        const formFields = document.querySelector('[data-form-fields]')
         if (successStatus instanceof HTMLElement) {
+          successStatus.hidden = false
+          if (formFields instanceof HTMLElement) formFields.hidden = true
           requestAnimationFrame(() => {
             successStatus.scrollIntoView({behavior: 'smooth', block: 'center'})
           })
