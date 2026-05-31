@@ -33,11 +33,15 @@ const {
 } = Astro.props
 
 function buildUrl(source: SanityImageSource, w: number, h?: number): string | null {
-  let b = urlFor(source)?.width(w)
-  if (!b) return null
-  if (h) b = b.height(h)
-  if (fit) b = b.fit(fit)
-  return b.quality(quality).url()
+  try {
+    let b = urlFor(source)?.width(w)
+    if (!b) return null
+    if (h) b = b.height(h)
+    if (fit) b = b.fit(fit)
+    return b.quality(quality).url()
+  } catch {
+    return null
+  }
 }
 
 const resolvedUrl = image ? buildUrl(image, width, height) : null
