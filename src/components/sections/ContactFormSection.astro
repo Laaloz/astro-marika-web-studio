@@ -29,6 +29,8 @@ const {
 }
 
 const safeFormName = formName.trim() || 'contact'
+const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY?.trim() || ''
+const hasRecaptchaV3 = Boolean(recaptchaSiteKey)
 
 const defaultFields = [
   {fieldType: 'text', name: 'firstName', label: 'Etunimi*', required: true, width: 'half'},
@@ -128,14 +130,17 @@ const sectionIntro = introText || ''
       class="contact-form"
       name={safeFormName}
       method="POST"
+      action={hasRecaptchaV3 ? '/api/contact-submit' : undefined}
       accept-charset="UTF-8"
       data-netlify="true"
-      data-netlify-recaptcha="true"
       netlify-honeypot="bot-field"
       enctype="multipart/form-data"
+      data-recaptcha-v3={hasRecaptchaV3 ? 'true' : undefined}
+      data-recaptcha-site-key={hasRecaptchaV3 ? recaptchaSiteKey : undefined}
     >
       <input type="hidden" name="form-name" value={safeFormName} />
       <input class="contact-form__bot-field" name="bot-field" tabindex="-1" autocomplete="off" />
+      {hasRecaptchaV3 && <input type="hidden" name="g-recaptcha-response" data-recaptcha-response />}
 
       <div class="contact-form__grid contact-form__grid--builder">
         {normalizedFields.map((field, index) => {
@@ -244,11 +249,59 @@ const sectionIntro = introText || ''
         })}
       </div>
 
-      <div data-netlify-recaptcha="true"></div>
-
       <button class="button button--primary-accent contact-form__submit" type="submit">
         {submitLabel}
       </button>
     </form>
+
+    {hasRecaptchaV3 && (
+      <script src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}></script>
+    )}
+
+    {hasRecaptchaV3 && (
+      <script is:inline>
+        const recaptchaForms = document.querySelectorAll('form[data-recaptcha-v3="true"]')
+
+        recaptchaForms.forEach((form) => {
+          if (!(form instanceof HTMLFormElement)) return
+
+          const siteKey = form.getAttribute('data-recaptcha-site-key')
+          const responseInput = form.querySelector('[data-recaptcha-response]')
+          if (!siteKey || !(responseInput instanceof HTMLInputElement)) return
+
+          let isSubmitting = false
+
+          form.addEventListener('submit', (event) => {
+            if (isSubmitting) return
+            event.preventDefault()
+
+            const submitWithToken = () => {
+              if (!window.grecaptcha || typeof window.grecaptcha.execute !== 'function') {
+                form.submit()
+                return
+              }
+
+              window.grecaptcha
+                .execute(siteKey, {action: 'contact_form_submit'})
+                .then((token) => {
+                  responseInput.value = token
+                  isSubmitting = true
+                  form.submit()
+                })
+                .catch(() => {
+                  form.submit()
+                })
+            }
+
+            if (window.grecaptcha && typeof window.grecaptcha.ready === 'function') {
+              window.grecaptcha.ready(submitWithToken)
+              return
+            }
+
+            form.submit()
+          })
+        })
+      </script>
+    )}
   </div>
 </section>
