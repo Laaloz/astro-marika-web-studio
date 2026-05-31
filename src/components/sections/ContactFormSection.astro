@@ -175,10 +175,16 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           const isFullWidth = field.width === 'full'
           const fieldClassName = `contact-form__field contact-form__field--${isFullWidth ? 'full' : 'half'}`
           const requiredMark = field.required === true ? ' *' : ''
+          const cleanFieldLabel = field.fieldLabel.replace(/\*/g, '').trim() || field.fieldName
 
           if (field.fieldType === 'radio') {
             return (
-              <fieldset class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}>
+              <fieldset
+                class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}
+                data-submission-field="group"
+                data-submission-name={cleanFieldLabel}
+                data-group-name={field.fieldName}
+              >
                 <legend>{field.fieldLabel}{requiredMark}</legend>
                 <div class="contact-form__options">
                   {field.options.map((option, optionIndex) => (
@@ -202,7 +208,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
 
           if (field.fieldType === 'checkboxGroup') {
             return (
-              <fieldset class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}>
+              <fieldset
+                class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}
+                data-submission-field="group"
+                data-submission-name={cleanFieldLabel}
+                data-group-name={field.fieldName}
+              >
                 <legend>{field.fieldLabel}{requiredMark}</legend>
                 <div class="contact-form__options">
                   {field.options.map((option, optionIndex) => (
@@ -228,7 +239,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
             const hasConsentLink = Boolean(field.linkLabel && field.linkHref)
             const hasConsentRichText = Array.isArray(field.consentContent) && field.consentContent.length > 0
             return (
-              <label class={`contact-form__consent ${isFullWidth ? 'contact-form__consent--full' : ''}`} for={fieldId}>
+              <label
+                class={`contact-form__consent ${isFullWidth ? 'contact-form__consent--full' : ''}`}
+                for={fieldId}
+                data-submission-field="direct"
+                data-submission-name={cleanFieldLabel}
+              >
                 <input id={fieldId} name={field.fieldName} type="checkbox" required={field.required === true} />
                 <div class="contact-form__consent-copy">
                   {hasConsentRichText ? (
@@ -248,7 +264,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
 
           if (field.fieldType === 'textarea') {
             return (
-              <div class={fieldClassName}>
+              <div class={fieldClassName} data-submission-field="direct" data-submission-name={cleanFieldLabel}>
                 <label for={fieldId}>{field.fieldLabel}{requiredMark}</label>
                 <div class="contact-form__control contact-form__control--textarea">
                   <textarea
@@ -264,7 +280,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           }
 
           return (
-            <div class={fieldClassName}>
+            <div class={fieldClassName} data-submission-field="direct" data-submission-name={cleanFieldLabel}>
               <label for={fieldId}>{field.fieldLabel}{requiredMark}</label>
               <div class="contact-form__control">
                 <input
@@ -337,18 +353,6 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           })
         }
 
-        const disableRawCheckboxGroupInputs = () => {
-          const rawGroupInputs = form.querySelectorAll('input[data-group-raw]')
-          rawGroupInputs.forEach((input) => {
-            if (!(input instanceof HTMLInputElement)) return
-            if (!input.dataset.originalName) {
-              input.dataset.originalName = input.name
-            }
-            input.removeAttribute('name')
-            input.disabled = true
-          })
-        }
-
         if (window.sessionStorage.getItem(successFlagKey) === '1') {
           if (successNotice instanceof HTMLElement) successNotice.hidden = false
           if (errorNotice instanceof HTMLElement) errorNotice.hidden = true
@@ -387,39 +391,32 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           appendField('form-source', form.querySelector('input[name="form-source"]')?.value || '')
           appendField('bot-field', form.querySelector('input[name="bot-field"]')?.value || '')
 
-          const valuesByName = new Map()
-          const setValue = (name, value) => {
-            if (!name) return
-            valuesByName.set(name, value)
-          }
+          const submissionBlocks = form.querySelectorAll('[data-submission-field]')
+          submissionBlocks.forEach((block) => {
+            if (!(block instanceof HTMLElement)) return
+            const blockType = block.getAttribute('data-submission-field')
+            const submissionName = block.getAttribute('data-submission-name') || ''
+            if (!submissionName) return
 
-          const fieldInputs = form.querySelectorAll('input, textarea, select')
-          fieldInputs.forEach((field) => {
+            if (blockType === 'group') {
+              const groupName = block.getAttribute('data-group-name') || ''
+              const summaryTarget = form.querySelector(`input[data-group-summary-target="${groupName}"]`)
+              if (!(summaryTarget instanceof HTMLInputElement) || !summaryTarget.value) return
+              appendField(submissionName, summaryTarget.value)
+              return
+            }
+
+            const field = block.querySelector('input, textarea, select')
             if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) return
-            if (field.type === 'hidden') return
-            if (!field.name) return
 
-            if (field instanceof HTMLInputElement && field.hasAttribute('data-group-raw')) {
-              return
-            }
-
-            if (field instanceof HTMLInputElement && (field.type === 'radio' || field.type === 'checkbox')) {
+            if (field instanceof HTMLInputElement && field.type === 'checkbox') {
               if (!field.checked) return
-              setValue(field.name, field.value)
+              appendField(submissionName, field.value)
               return
             }
 
-            setValue(field.name, field.value)
+            appendField(submissionName, field.value)
           })
-
-          const summaryTargets = form.querySelectorAll('input[type="hidden"][data-group-summary-target]')
-          summaryTargets.forEach((target) => {
-            if (!(target instanceof HTMLInputElement)) return
-            if (!target.name) return
-            setValue(target.name, target.value)
-          })
-
-          valuesByName.forEach((value, name) => appendField(name, value))
 
           try {
             const response = await fetch('/', {
