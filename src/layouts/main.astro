@@ -30,6 +30,9 @@ interface FooterSocialLink extends NavigationLink {
 	icon?: SanityImageSource & { alt?: string };
 }
 
+const gtmId = import.meta.env.PUBLIC_GTM_ID?.trim() || '';
+const hasGtm = Boolean(gtmId);
+
 const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   siteTitle,
   siteDescription,
@@ -284,6 +287,50 @@ const lcpPreloadSrcset = lcpImageSource
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
+		{hasGtm && (
+			<script is:inline>
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){window.dataLayer.push(arguments);}
+
+				gtag('consent', 'default', {
+					ad_storage: 'denied',
+					ad_user_data: 'denied',
+					ad_personalization: 'denied',
+					analytics_storage: 'denied',
+					functionality_storage: 'denied',
+					personalization_storage: 'denied',
+					security_storage: 'granted',
+					wait_for_update: 500,
+				});
+
+				const updateConsentFromCookiebot = () => {
+					if (!window.Cookiebot || !window.Cookiebot.consent) return;
+					const consent = window.Cookiebot.consent;
+					gtag('consent', 'update', {
+						ad_storage: consent.marketing ? 'granted' : 'denied',
+						ad_user_data: consent.marketing ? 'granted' : 'denied',
+						ad_personalization: consent.marketing ? 'granted' : 'denied',
+						analytics_storage: consent.statistics ? 'granted' : 'denied',
+						functionality_storage: consent.preferences ? 'granted' : 'denied',
+						personalization_storage: consent.preferences ? 'granted' : 'denied',
+						security_storage: 'granted',
+					});
+				};
+
+				document.addEventListener('CookiebotOnConsentReady', updateConsentFromCookiebot);
+				document.addEventListener('CookiebotOnAccept', updateConsentFromCookiebot);
+				document.addEventListener('CookiebotOnDecline', updateConsentFromCookiebot);
+			</script>
+		)}
+		{hasGtm && (
+			<script is:inline>
+				(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','dataLayer',${JSON.stringify(gtmId)});
+			</script>
+		)}
 		<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
 		{lcpPreloadSrcset && (
 			<link
@@ -313,6 +360,16 @@ const lcpPreloadSrcset = lcpImageSource
 		<title>{title}</title>
 	</head>
 	<body>
+		{hasGtm && (
+			<noscript>
+				<iframe
+					src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+					height="0"
+					width="0"
+					style="display:none;visibility:hidden"
+				></iframe>
+			</noscript>
+		)}
 		<a class="skip-link" href="#main-content">Siirry pääsisältöön</a>
 		<header class:list={{ 'site-header': true, 'site-header--home': isHomepage }} role="banner">
 			<div class="site-header__desktop">
@@ -550,6 +607,9 @@ const lcpPreloadSrcset = lcpImageSource
 				<div class="site-footer__meta">
 					<p>{footerCopyright}</p>
 					<a href={normalizeCmsHref(footerPrivacyHref)}>{footerPrivacyLabel}</a>
+					{hasGtm && (
+						<a href="#" data-cookie-preferences>Evästeasetukset</a>
+					)}
 				</div>
 			</div>
 		</footer>
@@ -744,6 +804,17 @@ const lcpPreloadSrcset = lcpImageSource
 
 			alignDesktopSubmenus();
 			window.addEventListener('resize', alignDesktopSubmenus);
+
+			const cookiePreferenceLinks = document.querySelectorAll('[data-cookie-preferences]');
+			cookiePreferenceLinks.forEach((link) => {
+				if (!(link instanceof HTMLAnchorElement)) return;
+				link.addEventListener('click', (event) => {
+					event.preventDefault();
+					if (window.Cookiebot && typeof window.Cookiebot.renew === 'function') {
+						window.Cookiebot.renew();
+					}
+				});
+			});
 		</script>
 	</body>
 	</html>
