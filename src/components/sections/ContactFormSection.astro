@@ -115,11 +115,36 @@ const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : 
   })
   .filter((field) => Boolean(field.fieldName && field.fieldLabel))
 
+const resolveGroupSubmissionLabel = (fieldName: string, fieldLabel: string) => {
+  const normalizedName = fieldName.trim().toLowerCase()
+  const normalizedLabel = fieldLabel.replace(/\*/g, '').trim().toLowerCase()
+
+  if (
+    normalizedName === 'topic' ||
+    normalizedName === 'interestedin' ||
+    normalizedLabel.includes('asiasi koskee') ||
+    normalizedLabel.includes('olet kiinnostunut')
+  ) {
+    return 'Mitä asiasi koskee?'
+  }
+
+  if (
+    normalizedName === 'preferredcontact' ||
+    normalizedName === 'contactstatus' ||
+    normalizedLabel.includes('toivot yhteydenottoa') ||
+    normalizedLabel.includes('yhteydenottotapa')
+  ) {
+    return 'Toivot yhteydenottoa:'
+  }
+
+  return fieldLabel.replace(/\*/g, '').trim() || fieldName
+}
+
 const groupedSubmissionFields = normalizedFields
   .filter((field) => field.fieldType === 'radio' || field.fieldType === 'checkboxGroup')
   .map((field) => ({
     key: field.fieldName,
-    label: field.fieldLabel.replace(/\*/g, '').trim() || field.fieldName,
+    label: resolveGroupSubmissionLabel(field.fieldName, field.fieldLabel),
   }))
 
 const sectionHeading = heading || 'Yhteydenotto'
@@ -178,11 +203,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           const cleanFieldLabel = field.fieldLabel.replace(/\*/g, '').trim() || field.fieldName
 
           if (field.fieldType === 'radio') {
+            const groupSubmissionName = resolveGroupSubmissionLabel(field.fieldName, field.fieldLabel)
             return (
               <fieldset
                 class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}
                 data-submission-field="group"
-                data-submission-name={cleanFieldLabel}
+                data-submission-name={groupSubmissionName}
                 data-group-name={field.fieldName}
               >
                 <legend>{field.fieldLabel}{requiredMark}</legend>
@@ -207,11 +233,12 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           }
 
           if (field.fieldType === 'checkboxGroup') {
+            const groupSubmissionName = resolveGroupSubmissionLabel(field.fieldName, field.fieldLabel)
             return (
               <fieldset
                 class={`contact-form__fieldset ${isFullWidth ? 'contact-form__fieldset--full' : ''}`}
                 data-submission-field="group"
-                data-submission-name={cleanFieldLabel}
+                data-submission-name={groupSubmissionName}
                 data-group-name={field.fieldName}
               >
                 <legend>{field.fieldLabel}{requiredMark}</legend>
