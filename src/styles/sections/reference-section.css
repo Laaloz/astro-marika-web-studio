@@ -78,7 +78,7 @@
   height: auto;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  transform: scale(1.01);
+  transform: scale(1);
   transform-origin: center;
   backface-visibility: hidden;
   will-change: transform;
@@ -126,7 +126,7 @@
 
 .reference-card:hover .reference-card__image,
 .reference-card:focus-visible .reference-card__image {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .reference-section__cta-wrap {
