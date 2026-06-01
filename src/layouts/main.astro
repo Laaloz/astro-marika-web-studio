@@ -275,7 +275,7 @@ const lcpPreloadSrcset = lcpImageSource
 	? lcpPreloadWidths
 			.map((w) => {
 				const h = Math.round(791 * w / 527);
-			return `${urlFor(lcpImageSource)?.width(w).height(h).fit('crop').quality(75).url()} ${w}w`;
+			return `${urlFor(lcpImageSource)?.width(w).height(h).fit('crop').quality(90).url()} ${w}w`;
 			})
 			.filter(Boolean)
 			.join(', ')
@@ -573,7 +573,7 @@ const lcpPreloadSrcset = lcpImageSource
 								width={416}
 								height={73}
 								fit="max"
-								quality={75}
+								quality={90}
 								widths={[320, 416, 640, 832]}
 								class="site-footer__brand-logo"
 								loading="lazy"
