@@ -270,7 +270,7 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 
 // Preload LCP hero image if it's a Sanity image (not a plain string)
 const lcpImageSource = content.image && typeof content.image !== 'string' ? content.image : null;
-const lcpPreloadWidths = [320, 420, 527, 640, 1054, 1280];
+const lcpPreloadWidths = [320, 420, 527, 640, 1054, 1280, 1600, 2000];
 const lcpPreloadSrcset = lcpImageSource
 	? lcpPreloadWidths
 			.map((w) => {

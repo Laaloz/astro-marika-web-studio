@@ -52,13 +52,13 @@ const headingAlignmentClass = textAlignment === 'left' ? 'reference-section__hea
                   <SanityImage
                     image={item.image}
                     alt={item.image.alt || item.title || ''}
-                    width={421}
-                    height={482}
+                    width={800}
+                    height={800}
                     fit="crop"
                     quality={100}
-                    widths={[320, 421, 600, 842, 960]}
+                    widths={[320, 480, 640, 800, 960, 1280, 1600, 1920]}
                     class="reference-card__image"
-                    sizes="(min-width: 80rem) 26.3rem, (min-width: 56rem) 31vw, 100vw"
+                    sizes="(min-width: 80rem) 29rem, (min-width: 56rem) 31vw, 100vw"
                   />
                 ) : (
                   <div class="reference-card__image reference-card__image--placeholder"></div>
