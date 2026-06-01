@@ -78,10 +78,6 @@
   height: auto;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  transform: translateZ(0) scale(1);
-  transform-origin: center;
-  backface-visibility: hidden;
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reference-card__image--placeholder {
@@ -125,7 +121,7 @@
 
 .reference-card:hover .reference-card__image,
 .reference-card:focus-visible .reference-card__image {
-  transform: translateZ(0) scale(1.03);
+  transform: none;
 }
 
 .reference-section__cta-wrap {
@@ -157,7 +153,4 @@
     font-size: clamp(2rem, 9vw, 2.5rem);
   }
 
-  .reference-card__image {
-    aspect-ratio: 4 / 5;
-  }
 }
