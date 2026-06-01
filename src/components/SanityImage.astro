@@ -15,6 +15,7 @@ interface Props {
   decoding?: 'async' | 'auto' | 'sync'
   fetchpriority?: 'high' | 'low' | 'auto'
   sizes?: string
+  dpr?: 1 | 2 | 3
 }
 
 const {
@@ -30,6 +31,7 @@ const {
   decoding = 'async',
   fetchpriority,
   sizes,
+  dpr = 1,
 } = Astro.props
 
 function buildUrl(source: SanityImageSource, w: number, h?: number): string | null {
@@ -38,7 +40,7 @@ function buildUrl(source: SanityImageSource, w: number, h?: number): string | nu
     if (!b) return null
     if (h) b = b.height(h)
     if (fit) b = b.fit(fit)
-    return b.quality(quality).url()
+    return b.quality(quality).dpr(dpr).url()
   } catch {
     return null
   }
