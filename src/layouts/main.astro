@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import {sanityClient} from 'sanity:client';
 import {urlFor} from '../lib/sanityImage';
+import SanityImage from '../components/SanityImage.astro';
 import type {SanityImageSource} from '@sanity/image-url';
 import {PortableText} from 'astro-portabletext';
 import type {PortableTextBlock} from '@portabletext/types';
@@ -122,7 +123,6 @@ const footerNavigation =
 		: defaultFooterNavigation;
 const footerNavigationLabel = siteSettings?.footerNavigationLabel || 'Sivut';
 const footerLogo = siteSettings?.footerLogo;
-const footerLogoUrl = footerLogo ? urlFor(footerLogo)?.url() : undefined;
 const footerLogoAlt = footerLogo?.alt || siteSettings?.siteTitle || 'Sivuston logo';
 const footerSocialLinks = Array.isArray(siteSettings?.footerSocialLinks) ? siteSettings.footerSocialLinks : [];
 const footerContactTitle = siteSettings?.footerContactTitle || 'Yhteystiedot';
@@ -270,12 +270,12 @@ const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).hre
 
 // Preload LCP hero image if it's a Sanity image (not a plain string)
 const lcpImageSource = content.image && typeof content.image !== 'string' ? content.image : null;
-const lcpPreloadWidths = [320, 420, 527, 640];
+const lcpPreloadWidths = [320, 420, 527, 640, 1054, 1280];
 const lcpPreloadSrcset = lcpImageSource
 	? lcpPreloadWidths
 			.map((w) => {
 				const h = Math.round(791 * w / 527);
-				return `${urlFor(lcpImageSource)?.width(w).height(h).fit('crop').quality(50).url()} ${w}w`;
+			return `${urlFor(lcpImageSource)?.width(w).height(h).fit('crop').quality(75).url()} ${w}w`;
 			})
 			.filter(Boolean)
 			.join(', ')
@@ -341,6 +341,7 @@ const lcpPreloadSrcset = lcpImageSource
 				fetchpriority="high"
 			/>
 		)}
+		{hasGtm && <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />}
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		{canonical && <link rel="canonical" href={canonical} />}
@@ -565,8 +566,20 @@ const lcpPreloadSrcset = lcpImageSource
 			<div class="site-container site-footer__inner">
 				<div class="site-footer__grid">
 					<div class="site-footer__brand">
-						{footerLogoUrl && (
-							<img src={footerLogoUrl} alt={footerLogoAlt} class="site-footer__brand-logo" loading="lazy" decoding="async" />
+						{footerLogo && (
+							<SanityImage
+								image={footerLogo}
+								alt={footerLogoAlt}
+								width={416}
+								height={73}
+								fit="max"
+								quality={75}
+								widths={[320, 416, 640, 832]}
+								class="site-footer__brand-logo"
+								loading="lazy"
+								decoding="async"
+								sizes="(min-width: 64rem) 26rem, 100vw"
+							/>
 						)}
 						{footerSocialLinks.length > 0 && (
 							<ul class="site-footer__social-links" role="list">
@@ -576,7 +589,7 @@ const lcpPreloadSrcset = lcpImageSource
 									return (
 										<li>
 											<a class="site-footer__social-link" href={normalizeCmsHref(item.href)} aria-label={item.label || undefined}>
-												{iconUrl && <img src={iconUrl} alt={iconAlt} loading="lazy" decoding="async" />}
+												{iconUrl && <img src={iconUrl} alt={iconAlt} width="36" height="36" loading="lazy" decoding="async" />}
 												<span class="sr-only">{item.label || 'Some'}</span>
 											</a>
 										</li>
