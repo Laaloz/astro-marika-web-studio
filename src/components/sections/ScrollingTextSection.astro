@@ -1,10 +1,7 @@
 ---
-import SanityImage from '../SanityImage.astro'
-
 interface ScrollingItem {
   _key?: string
   text?: string
-  icon?: Record<string, unknown> | null
 }
 
 const {items = []} = Astro.props as {
@@ -14,7 +11,6 @@ const {items = []} = Astro.props as {
 const normalizedItems = items
   .map((item) => ({
     text: item?.text?.trim() || '',
-    icon: item?.icon || null,
   }))
   .filter((item) => Boolean(item.text))
 ---
@@ -26,20 +22,6 @@ const normalizedItems = items
         <div class="scrolling-text__set" role="list" data-scrolling-set>
           {normalizedItems.map((item) => (
             <div class="scrolling-text__item" role="listitem">
-              {item.icon && (
-                <span class="scrolling-text__icon-wrap" aria-hidden="true">
-                  <SanityImage
-                    image={item.icon}
-                    alt=""
-                    width={24}
-                    height={24}
-                    class="scrolling-text__icon"
-                    fit="crop"
-                    widths={[24, 48, 72]}
-                    loading="lazy"
-                  />
-                </span>
-              )}
               <span class="scrolling-text__label">{item.text}</span>
             </div>
           ))}
@@ -131,10 +113,5 @@ const normalizedItems = items
 
     resizeObserver.observe(section)
     resizeObserver.observe(originalSet)
-
-    const iconImages = section.querySelectorAll('img')
-    for (const image of iconImages) {
-      image.addEventListener('load', build, {once: true})
-    }
   }
 </script>
