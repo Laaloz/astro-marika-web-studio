@@ -38,7 +38,7 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-inline: auto;
-  color: #3b2115;
+  color: var(--espresso);
 }
 
 .call-to-action__icon :global(svg),
@@ -86,7 +86,7 @@
   font-size: clamp(2.1rem, 4.2vw, 3rem);
   line-height: 1.16;
   letter-spacing: -0.576px;
-  color: #3b2115;
+  color: var(--espresso);
 }
 
 .call-to-action__body {

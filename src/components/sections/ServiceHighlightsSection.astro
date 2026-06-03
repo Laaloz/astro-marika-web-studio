@@ -1,5 +1,7 @@
 ---
 import {PortableText} from 'astro-portabletext'
+import type {SanityImageSource} from '@sanity/image-url'
+import SanityImage from '../SanityImage.astro'
 
 interface ServiceItem {
   _key?: string
@@ -7,7 +9,7 @@ interface ServiceItem {
   body?: unknown[]
   buttonLabel?: string
   buttonHref?: string
-  backgroundColor?: string
+  image?: SanityImageSource & {alt?: string}
 }
 
 const {
@@ -32,7 +34,7 @@ const cards = items.filter((item) => item?.title && item?.buttonLabel && item?.b
 
 {
   cards.length > 0 && (
-    <section class="page-section service-highlights" aria-label={eyebrow || title || 'Palvelut'}>
+    <section class="page-section service-highlights has-background" aria-label={eyebrow || title || 'Palvelut'}>
       <div class="site-container service-highlights__container">
         <div class="service-highlights__intro">
           <div class="service-highlights__text-stack">
@@ -59,21 +61,36 @@ const cards = items.filter((item) => item?.title && item?.buttonLabel && item?.b
 
         <div class="service-highlights__grid">
           {cards.map((item) => (
-            <article class="service-card" style={`--service-card-bg: ${item.backgroundColor || '#c7d8ff'}`}>
-              <div class="service-card__content">
-                <h3 class="service-card__title">{item.title}</h3>
-                {Array.isArray(item.body) && item.body.length > 0 && (
-                  <div class="service-card__body rich-text">
-                    <PortableText value={item.body} />
-                  </div>
+            <article class="service-card">
+              <div class:list={['service-card__media', !item.image && 'service-card__media--placeholder']}>
+                {item.image ? (
+                  <SanityImage
+                    image={item.image}
+                    alt={item.image.alt || item.title || ''}
+                    width={1200}
+                    height={900}
+                    fit="crop"
+                    widths={[420, 640, 840, 1200, 1600, 1920]}
+                    class="service-card__image"
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(min-width: 74rem) 24rem, (min-width: 48rem) 33vw, 100vw"
+                  />
+                ) : (
+                  <div class="service-card__media-placeholder" aria-hidden="true"></div>
                 )}
               </div>
-              <a class="button button--primary-outline" href={item.buttonHref}>
-                <span>{item.buttonLabel}</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
-                </svg>
-              </a>
+              <div class="service-card__content">
+                <div class="service-card__copy">
+                  <h3 class="service-card__title">{item.title}</h3>
+                  {Array.isArray(item.body) && item.body.length > 0 && (
+                    <div class="service-card__body rich-text">
+                      <PortableText value={item.body} />
+                    </div>
+                  )}
+                </div>
+                <a class="button button--raspberry" href={item.buttonHref}>{item.buttonLabel}</a>
+              </div>
             </article>
           ))}
         </div>

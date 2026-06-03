@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   column-gap: clamp(2.5rem, 6vw, 4.5rem);
-  align-items: start;
+  align-items: center;
 }
 
 .two-column-content__left {
@@ -82,11 +82,11 @@
 }
 
 .two-column-content__button {
-  --button-brand-bg: #3b2115;
+  --button-brand-bg: var(--espresso);
   --button-brand-fg: #fffefb;
   --button-brand-border: #322221;
   --button-brand-hover-fill: var(--color-background);
-  --button-brand-hover-fg: #3b2115;
+  --button-brand-hover-fg: var(--espresso);
   --button-brand-hover-border: #322221;
   justify-self: start;
   margin-top: var(--space-3);

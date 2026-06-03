@@ -31,7 +31,7 @@
   justify-items: center;
   align-items: center;
   min-height: inherit;
-  padding-block: clamp(4.5rem, 10vw, 8rem);
+  padding-block: var(--space-8);
   text-align: center;
 }
 

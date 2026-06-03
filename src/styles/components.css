@@ -13,6 +13,11 @@
   padding: clamp(1.5rem, 4vw, 3rem);
 }
 
+.surface-panel :is(.button-link, .button--link-secondary) {
+  border-bottom-color: var(--espresso-border);
+  color: var(--espresso);
+}
+
 .actions-row {
   display: flex;
   flex-wrap: wrap;

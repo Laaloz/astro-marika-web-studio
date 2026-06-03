@@ -31,7 +31,7 @@
 }
 
 .subpage-hero__title {
-  color: #3b2115;
+  color: var(--espresso);
   font-size: clamp(2.75rem, 7.2vw, 5.25rem);
   line-height: 0.98;
   letter-spacing: -0.025em;

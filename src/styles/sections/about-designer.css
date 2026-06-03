@@ -26,13 +26,13 @@
 }
 
 .about-designer__eyebrow {
-  color: #3b2115;
+  color: var(--espresso);
   font-size: var(--text-body-normal);
   line-height: 1.4;
 }
 
 .about-designer__title {
-  color: #3b2115;
+  color: var(--espresso);
   font-size: 3rem;
   line-height: 3.475rem;
   letter-spacing: -0.576px;
@@ -44,7 +44,7 @@
 }
 
 .about-designer__body :global(p) {
-  color: #3b2115;
+  color: var(--espresso);
   font-size: var(--text-body-normal);
   line-height: 1.4;
 }

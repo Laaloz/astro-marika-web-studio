@@ -39,7 +39,7 @@
 
 .site-subnav__link:focus-visible,
 .mobile-subnav__link:focus-visible {
-  outline: 2px solid #3b2115;
+  outline: 2px solid var(--espresso);
   outline-offset: 3px;
   border-radius: 0.2rem;
 }
@@ -220,7 +220,7 @@
 }
 
 .site-subnav__link {
-  color: #3b2115;
+  color: var(--espresso);
   font-family: var(--font-body);
   font-size: var(--text-body-large);
   line-height: var(--leading-body-large);
@@ -240,7 +240,7 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-  color: #3b2115;
+  color: var(--espresso);
   font-size: 0.95rem;
   line-height: 1.35;
 }
@@ -413,7 +413,7 @@ html:has(.site-header__mobile.is-open) .site-header {
 
 .mobile-nav__link,
 .mobile-subnav__summary {
-  color: #3b2115;
+  color: var(--espresso);
   font-family: var(--font-heading);
   font-size: 2rem;
   line-height: 1.2;
@@ -492,7 +492,7 @@ html:has(.site-header__mobile.is-open) .site-header {
 }
 
 .mobile-subnav__link {
-  color: #3b2115;
+  color: var(--espresso);
   font-family: var(--font-body);
   font-size: var(--text-body-large);
   line-height: var(--leading-body-large);
@@ -512,7 +512,7 @@ html:has(.site-header__mobile.is-open) .site-header {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-  color: #3b2115;
+  color: var(--espresso);
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.4;

@@ -31,7 +31,7 @@
 
 .reference-section__title {
   max-width: 53.625rem;
-  color: #3b2115;
+  color: var(--espresso);
   font-size: var(--text-h2);
   line-height: 1.16;
   letter-spacing: -0.576px;
@@ -40,7 +40,7 @@
 .reference-section__description {
   margin-top: var(--space-3);
   max-width: 53.625rem;
-  color: #3b2115;
+  color: var(--espresso);
   font-size: var(--text-body-normal);
   line-height: 1.4;
 }
@@ -133,6 +133,8 @@
 
 .reference-section__cta {
   border-bottom-width: 1.75px;
+  color: var(--espresso);
+  border-bottom-color: var(--espresso-border);
 }
 
 @media (max-width: 74rem) {

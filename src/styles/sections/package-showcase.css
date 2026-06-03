@@ -180,11 +180,11 @@
 }
 
 .package-showcase__cta {
-  --button-brand-bg: #3b2115;
+  --button-brand-bg: var(--espresso);
   --button-brand-fg: #fffefb;
   --button-brand-border: #322221;
   --button-brand-hover-fill: #cec29f;
-  --button-brand-hover-fg: #3b2115;
+  --button-brand-hover-fg: var(--espresso);
   --button-brand-hover-border: #322221;
   justify-self: start;
 }

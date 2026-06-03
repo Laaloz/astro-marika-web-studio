@@ -1,12 +1,22 @@
+.service-highlights {
+  position: relative;
+  overflow: hidden;
+  background: var(--espresso);
+  color: var(--marshmallow);
+}
+
 .service-highlights__container {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-7);
+  justify-items: center;
 }
 
 .service-highlights__intro {
   display: grid;
   gap: var(--space-5);
-  max-width: 33.125rem;
+  justify-items: center;
+  max-width: 26rem;
+  text-align: center;
 }
 
 .service-highlights__text-stack {
@@ -20,85 +30,142 @@
 }
 
 .service-highlights__eyebrow {
-  color: var(--color-text);
+  color: var(--marshmallow);
   font-size: var(--text-button-large);
   line-height: var(--leading-button-large);
 }
 
 .service-highlights__title {
-  color: var(--color-heading);
+  color: var(--marshmallow);
 }
 
 .service-highlights__body {
-  color: #4a2a1c;
+  color: var(--marshmallow);
   font-size: var(--text-body-normal);
   line-height: 1.4;
 }
 
 .service-highlights__secondary-link {
-  justify-self: start;
+  align-self: center;
+  border: 0;
+  border-bottom: 0;
+  color: var(--marshmallow);
+  gap: var(--space-1);
+  justify-self: center;
+  min-height: auto;
+  padding: 0;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.service-highlights__secondary-link::before {
+  display: none;
+}
+
+.service-highlights__secondary-link:hover,
+.service-highlights__secondary-link:focus-visible {
+  color: var(--marshmallow);
+}
+
+.service-highlights__secondary-link svg {
+  color: var(--dream-pink);
 }
 
 .service-highlights__grid {
   display: grid;
-  gap: var(--grid-gutter);
+  gap: 33px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  width: 100%;
 }
 
 .service-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-6);
-  min-height: 22rem;
-  padding: var(--space-4) var(--space-3);
-  border: 1.75px solid #322928;
-  border-radius: 6px 6px 0 0;
-  background: var(--service-card-bg, #c7d8ff);
-  box-shadow: 2px 2px 0 #322928;
+  gap: var(--space-4);
+  align-items: center;
+  overflow: visible;
+  min-height: 100%;
+  padding-inline: var(--space-5);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--marshmallow);
+}
+
+.service-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 338 / 268;
+  overflow: hidden;
+  background: transparent;
+}
+
+.service-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.service-card__media-placeholder {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--marshmallow) 28%, transparent), transparent 36%),
+    linear-gradient(135deg, color-mix(in srgb, var(--marshmallow) 12%, transparent), transparent 58%),
+    color-mix(in srgb, var(--marshmallow) 4%, transparent);
 }
 
 .service-card__content {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  align-items: center;
+  padding: 0;
+  text-align: center;
+}
+
+.service-card__copy {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
 }
 
 .service-card__title {
-  color: var(--color-heading);
+  color: var(--marshmallow);
   font-size: var(--text-h3);
   line-height: var(--leading-h3);
+  letter-spacing: -0.384px;
 }
 
 .service-card__body {
-  color: #2f2a26;
   display: grid;
   gap: var(--space-2);
-}
-
-.service-card__body p {
-  font-size: var(--text-body-normal);
-  line-height: 1.4;
-}
-
-.service-card__body p:first-child {
+  color: var(--marshmallow);
   font-size: var(--text-body-medium);
   font-style: italic;
   font-weight: 300;
   line-height: 1.3;
 }
 
-.service-card .button {
-  align-self: flex-start;
+.service-card__body :where(p, li) {
+  font-size: inherit;
+  line-height: inherit;
 }
 
 @media (max-width: 74rem) {
   .service-highlights__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
+    gap: var(--space-5);
   }
 }
 
 @media (max-width: 48rem) {
+  .service-highlights__intro {
+    max-width: 100%;
+  }
+
   .service-highlights__grid {
     grid-template-columns: 1fr;
     gap: var(--space-5);
@@ -106,5 +173,10 @@
 
   .service-card {
     min-height: 0;
+    padding-inline: 0;
+  }
+
+  .service-card__media {
+    aspect-ratio: 5 / 4;
   }
 }
