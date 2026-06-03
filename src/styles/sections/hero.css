@@ -1,18 +1,26 @@
 .hero-block {
-  --hero-layout-gap: clamp(2.5rem, 5vw, 8.75rem);
-  --hero-copy-gap: var(--space-6);
-  --hero-copy-offset-bottom: var(--space-10);
-  --hero-actions-gap: 2.125rem;
-  --hero-body-gap: 1rem;
-  padding-bottom: 0;
+  --hero-layout-gap: var(--space-6);
+  --hero-copy-gap: var(--space-5);
+  --hero-body-gap: var(--space-3);
+  --hero-actions-gap: 1rem;
+  min-height: min(56rem, 100vh);
+  padding: 0;
   position: relative;
   overflow: hidden;
-  min-height: min(50rem, 100vh);
-  border-top: 1px solid rgb(255 255 255 / 0.14);
-  background:
-    linear-gradient(90deg, rgb(255 255 255 / 0.022) 0, rgb(255 255 255 / 0.022) 50%, transparent 50%, transparent 100%),
-    linear-gradient(135deg, #3b2521 0%, #37231f 45%, #2f1f1c 100%);
-  background-size: 4.1rem 4.1rem, auto;
+  background: var(--marshmallow);
+}
+
+.hero-block__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-block__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, var(--color-hero-overlay) 0%, var(--color-hero-overlay) 100%);
 }
 
 .hero-block__container {
@@ -20,32 +28,17 @@
   z-index: 1;
   display: grid;
   gap: var(--hero-layout-gap);
-  align-items: end;
+  justify-items: center;
+  align-items: center;
+  min-height: inherit;
+  padding-block: clamp(4.5rem, 10vw, 8rem);
+  text-align: center;
 }
 
-.hero-block::after {
-  content: '';
-  position: absolute;
-  pointer-events: none;
-}
-
-.hero-block__ornament {
-  position: absolute;
-  top: -5.25rem;
-  left: 37.25%;
-  height: auto;
-  pointer-events: none;
-}
-
-.hero-block::after {
-  inset: 0;
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.02), transparent 32%);
-}
-
-.hero-block__copy,
-.hero-block__media {
-  position: relative;
-  z-index: 1;
+.hero-block__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
 }
 
 .hero-block__copy,
@@ -56,26 +49,38 @@
 }
 
 .hero-block__copy {
-  gap: var(--hero-copy-gap);
-  padding-bottom: var(--hero-copy-offset-bottom);
+  max-width: 46rem;
+  justify-items: center;
+  color: var(--marshmallow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
 }
 
 .hero-block__headline-group {
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .hero-block__eyebrow {
-  color: rgb(255 251 247 / 0.88);
-  font-size: 1.25rem;
-  line-height: 1.3;
+  color: var(--marshmallow);
+  font-family: var(--font-body);
+  font-size: var(--font-size-large, 20px);
+  font-style: normal;
+  font-weight: 300;
+  line-height: var(--font-lineheight-large, 26px);
+  text-align: center;
 }
 
 .hero-block__title {
   gap: 0;
-  color: var(--color-white);
-  font-size: clamp(2.4rem, 6vw, 3.6rem);
-  line-height: 1.015;
-  letter-spacing: -0.02em;
+  color: var(--marshmallow);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-H1, 88px);
+  font-style: normal;
+  font-weight: 300;
+  line-height: var(--Font-lineheight-H1, 89.3px);
+  text-shadow: 0 2px 24px rgb(35 31 32 / 0.22);
 }
 
 .hero-block__title-part {
@@ -83,106 +88,87 @@
 }
 
 .hero-block__title-part--accent {
-  color: #d9defd;
+  color: var(--raspberry);
   font-style: italic;
 }
 
 .hero-block__body {
   gap: var(--hero-body-gap);
-  max-width: 40rem;
-  color: rgb(255 244 238 / 0.86);
-  font-size: 1rem;
-  line-height: 1.42;
-}
-
-.hero-block__note {
-  color: rgb(255 244 238 / 0.75);
-  font-size: 1.125rem;
-  font-weight: 300;
-  line-height: 1.3;
-  font-style: italic;
+  max-width: 38rem;
+  color: var(--marshmallow);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--font-size-normal, 16px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--font-lineheight-normal, 22.4px);
+  text-shadow: 0 1px 16px rgb(35 31 32 / 0.24);
 }
 
 .hero-block__actions {
   gap: var(--hero-actions-gap);
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-block__media {
-  min-width: 0;
-  justify-self: end;
-  width: min(100%, 32.9375rem);
-}
-
-.hero-block__media-frame {
-  overflow: hidden;
-  border-top: 1.75px solid rgb(255 255 255 / 0.88);
-  border-right: 1.75px solid rgb(255 255 255 / 0.88);
-  border-left: 1.75px solid rgb(255 255 255 / 0.88);
-  border-radius: 0.375rem 0.375rem 0 0;
+.hero-block__button {
 }
 
 .hero-block__image {
+  position: absolute;
+  inset: 0;
+  display: block;
   width: 100%;
-  aspect-ratio: 3 / 4;
+  height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center center;
   border: 0;
 }
 
 .hero-block__image--placeholder {
   background:
-    radial-gradient(circle at top, rgb(255 221 209 / 0.55), transparent 35%),
-    linear-gradient(180deg, #74514c 0%, #3f2b27 100%);
+    radial-gradient(circle at top, var(--color-hero-placeholder-accent), transparent 35%),
+    linear-gradient(180deg, var(--espresso) 0%, var(--color-hero-placeholder-dark) 100%);
 }
 
-@media (min-width: 80rem) {
+@media (min-width: 64rem) {
   .hero-block__title {
-    font-size: clamp(3.5rem, 7.2vw, 5.5rem);
+    font-size: var(--font-size-H1, 88px);
   }
 
   .hero-block__container {
-    grid-template-columns: minmax(0, 40.25rem) minmax(24rem, 32.9375rem);
-    justify-content: space-between;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .hero-block__copy {
-    max-width: 40.25rem;
-    padding-inline: 0;
+    max-width: 48rem;
   }
 }
 
 @media (min-width: 64rem) and (max-width: 79.999rem) {
   .hero-block {
-    --hero-layout-gap: clamp(2.5rem, 3vw, 4.5rem);
+    --hero-layout-gap: clamp(2rem, 3vw, 4rem);
   }
 
   .hero-block__container {
-    grid-template-columns: minmax(0, 1fr) minmax(22rem, 28rem);
+    grid-template-columns: minmax(0, 1fr);
   }
-
 }
 
 @media (max-width: 63.999rem) {
   .hero-block {
-    --hero-layout-gap: 2.5rem;
-    --hero-copy-gap: 2rem;
-    --hero-copy-offset-bottom: 0;
-    --hero-actions-gap: 1.25rem 2rem;
-    background-size: 3rem 3rem, auto;
-    min-height: auto;
+    --hero-layout-gap: 2.25rem;
+    --hero-copy-gap: 1.75rem;
+    --hero-body-gap: 1rem;
+    min-height: min(44rem, 100vh);
   }
 
-  .hero-block__ornament {
-    top: -1rem;
-    left: 48%;
-    width: 52rem;
+  .hero-block__container {
+    padding-block: clamp(4rem, 14vw, 6rem);
   }
 
-  .hero-block__media {
+  .hero-block__button {
     width: 100%;
-  }
-
-  .hero-block__image {
-    aspect-ratio: 4 / 5;
+    min-width: 0;
   }
 }

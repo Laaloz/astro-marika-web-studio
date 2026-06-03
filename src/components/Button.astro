@@ -1,25 +1,50 @@
 ---
-const { href, variant = 'primary', type = 'button' } = Astro.props;
+const { href, variant = 'primary', type = 'button', arrowClass = '' } = Astro.props;
 
 const variantClassMap = {
 	primary: 'button--primary',
+	default: 'button--default',
 	secondary: 'button-link',
 	'primary-brand': 'button--primary-brand',
 	'primary-accent': 'button--primary-accent',
+	raspberry: 'button--raspberry',
 	'primary-outline': 'button--primary-outline',
 	'primary-brand--accent': 'button--primary-accent',
 	'primary-brand--outline': 'button--primary-outline',
 };
 
 const className = `button ${variantClassMap[variant] || 'button--primary'}`;
+
+const hasArrow = typeof arrowClass === 'string' && arrowClass.trim().length > 0;
+const arrowMaskId = `button-arrow-mask-${Math.random().toString(36).slice(2, 10)}`;
 ---
 
 {href ? (
 	<a class={className} href={href}>
 		<slot />
+		{hasArrow && (
+			<svg class={arrowClass} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<mask id={arrowMaskId} style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+					<rect width="24" height="24" fill="#D9D9D9" />
+				</mask>
+				<g mask={`url(#${arrowMaskId})`}>
+					<path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" fill="#322221" />
+				</g>
+			</svg>
+		)}
 	</a>
 ) : (
 	<button class={className} type={type}>
 		<slot />
+		{hasArrow && (
+			<svg class={arrowClass} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<mask id={arrowMaskId} style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+					<rect width="24" height="24" fill="#D9D9D9" />
+				</mask>
+				<g mask={`url(#${arrowMaskId})`}>
+					<path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" fill="#322221" />
+				</g>
+			</svg>
+		)}
 	</button>
 )}

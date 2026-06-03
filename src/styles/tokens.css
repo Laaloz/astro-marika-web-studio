@@ -1,13 +1,18 @@
 :root {
-  --pearl-white: #fffefb;
-  --olive-green: #71650b;
-  --dream-pink: #ffcae0;
+  --marshmallow: #fffefb;
+  --olive: #6d673a;
+  --raspberry: #ffc0e9;
+  --fudge: #eee8de;
+  --tittle-color: #3b2115;
+  --text-color: #2f2a26;
+  --espresso: #231f20;
+
+  --pearl-white: var(--marshmallow);
+  --olive-green: var(--olive);
+  --dream-pink: var(--raspberry);
   --lavender: #cedefd;
   --poppy-flower: #d53a0b;
   --soft-green: #ece59e;
-  --tittle-color: #3b2115;
-  --text-color: #2f2a26;
-  --espresso: #322221;
 
   --color-brand-primary: #cedefd;
   --color-brand-secondary: #ece59e;
@@ -15,6 +20,9 @@
   --color-brand-secondary-dark: #71650b;
   --color-brand-accent: #ffcae0;
   --color-brand-accent-strong: #d53a0b;
+  --color-hero-overlay: rgb(42 32 32 / 0.85);
+  --color-hero-placeholder-accent: rgb(255 192 233 / 0.5);
+  --color-hero-placeholder-dark: rgb(35 31 32 / 0.92);
   --color-background: var(--pearl-white);
   --color-surface: #ffffff;
   --color-heading: var(--tittle-color);
@@ -88,6 +96,7 @@
   --font-size-small: 0.875rem;
 
   --font-lineheight-h1: 3rem;
+  --Font-lineheight-H1: 48.4px;
   --font-lineheight-h2: 3rem;
   --font-lineheight-h3: 2.375rem;
   --font-lineheight-h4: 2.0625rem;
@@ -110,6 +119,7 @@
   --leading-body-small: var(--font-lineheight-small);
 
   --text-h1: var(--font-size-h1);
+  --font-size-H1: 44px;
   --leading-h1: var(--font-lineheight-h1);
   --text-h2: var(--font-size-h2);
   --leading-h2: var(--font-lineheight-h2);
@@ -129,7 +139,14 @@
   --section-title-max-width: 30rem;
 }
 
-@media (min-width: 80rem) {
+@media (min-width: 48rem) {
+  :root {
+    --spacing-gutter-grid-margin: 2rem;
+    --grid-margin: var(--spacing-gutter-grid-margin);
+  }
+}
+
+@media (min-width: 64rem) {
   :root {
     --spacing-1: 0.5rem;
     --spacing-2: 1rem;
@@ -191,6 +208,8 @@
     --leading-body-small: var(--font-lineheight-small);
 
     --text-h1: var(--font-size-h1);
+    --font-size-H1: 88px;
+    --Font-lineheight-H1: 89.3px;
     --leading-h1: var(--font-lineheight-h1);
     --text-h2: var(--font-size-h2);
     --leading-h2: var(--font-lineheight-h2);
