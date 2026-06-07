@@ -2,7 +2,6 @@
 import type {SanityDocument} from '@sanity/client';
 import MainLayout from '../layouts/main.astro';
 import HomeHeroSection from '../components/sections/HomeHeroSection.astro';
-import ScrollingTextSection from '../components/sections/ScrollingTextSection.astro';
 import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
 import FiftyFiftyHighlightsSection from '../components/sections/FiftyFiftyHighlightsSection.astro';
 import FiftyFiftySimpleSection from '../components/sections/FiftyFiftySimpleSection.astro';
@@ -67,10 +66,6 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 		{(homepage?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'heroSection') {
 				return <HomeHeroSection {...block} />;
-			}
-
-			if (block._type === 'scrollingTextSection') {
-				return <ScrollingTextSection {...block} />;
 			}
 
 			if (block._type === 'serviceHighlightsSection') {

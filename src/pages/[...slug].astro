@@ -3,7 +3,6 @@ import type {SanityDocument} from '@sanity/client';
 import MainLayout from '../layouts/main.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import SubpageHeroSection from '../components/sections/SubpageHeroSection.astro';
-import ScrollingTextSection from '../components/sections/ScrollingTextSection.astro';
 import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
 import FiftyFiftyHighlightsSection from '../components/sections/FiftyFiftyHighlightsSection.astro';
 import FiftyFiftySimpleSection from '../components/sections/FiftyFiftySimpleSection.astro';
@@ -93,10 +92,6 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 
 			if (block._type === 'heroSection') {
 				return <HeroSection {...block} />;
-			}
-
-			if (block._type === 'scrollingTextSection') {
-				return <ScrollingTextSection {...block} />;
 			}
 
 			if (block._type === 'serviceHighlightsSection') {
