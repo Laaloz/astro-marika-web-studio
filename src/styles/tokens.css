@@ -2,10 +2,14 @@
   --marshmallow: #fffefb;
   --olive: #6d673a;
   --raspberry: #ffc0e9;
-  --fudge: #eee8de;
-  --tittle-color: var(--espresso);
-  --text-color: #2f2a26;
+  --fudge: #fcf8ee;
+  --mandarin: #f98715;
+  --lemon: #ffde70;
+  --tittle-color: #111111;
+  --text-color: #1a1a1a;
   --espresso: #231f20;
+  --peach: #fff1e6;
+  --blue-rasberry: #477eff;
 
   --pearl-white: var(--marshmallow);
   --olive-green: var(--olive);
@@ -15,16 +19,16 @@
   --poppy-flower: #d53a0b;
   --soft-green: #ece59e;
 
-  --color-brand-primary: #cedefd;
-  --color-brand-secondary: #ece59e;
+  --color-brand-primary: var(--blue-rasberry);
+  --color-brand-secondary: var(--lemon);
   --color-brand-secondary-hover: #827724;
   --color-brand-secondary-dark: #71650b;
-  --color-brand-accent: #ffcae0;
-  --color-brand-accent-strong: #d53a0b;
+  --color-brand-accent: var(--peach);
+  --color-brand-accent-strong: var(--mandarin);
   --color-hero-overlay: rgb(42 32 32 / 0.85);
   --color-hero-placeholder-accent: rgb(255 192 233 / 0.5);
   --color-hero-placeholder-dark: rgb(35 31 32 / 0.92);
-  --color-background: var(--pearl-white);
+  --color-background: var(--fudge);
   --color-surface: #ffffff;
   --color-heading: var(--tittle-color);
   --color-text: var(--text-color);
@@ -38,7 +42,7 @@
   --color-black-2: #1d1d1d;
   --color-black-3: #282828;
   --color-white: #ffffff;
-  --color-info: #2f80ed;
+  --color-info: var(--blue-rasberry);
   --color-success: #27ae60;
   --color-warning: #ffc943;
   --color-error: #eb5757;
@@ -86,7 +90,7 @@
   --font-heading: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
-  --font-size-h1: 2.75rem;
+  --font-size-h1: 4.75rem;
   --font-size-h2: 2.5rem;
   --font-size-h3: 2rem;
   --font-size-h4: 1.75rem;
@@ -97,8 +101,8 @@
   --font-size-normal: 1rem;
   --font-size-small: 0.875rem;
 
-  --font-lineheight-h1: 3rem;
-  --Font-lineheight-H1: 48.4px;
+  --font-lineheight-h1: 4.75rem;
+  --Font-lineheight-H1: 4.75rem;
   --font-lineheight-h2: 3rem;
   --font-lineheight-h3: 2.375rem;
   --font-lineheight-h4: 2.0625rem;
@@ -108,6 +112,10 @@
   --font-lineheight-medium: 1.75rem;
   --font-lineheight-normal: 1.5625rem;
   --font-lineheight-small: 1rem;
+  --font-size-large-caps: 1.25rem;
+  --font-lineheight-large-caps: 1.625rem;
+  --font-size-h1extra: 5.5rem;
+  --font-lineheight-h1-extra: 5.5rem;
 
   --text-body-large: var(--font-size-large);
   --leading-body-large: var(--font-lineheight-large);
@@ -178,7 +186,7 @@
 
     --grid-gutter: var(--spacing-gutter-grid-gutter);
     --grid-margin: var(--spacing-gutter-grid-margin);
-    --font-size-h1: 5.5rem;
+    --font-size-h1: 6.5rem;
     --font-size-h2: 3rem;
     --font-size-h3: 2rem;
     --font-size-h4: 1.75rem;
@@ -188,8 +196,12 @@
     --font-size-medium: 1.125rem;
     --font-size-normal: 1rem;
     --font-size-small: 0.875rem;
+    --font-size-large-caps: 1.25rem;
+    --font-lineheight-large-caps: 1.625rem;
+    --font-size-h1extra: 17.5rem;
+    --font-lineheight-h1-extra: 17.5rem;
 
-    --font-lineheight-h1: 5.5625rem;
+    --font-lineheight-h1: 6.5rem;
     --font-lineheight-h2: 3.4375rem;
     --font-lineheight-h3: 2.375rem;
     --font-lineheight-h4: 2.0625rem;
@@ -211,7 +223,7 @@
 
     --text-h1: var(--font-size-h1);
     --font-size-H1: 88px;
-    --Font-lineheight-H1: 89.3px;
+    --Font-lineheight-H1: 6.5rem;
     --leading-h1: var(--font-lineheight-h1);
     --text-h2: var(--font-size-h2);
     --leading-h2: var(--font-lineheight-h2);

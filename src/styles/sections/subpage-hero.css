@@ -1,6 +1,8 @@
 .subpage-hero {
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
   background: transparent;
   color: var(--color-heading);
   --section-padding-top: calc(var(--space-10) + 72px);

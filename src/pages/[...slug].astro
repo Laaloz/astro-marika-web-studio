@@ -40,6 +40,7 @@ const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeadin
           _id,
           title,
           slug,
+          areas,
           image {
             ...,
             alt
@@ -49,6 +50,7 @@ const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeadin
           _id,
           title,
           slug,
+          areas,
           image {
             ...,
             alt
@@ -84,7 +86,6 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 ---
 
 <MainLayout content={{title: `${page?.title || 'Page'} | Marika Web Studio`, description: page?.metaDescription, image: page?.metaImage}}>
-	<main class="page-shell page-shell--builder page-shell--hero">
 		{(page?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'subpageHeroSection') {
 				return <SubpageHeroSection {...block} />;
@@ -156,5 +157,4 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 
 			return null;
 		})}
-	</main>
 </MainLayout>

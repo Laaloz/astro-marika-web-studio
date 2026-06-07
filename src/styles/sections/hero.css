@@ -3,6 +3,8 @@
   --hero-copy-gap: var(--space-5);
   --hero-body-gap: var(--space-3);
   --hero-actions-gap: 1rem;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
   min-height: min(56rem, 100vh);
   padding: 0;
   position: relative;

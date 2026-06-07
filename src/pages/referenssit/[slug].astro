@@ -91,7 +91,6 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
     image: reference?.metaImage,
   }}
 >
-  <main class="page-shell page-shell--builder page-shell--hero">
     <ReferenceHeroSection
       title={reference?.title}
       image={reference?.image}
@@ -171,5 +170,4 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
 
       return null
     })}
-  </main>
 </MainLayout>
