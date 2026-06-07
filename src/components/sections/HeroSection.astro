@@ -60,13 +60,9 @@ const hasSecondaryCta = secondaryCtaLabel && secondaryCtaHref;
 				{hasSecondaryCta && (
 					<a class="button button--primary-brand hero-block__button hero-block__button--primary" href={secondaryCtaHref}>
 						<span>{secondaryCtaLabel}</span>
-						<svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-							<mask id="hero-secondary-arrow-mask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-								<rect width="24" height="24" fill="#D9D9D9" />
-							</mask>
-							<g mask="url(#hero-secondary-arrow-mask)">
-								<path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" fill="#322221" />
-							</g>
+						<svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+							<path d="M5 12H17" />
+							<path d="M12 7L17 12L12 17" />
 						</svg>
 					</a>
 				)}

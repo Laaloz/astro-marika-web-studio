@@ -1,0 +1,125 @@
+---
+const {
+	titleTop,
+	titleBottom,
+	description,
+	primaryCtaLabel,
+	primaryCtaHref,
+	secondaryCtaLabel,
+	secondaryCtaHref,
+} = Astro.props as {
+	titleTop?: string;
+	titleBottom?: string;
+	description?: string;
+	primaryCtaLabel?: string;
+	primaryCtaHref?: string;
+	secondaryCtaLabel?: string;
+	secondaryCtaHref?: string;
+};
+
+const hasPrimaryCta = Boolean(primaryCtaLabel && primaryCtaHref);
+const hasSecondaryCta = Boolean(secondaryCtaLabel && secondaryCtaHref);
+const titleTopText = typeof titleTop === 'string' ? titleTop.trim() : '';
+const titleTopIIndex = titleTopText.indexOf('i');
+const titleTopPrefix = titleTopIIndex >= 0 ? titleTopText.slice(0, titleTopIIndex) : titleTopText;
+const titleTopSuffix = titleTopIIndex >= 0 ? titleTopText.slice(titleTopIIndex + 1) : '';
+const hasTitleTop = titleTopText.length > 0;
+const hasIconSplit = titleTopIIndex >= 0;
+---
+
+<section class="page-section home-hero" data-home-hero aria-label="Marika Web Studio">
+	<div class="home-hero__stage">
+		<div class="site-container home-hero__container">
+			<div class="home-hero__grid">
+				<div class="home-hero__title-block" data-home-hero-title-block>
+					{hasTitleTop && (
+						<h1 class="home-hero__title home-hero__title--top" data-home-hero-title>
+							{hasIconSplit ? (
+								<>
+									<span class="home-hero__title-text">{titleTopPrefix}</span>
+									<span class="home-hero__title-icon" aria-hidden="true">
+										<span class="home-hero__title-i">i</span>
+										<svg class="home-hero__flower" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" fill="none" aria-hidden="true">
+											<path d="M39.3803 18.611C43.4738 19.536 46 20.9657 46 23C46 25.0343 43.4738 26.464 39.3803 27.389C42.463 30.2369 43.936 32.7382 42.9188 34.5C41.9017 36.2618 38.9989 36.2368 34.9913 34.9911C36.237 38.9987 36.262 41.9014 34.5002 42.9186C32.7384 43.9358 30.237 42.4627 27.3891 39.3799C26.4641 43.4736 25.0343 46 23 46C20.9657 46 19.536 43.4738 18.611 39.3803C15.7632 42.4628 13.262 43.9357 11.5002 42.9186C9.73846 41.9014 9.76342 38.9987 11.0091 34.9911C7.00151 36.2368 4.0988 36.2618 3.08164 34.5C2.06449 32.7382 3.53744 30.2369 6.62004 27.3891C2.52638 26.4641 -3.46573e-07 25.0343 0 23C8.8924e-08 20.9657 2.52638 19.5359 6.62004 18.6109C3.53744 15.7631 2.06449 13.2618 3.08164 11.5C4.0988 9.73823 7.00151 9.76319 11.0091 11.0089C9.76342 7.00129 9.73846 4.09857 11.5002 3.08142C13.262 2.06428 15.7632 3.53717 18.611 6.61967C19.536 2.52622 20.9657 0 23 0C25.0343 0 26.4641 2.52638 27.3891 6.62006C30.237 3.53729 32.7384 2.06424 34.5002 3.08142C36.262 4.09857 36.237 7.00129 34.9913 11.0089C38.9989 9.76319 41.9017 9.73823 42.9188 11.5C43.936 13.2618 42.463 15.7631 39.3803 18.611Z" fill="#477EFF" />
+										</svg>
+									</span>
+									{titleTopSuffix && <span class="home-hero__title-letter home-hero__title-letter--italic">{titleTopSuffix}</span>}
+							</>
+						) : (
+							<span class="home-hero__title-text">{titleTopText}</span>
+						)}
+						</h1>
+					)}
+				</div>
+
+				<div class="home-hero__copy">
+					<p>{description}</p>
+					<div class="home-hero__actions">
+						{hasPrimaryCta && (
+							<a class="button button--primary-brand--accent home-hero__button home-hero__button--secondary" href={primaryCtaHref}>
+								<span>{primaryCtaLabel}</span>
+							</a>
+						)}
+						{hasSecondaryCta && (
+							<a class="button button--primary-brand home-hero__button home-hero__button--primary" href={secondaryCtaHref}>
+								<span>{secondaryCtaLabel}</span>
+								<svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+								<path d="M5 12H17" />
+								<path d="M12 7L17 12L12 17" />
+								</svg>
+							</a>
+						)}
+					</div>
+				</div>
+
+				<h2 class="home-hero__title home-hero__title--bottom" data-home-hero-bottom>{titleBottom}</h2>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const hero = document.querySelector('[data-home-hero]');
+	const title = hero?.querySelector('[data-home-hero-title]');
+	const bottom = hero?.querySelector('[data-home-hero-bottom]');
+	if (hero && title && bottom && window.matchMedia('(min-width: 64rem)').matches) {
+		let frame = 0;
+		let maxShift = 0;
+		let resizeFrame = 0;
+
+		const updateMetrics = () => {
+			const titleRect = title.getBoundingClientRect();
+			const bottomRect = bottom.getBoundingClientRect();
+			maxShift = Math.max(bottomRect.left - titleRect.left, 0);
+		};
+
+		const update = () => {
+			const rect = hero.getBoundingClientRect();
+			const total = Math.max(hero.offsetHeight - window.innerHeight, 1);
+			const progress = Math.min(Math.max((-rect.top) / total, 0), 1);
+			hero.style.setProperty('--home-hero-bottom-shift', `${maxShift * progress}px`);
+		};
+
+		const requestUpdate = () => {
+			window.cancelAnimationFrame(frame);
+			frame = window.requestAnimationFrame(update);
+		};
+
+		const refresh = () => {
+			updateMetrics();
+			requestUpdate();
+		};
+
+		const requestResizeRefresh = () => {
+			window.cancelAnimationFrame(resizeFrame);
+			resizeFrame = window.requestAnimationFrame(refresh);
+		};
+
+		window.addEventListener('scroll', requestUpdate, { passive: true });
+		window.addEventListener('resize', requestResizeRefresh, { passive: true });
+		if (document.fonts?.ready) {
+			document.fonts.ready.then(refresh).catch(refresh);
+		}
+		refresh();
+	}
+</script>

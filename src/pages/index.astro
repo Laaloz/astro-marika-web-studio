@@ -1,7 +1,7 @@
 ---
 import type {SanityDocument} from '@sanity/client';
 import MainLayout from '../layouts/main.astro';
-import HeroSection from '../components/sections/HeroSection.astro';
+import HomeHeroSection from '../components/sections/HomeHeroSection.astro';
 import ScrollingTextSection from '../components/sections/ScrollingTextSection.astro';
 import ServiceHighlightsSection from '../components/sections/ServiceHighlightsSection.astro';
 import FiftyFiftyHighlightsSection from '../components/sections/FiftyFiftyHighlightsSection.astro';
@@ -66,7 +66,7 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 <MainLayout content={{ title: `${homepage?.title || 'Marika Web Studio'} | Marika Web Studio`, description: homepage?.metaDescription, image: homepage?.metaImage }}>
 		{(homepage?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'heroSection') {
-				return <HeroSection {...block} />;
+				return <HomeHeroSection {...block} />;
 			}
 
 			if (block._type === 'scrollingTextSection') {
