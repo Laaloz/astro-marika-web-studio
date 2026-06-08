@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   column-gap: clamp(2.5rem, 6vw, 4.5rem);
+  align-items: flex-start;
 }
 
 .two-column-content__left {
@@ -12,13 +13,18 @@
 .two-column-content__heading {
   display: grid;
   gap: var(--space-1);
+  justify-items: start;
+  width: fit-content;
 }
 
 .two-column-content__eyebrow-wrap {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  justify-self: start;
+  width: fit-content;
   color: var(--color-text);
+  line-height: var(--leading-button-large);
 }
 
 .two-column-content__eyebrow-dot {
@@ -30,6 +36,7 @@
 }
 
 .two-column-content__eyebrow {
+  margin: 0;
   color: var(--espresso);
   font-size: var(--text-body-large);
   line-height: var(--leading-button-large);
