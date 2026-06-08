@@ -1,98 +1,48 @@
 ---
-import {PortableText} from 'astro-portabletext'
-import type {SanityImageSource} from '@sanity/image-url'
-import SanityImage from '../SanityImage.astro'
-
 interface ServiceItem {
   _key?: string
   title?: string
-  body?: unknown[]
-  buttonLabel?: string
   buttonHref?: string
-  image?: SanityImageSource & {alt?: string}
 }
 
-const {
-  eyebrow,
-  title,
-  body,
-  secondaryLinkLabel,
-  secondaryLinkHref,
-  items = [],
-} = Astro.props as {
-  eyebrow?: string
+const {title, items = []} = Astro.props as {
   title?: string
-  body?: unknown[]
-  secondaryLinkLabel?: string
-  secondaryLinkHref?: string
   items?: ServiceItem[]
 }
 
-const hasSecondaryLink = Boolean(secondaryLinkLabel && secondaryLinkHref)
-const cards = items.filter((item) => item?.title && item?.buttonLabel && item?.buttonHref)
+const cards = items.filter((item) => item?.title && item?.buttonHref)
 ---
 
 {
   cards.length > 0 && (
-    <section class="page-section service-highlights has-background" aria-label={eyebrow || title || 'Palvelut'}>
+    <section class="page-section service-highlights" aria-label={title || 'Palvelut'}>
       <div class="site-container service-highlights__container">
         <div class="service-highlights__intro">
-          <div class="service-highlights__text-stack">
-            <div class="service-highlights__heading-group">
-              {eyebrow && <p class="service-highlights__eyebrow">{eyebrow}</p>}
-              {title && <h2 class="service-highlights__title">{title}</h2>}
-            </div>
-            {Array.isArray(body) && body.length > 0 && (
-              <div class="service-highlights__body rich-text">
-                <PortableText value={body} />
-              </div>
-            )}
-          </div>
-          {hasSecondaryLink && (
-            <a class="button--link-secondary service-highlights__secondary-link" href={secondaryLinkHref}>
-              <span>{secondaryLinkLabel}</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12H17" />
-                <path d="M12 7L17 12L12 17" />
-              </svg>
-            </a>
-          )}
+          <svg class="service-highlights__blob" xmlns="http://www.w3.org/2000/svg" width="421" height="421" viewBox="0 0 421 421" fill="none" aria-hidden="true">
+            <path d="M360.415 170.331C397.879 178.797 421 191.882 421 210.5C421 229.118 397.879 242.203 360.415 250.669C388.629 276.733 402.11 299.626 392.8 315.75C383.491 331.874 356.925 331.646 320.247 320.245C331.648 356.923 331.876 383.489 315.752 392.798C299.628 402.108 276.734 388.626 250.67 360.412C242.204 397.878 229.119 421 210.5 421C191.882 421 178.797 397.88 170.331 360.416C144.268 388.627 121.376 402.107 105.252 392.798C89.128 383.489 89.3565 356.923 100.757 320.245C64.079 331.646 37.5129 331.874 28.2037 315.75C18.8946 299.626 32.3753 276.733 60.5878 250.67C23.1218 242.204 -3.17189e-06 229.119 0 210.5C8.13848e-07 191.881 23.1218 178.796 60.5878 170.33C32.3753 144.267 18.8946 121.374 28.2037 105.25C37.5129 89.126 64.079 89.3544 100.757 100.755C89.3565 64.077 89.1281 37.5108 105.252 28.2017C121.376 18.8927 144.268 32.3728 170.331 60.5844C178.797 23.1204 191.882 0 210.5 0C229.119 0 242.204 23.1219 250.67 60.5879C276.734 32.3739 299.628 18.8923 315.752 28.2017C331.876 37.5108 331.648 64.077 320.247 100.755C356.925 89.3544 383.491 89.126 392.8 105.25C402.11 121.374 388.629 144.267 360.415 170.331Z" fill="currentColor"/>
+          </svg>
+          <h2 class="service-highlights__title">{title}</h2>
         </div>
 
-        <div class="service-highlights__grid">
-          {cards.map((item) => (
-            <article class="service-card">
-              <div class:list={['service-card__media', !item.image && 'service-card__media--placeholder']}>
-                {item.image ? (
-                  <SanityImage
-                    image={item.image}
-                    alt={item.image.alt || item.title || ''}
-                    width={1200}
-                    height={900}
-                    fit="crop"
-                    widths={[420, 640, 840, 1200, 1600, 1920]}
-                    class="service-card__image"
-                    loading="lazy"
-                    decoding="async"
-                    sizes="(min-width: 74rem) 24rem, (min-width: 48rem) 33vw, 100vw"
-                  />
-                ) : (
-                  <div class="service-card__media-placeholder" aria-hidden="true"></div>
-                )}
-              </div>
-              <div class="service-card__content">
-                <div class="service-card__copy">
-                  <h3 class="service-card__title">{item.title}</h3>
-                  {Array.isArray(item.body) && item.body.length > 0 && (
-                    <div class="service-card__body rich-text">
-                      <PortableText value={item.body} />
-                    </div>
-                  )}
+        <div class="service-highlights__list" role="navigation" aria-label={title || 'Palvelulinkit'}>
+          {cards.map((item, index) => {
+            const number = String(index + 1).padStart(2, '0')
+
+            return (
+              <a class="service-card" href={item.buttonHref}>
+                <div class="service-card__content">
+                  <div class="service-card__copy">
+                    <span class="service-card__number" aria-hidden="true">{number}</span>
+                    <span class="service-card__separator" aria-hidden="true">/</span>
+                    <h3 class="service-card__title">{item.title}</h3>
+                  </div>
+                  <svg class="service-card__arrow" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none" aria-hidden="true">
+                    <path d="M17.6148 10.9375H0V9.47917H17.6148L9.16781 1.03214L10.2083 0L20.4167 10.2083L10.2083 20.4167L9.16781 19.3845L17.6148 10.9375Z" fill="currentColor"/>
+                  </svg>
                 </div>
-                <a class="button button--raspberry" href={item.buttonHref}>{item.buttonLabel}</a>
-              </div>
-            </article>
-          ))}
+              </a>
+            )
+          })}
         </div>
       </div>
     </section>

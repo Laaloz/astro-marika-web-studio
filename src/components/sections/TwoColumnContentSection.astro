@@ -4,7 +4,9 @@ import type {PortableTextBlock} from '@portabletext/types'
 import PortableTextImage from '../portable-text/PortableTextImage.astro'
 
 const {
+  leftEyebrow,
   title,
+  rightEyebrow,
   rightTitle,
   leftBody,
   body,
@@ -14,7 +16,9 @@ const {
   rightCtaHref,
   backgroundStyle = 'none',
 } = Astro.props as {
+  leftEyebrow?: string
   title?: string
+  rightEyebrow?: string
   rightTitle?: string
   leftBody?: PortableTextBlock[]
   body?: PortableTextBlock[]
@@ -26,13 +30,15 @@ const {
 }
 
 const hasTitle = Boolean(typeof title === 'string' && title.trim())
+const hasLeftEyebrow = Boolean(typeof leftEyebrow === 'string' && leftEyebrow.trim())
 const hasRightTitle = Boolean(typeof rightTitle === 'string' && rightTitle.trim())
+const hasRightEyebrow = Boolean(typeof rightEyebrow === 'string' && rightEyebrow.trim())
 const hasLeftBody = Array.isArray(leftBody) && leftBody.length > 0
 const hasBody = Array.isArray(body) && body.length > 0
 const hasLeftCta = Boolean(leftCtaLabel && leftCtaHref)
 const hasRightCta = Boolean(rightCtaLabel && rightCtaHref)
-const hasLeftContent = Boolean(hasTitle || hasLeftBody || hasLeftCta)
-const hasRightContent = Boolean(hasRightTitle || hasBody || hasRightCta)
+const hasLeftContent = Boolean(hasLeftEyebrow || hasTitle || hasLeftBody || hasLeftCta)
+const hasRightContent = Boolean(hasRightEyebrow || hasRightTitle || hasBody || hasRightCta)
 const hasContent = Boolean(hasLeftContent || hasRightContent)
 const hasBackground = backgroundStyle === 'brown'
 
@@ -57,7 +63,17 @@ const portableTextComponents = {
         <div class="two-column-content__grid">
           {hasLeftContent && (
             <div class="two-column-content__left">
-              {hasTitle && <h2 class="two-column-content__title">{title}</h2>}
+              {(hasLeftEyebrow || hasTitle) && (
+                <div class="two-column-content__heading">
+                  {hasLeftEyebrow && (
+                    <div class="two-column-content__eyebrow-wrap">
+                      <span class="two-column-content__eyebrow-dot" aria-hidden="true"></span>
+                      <p class="two-column-content__eyebrow">{leftEyebrow}</p>
+                    </div>
+                  )}
+                  {hasTitle && <h2 class="two-column-content__title">{title}</h2>}
+                </div>
+              )}
 
               {hasLeftBody && (
                 <div class="two-column-content__left-body rich-text">
@@ -78,8 +94,18 @@ const portableTextComponents = {
 
           {hasRightContent && (
             <div class="two-column-content__body">
-              {hasRightTitle && (
-                <h2 class="two-column-content__title two-column-content__title--right">{rightTitle}</h2>
+              {(hasRightEyebrow || hasRightTitle) && (
+                <div class="two-column-content__heading">
+                  {hasRightEyebrow && (
+                    <div class="two-column-content__eyebrow-wrap">
+                      <span class="two-column-content__eyebrow-dot" aria-hidden="true"></span>
+                      <p class="two-column-content__eyebrow">{rightEyebrow}</p>
+                    </div>
+                  )}
+                  {hasRightTitle && (
+                    <h2 class="two-column-content__title two-column-content__title--right">{rightTitle}</h2>
+                  )}
+                </div>
               )}
 
               {hasBody && (
