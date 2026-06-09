@@ -82,9 +82,16 @@ const hasIconSplit = titleTopIIndex >= 0;
 	const hero = document.querySelector('[data-home-hero]');
 	const title = hero?.querySelector('[data-home-hero-title]');
 	const bottom = hero?.querySelector('[data-home-hero-bottom]');
-	if (hero && title && bottom && window.matchMedia('(min-width: 64rem)').matches) {
+	if (hero && title && bottom) {
+		const isDesktop = window.matchMedia('(min-width: 64rem)').matches;
+		const motionScale = 1;
+		const followStrength = isDesktop ? 0.07 : 0.1;
+		const settleThreshold = isDesktop ? 0.15 : 0.08;
 		let frame = 0;
+		let animateFrame = 0;
 		let maxShift = 0;
+		let currentShift = 0;
+		let targetShift = 0;
 		let resizeFrame = 0;
 
 		const updateMetrics = () => {
@@ -97,12 +104,35 @@ const hasIconSplit = titleTopIIndex >= 0;
 			const rect = hero.getBoundingClientRect();
 			const total = Math.max(hero.offsetHeight - window.innerHeight, 1);
 			const progress = Math.min(Math.max((-rect.top) / total, 0), 1);
-			hero.style.setProperty('--home-hero-bottom-shift', `${maxShift * progress}px`);
+			targetShift = maxShift * progress * motionScale;
+		};
+
+		const animate = () => {
+			currentShift += (targetShift - currentShift) * followStrength;
+			if (Math.abs(targetShift - currentShift) < settleThreshold) {
+				currentShift = targetShift;
+			}
+			hero.style.setProperty('--home-hero-bottom-shift', `${currentShift}px`);
+			if (currentShift !== targetShift) {
+				animateFrame = window.requestAnimationFrame(animate);
+			}
 		};
 
 		const requestUpdate = () => {
 			window.cancelAnimationFrame(frame);
 			frame = window.requestAnimationFrame(update);
+			window.cancelAnimationFrame(animateFrame);
+			animateFrame = window.requestAnimationFrame(animate);
+		};
+
+		const requestLateRefresh = () => {
+			window.cancelAnimationFrame(frame);
+			frame = window.requestAnimationFrame(() => {
+				window.cancelAnimationFrame(frame);
+				frame = window.requestAnimationFrame(update);
+				window.cancelAnimationFrame(animateFrame);
+				animateFrame = window.requestAnimationFrame(animate);
+			});
 		};
 
 		const refresh = () => {
@@ -117,9 +147,12 @@ const hasIconSplit = titleTopIIndex >= 0;
 
 		window.addEventListener('scroll', requestUpdate, { passive: true });
 		window.addEventListener('resize', requestResizeRefresh, { passive: true });
+		window.addEventListener('load', requestLateRefresh, { passive: true });
+		window.addEventListener('pageshow', requestLateRefresh, { passive: true });
 		if (document.fonts?.ready) {
 			document.fonts.ready.then(refresh).catch(refresh);
 		}
 		refresh();
+		requestLateRefresh();
 	}
 </script>
