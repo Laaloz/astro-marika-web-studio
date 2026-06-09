@@ -7,6 +7,10 @@
   --section-padding-bottom: var(--space-11);
 }
 
+.home-hero + script + .page-section {
+  padding-top: var(--space-11) !important;
+}
+
 .home-hero__stage {
   position: relative;
 }
