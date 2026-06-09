@@ -4,8 +4,6 @@ import {sanityClient} from 'sanity:client';
 import {urlFor} from '../lib/sanityImage';
 import SanityImage from '../components/SanityImage.astro';
 import type {SanityImageSource} from '@sanity/image-url';
-import {PortableText} from 'astro-portabletext';
-import type {PortableTextBlock} from '@portabletext/types';
 
 interface ContentMetadata {
 	title?: string;
@@ -22,13 +20,6 @@ interface NavigationLink {
 
 interface NavigationItem extends NavigationLink {
 	submenu?: NavigationLink[];
-}
-
-interface FooterNavigationItem extends NavigationLink {}
-
-interface FooterSocialLink extends NavigationLink {
-	label?: string;
-	icon?: SanityImageSource & { alt?: string };
 }
 
 const gtmId = import.meta.env.PUBLIC_GTM_ID?.trim() || '';
@@ -51,22 +42,14 @@ const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
       href
     }
   },
-  footerLogo,
-  footerSocialLinks[]{
-    label,
-    href,
-    icon
-  },
-  footerNavigationLabel,
-  footerNavigation[]{
-    label,
-    href
-  },
-  footerContactTitle,
-  footerContactLines,
+  footerInstagramHref,
+  footerInstagramLabel,
+  footerEmail,
+  footerPhone,
   footerCopyright,
   footerPrivacyLabel,
-  footerPrivacyHref
+  footerPrivacyHref,
+  footerCookiesLabel
   
 }`;
 
@@ -80,15 +63,14 @@ const siteSettings = await sanityClient.fetch<{
 	logoMobile?: SanityImageSource & { alt?: string };
 	logoHref?: string;
 	mainNavigation?: NavigationItem[];
-	footerLogo?: SanityImageSource & { alt?: string };
-	footerSocialLinks?: FooterSocialLink[];
-	footerNavigationLabel?: string;
-	footerNavigation?: FooterNavigationItem[];
-	footerContactTitle?: string;
-	footerContactLines?: PortableTextBlock[];
+	footerInstagramHref?: string;
+	footerInstagramLabel?: string;
+	footerEmail?: string;
+	footerPhone?: string;
 	footerCopyright?: string;
 	footerPrivacyLabel?: string;
 	footerPrivacyHref?: string;
+	footerCookiesLabel?: string;
 } | null>(SITE_SETTINGS_QUERY);
 
 const defaultNavigation: NavigationItem[] = [
@@ -102,6 +84,21 @@ const navigation = Array.isArray(siteSettings?.mainNavigation) && siteSettings.m
 	? siteSettings.mainNavigation
 	: defaultNavigation;
 
+const headerCtaLabel = 'Ota yhteyttä';
+const headerCtaHref = '/ota-yhteytta';
+const isHeaderCtaItem = (item: NavigationLink) => {
+	const label = (item.label || '').trim().toLowerCase();
+	const href = normalizeCmsHref(item.href);
+	return label === headerCtaLabel.toLowerCase() || href === headerCtaHref;
+};
+const headerCtaSource = navigation.find(isHeaderCtaItem);
+const headerCta = {
+	label: headerCtaSource?.label || headerCtaLabel,
+	href: headerCtaSource?.href || headerCtaHref,
+};
+const desktopNavigation = navigation.filter((item) => !isHeaderCtaItem(item));
+const mobileNavigation = navigation.some(isHeaderCtaItem) ? navigation : [...navigation, headerCta];
+
 const logoDesktop = siteSettings?.logoDesktop;
 const logoMobile = siteSettings?.logoMobile;
 const logoDesktopAlt = siteSettings?.logoDesktop?.alt || siteSettings?.siteTitle || 'Sivuston logo';
@@ -110,90 +107,17 @@ const logoDesktopUrl = logoDesktop ? urlFor(logoDesktop)?.url() : undefined;
 const logoMobileUrl = logoMobile ? urlFor(logoMobile)?.url() : undefined;
 const logoHref = siteSettings?.logoHref || '/';
 
-const defaultFooterNavigation: FooterNavigationItem[] = [
-	{ label: 'Palvelut', href: '/palvelut' },
-	{ label: 'Portfolio', href: '/referenssit' },
-	{ label: 'Marika', href: '/marika' },
-	{ label: 'Ota yhteyttä', href: '/ota-yhteytta' },
-];
-
-const footerNavigation =
-	Array.isArray(siteSettings?.footerNavigation) && siteSettings.footerNavigation.length > 0
-		? siteSettings.footerNavigation
-		: defaultFooterNavigation;
-const footerNavigationLabel = siteSettings?.footerNavigationLabel || 'Sivut';
-const footerLogo = siteSettings?.footerLogo;
-const footerLogoAlt = footerLogo?.alt || siteSettings?.siteTitle || 'Sivuston logo';
-const footerSocialLinks = Array.isArray(siteSettings?.footerSocialLinks) ? siteSettings.footerSocialLinks : [];
-const footerContactTitle = siteSettings?.footerContactTitle || 'Yhteystiedot';
-const normalizeFooterContactContent = (value: unknown): PortableTextBlock[] => {
-	if (!Array.isArray(value) || value.length === 0) return [];
-
-	return value
-		.map((item, index) => {
-			if (item && typeof item === 'object' && (item as { _type?: string })._type === 'block') {
-				return item as PortableTextBlock;
-			}
-
-			if (typeof item === 'string') {
-				return {
-					_type: 'block',
-					_key: `legacy-string-${index}`,
-					style: 'normal',
-					children: [{ _type: 'span', _key: `legacy-string-span-${index}`, text: item, marks: [] }],
-					markDefs: [],
-				} as PortableTextBlock;
-			}
-
-			if (item && typeof item === 'object') {
-				const row = item as { label?: string; href?: string };
-				if (row.label) {
-					const marks = row.href ? [`legacy-link-${index}`] : [];
-					return {
-						_type: 'block',
-						_key: `legacy-row-${index}`,
-						style: 'normal',
-						children: [{ _type: 'span', _key: `legacy-row-span-${index}`, text: row.label, marks }],
-						markDefs: row.href ? [{ _key: `legacy-link-${index}`, _type: 'link', href: row.href }] : [],
-					} as PortableTextBlock;
-				}
-			}
-
-			return null;
-		})
-		.filter((block): block is PortableTextBlock => Boolean(block));
-};
-
-const footerContactContentRaw =
-	normalizeFooterContactContent(siteSettings?.footerContactLines).length > 0
-		? normalizeFooterContactContent(siteSettings?.footerContactLines)
-		: [
-				{
-					_type: 'block',
-					style: 'normal',
-					_key: 'fallback-contact-1',
-					children: [{_type: 'span', text: 'Marika. design - websuunnittelija'}],
-					markDefs: [],
-				},
-				{
-					_type: 'block',
-					style: 'normal',
-					_key: 'fallback-contact-2',
-					children: [{_type: 'span', text: 'lorem.ipsum@gmail.com', marks: ['email']}],
-					markDefs: [{_key: 'email', _type: 'link', href: 'mailto:lorem.ipsum@gmail.com'}],
-				},
-				{
-					_type: 'block',
-					style: 'normal',
-					_key: 'fallback-contact-3',
-					children: [{_type: 'span', text: '+358408971399, myös whatsapp', marks: ['phone']}],
-					markDefs: [{_key: 'phone', _type: 'link', href: 'tel:+358408971399'}],
-			},
-		  ];
-const footerContactContent = normalizePortableTextLinks(footerContactContentRaw);
-const footerCopyright = siteSettings?.footerCopyright || '© Finding Design, 2026.';
-const footerPrivacyLabel = siteSettings?.footerPrivacyLabel || 'Tietosuojaseloste';
-const footerPrivacyHref = siteSettings?.footerPrivacyHref || '/tietosuojaseloste';
+const footerLogoUrl = logoDesktopUrl;
+const footerLogoAlt = logoDesktopAlt;
+const footerInstagramHref = siteSettings?.footerInstagramHref;
+const footerInstagramLabel = siteSettings?.footerInstagramLabel;
+const footerEmail = siteSettings?.footerEmail;
+const footerPhone = siteSettings?.footerPhone;
+const footerPhoneHref = footerPhone ? `tel:${footerPhone.replace(/[^+\d]/g, '')}` : undefined;
+const footerCopyright = siteSettings?.footerCopyright;
+const footerPrivacyLabel = siteSettings?.footerPrivacyLabel;
+const footerPrivacyHref = siteSettings?.footerPrivacyHref;
+const footerCookiesLabel = siteSettings?.footerCookiesLabel;
 
 function normalizeCmsHref(href?: string) {
 	if (!href) return '#';
@@ -209,25 +133,6 @@ function normalizeCmsHref(href?: string) {
 	return `/${href}`;
 }
 
-function normalizePortableTextLinks(blocks: PortableTextBlock[]) {
-	return blocks.map((block) => {
-		const markDefs = Array.isArray((block as {markDefs?: unknown[]}).markDefs)
-			? ((block as {markDefs?: Array<{_type?: string; href?: string}>}).markDefs || []).map((markDef) => {
-				if (markDef?._type !== 'link') return markDef;
-				return {
-					...markDef,
-					href: normalizeCmsHref(markDef.href),
-				};
-			})
-			: [];
-
-		return {
-			...block,
-			markDefs,
-		};
-	});
-}
-
 const normalizePath = (path: string) => {
 	const plainPath = path.split('#')[0]?.split('?')[0] || '/';
 	const trimmed = plainPath.replace(/\/+$/, '');
@@ -235,7 +140,6 @@ const normalizePath = (path: string) => {
 };
 
 const currentPath = normalizePath(Astro.url.pathname);
-const isHomepage = currentPath === '/';
 const isInternalPath = (href?: string) => {
 	const normalizedHref = normalizeCmsHref(href);
 	return normalizedHref.startsWith('/');
@@ -372,7 +276,7 @@ const lcpPreloadSrcset = lcpImageSource
 			</noscript>
 		)}
 		<a class="skip-link" href="#main-content">Siirry pääsisältöön</a>
-		<header class:list={{ 'site-header': true, 'site-header--home': isHomepage }} role="banner">
+		<header class="site-header" role="banner">
 			<div class="site-header__desktop">
 				<div class="site-container site-header__desktop-inner">
 					<a class="site-header__logo site-header__logo--desktop" href={normalizeCmsHref(logoHref)} aria-label="Etusivu">
@@ -393,13 +297,13 @@ const lcpPreloadSrcset = lcpImageSource
 					</a>
 					<nav aria-label="Päävalikko" class="site-nav site-nav--desktop">
 						<ul class="site-nav__list">
-							{navigation.map((item, index) => {
+							{desktopNavigation.map((item, index) => {
 								const hasSubmenu = Array.isArray(item.submenu) && item.submenu.length > 0;
 								const submenuHasCurrent = hasSubmenu && item.submenu?.some((subitem) => isCurrentPath(subitem.href));
 								const itemActive = isCurrentPath(item.href) || submenuHasCurrent;
 								const currentAnchorId = navItemAnchorId('desktop', index);
 								const nextAnchorHref =
-									index === navigation.length - 1
+									index === desktopNavigation.length - 1
 										? '#main-content'
 										: `#${navItemAnchorId('desktop', index + 1)}`;
 
@@ -418,14 +322,14 @@ const lcpPreloadSrcset = lcpImageSource
 												</svg>
 											)}
 										</a>
-										{hasSubmenu && (
-											<div class="site-subnav" aria-label={`${item.label || 'Alavalikko'} alavalikko`}>
-												{navigation.length > 1 && (
-													<a class="site-subnav__skip" href={nextAnchorHref}>
-														Ohita tämän alavalikon linkit
-													</a>
-												)}
-												<ul class="site-subnav__links">
+						{hasSubmenu && (
+							<div class="site-subnav" aria-label={`${item.label || 'Alavalikko'} alavalikko`}>
+								{desktopNavigation.length > 1 && (
+									<a class="site-subnav__skip" href={nextAnchorHref}>
+										Ohita tämän alavalikon linkit
+									</a>
+								)}
+								<ul class="site-subnav__links">
 													{item.submenu?.map((subitem) => (
 														<li>
 															<a
@@ -445,6 +349,12 @@ const lcpPreloadSrcset = lcpImageSource
 							})}
 						</ul>
 					</nav>
+					<a class="site-header__cta" href={normalizeCmsHref(headerCta.href)}>
+						<span>{headerCta.label}</span>
+						<svg class="site-header__cta-icon" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
+						</svg>
+					</a>
 				</div>
 			</div>
 
@@ -488,14 +398,14 @@ const lcpPreloadSrcset = lcpImageSource
 								Etusivu
 							</a>
 						</li>
-						{navigation.map((item, index) => {
+						{mobileNavigation.map((item, index) => {
 							const hasSubmenu = Array.isArray(item.submenu) && item.submenu.length > 0;
 							const submenuHasCurrent = hasSubmenu && item.submenu?.some((subitem) => isCurrentPath(subitem.href));
 							const itemActive = isCurrentPath(item.href) || submenuHasCurrent;
 							const submenuId = `mobile-submenu-${menuItemId(item)}`;
 							const currentAnchorId = navItemAnchorId('mobile', index);
 							const nextAnchorHref =
-								index === navigation.length - 1
+								index === mobileNavigation.length - 1
 									? '#main-content'
 									: `#${navItemAnchorId('mobile', index + 1)}`;
 
@@ -533,7 +443,7 @@ const lcpPreloadSrcset = lcpImageSource
 												<path d="M6 9L12 15L18 9" />
 											</svg>
 										</summary>
-										{navigation.length > 1 && (
+										{mobileNavigation.length > 1 && (
 											<a class="mobile-subnav__skip" href={nextAnchorHref}>
 												Ohita tämän alavalikon linkit
 											</a>
@@ -564,118 +474,49 @@ const lcpPreloadSrcset = lcpImageSource
 		</main>
 		<footer class="site-footer" aria-label="Alatunniste">
 			<div class="site-container site-footer__inner">
-				<div class="site-footer__grid">
-					<div class="site-footer__brand">
-						{footerLogo && (
-							<SanityImage
-								image={footerLogo}
-								alt={footerLogoAlt}
-								width={416}
-								height={73}
-								fit="max"
-								quality={90}
-								widths={[320, 416, 640, 832]}
-								class="site-footer__brand-logo"
-								loading="lazy"
-								decoding="async"
-								sizes="(min-width: 64rem) 26rem, 100vw"
-							/>
-						)}
-						{footerSocialLinks.length > 0 && (
-							<ul class="site-footer__social-links" role="list">
-								{footerSocialLinks.map((item) => {
-									const iconUrl = item.icon ? urlFor(item.icon)?.width(36).height(36).fit('max').url() : undefined;
-									const iconAlt = item.icon?.alt || item.label || 'Some';
-									return (
-										<li>
-											<a class="site-footer__social-link" href={normalizeCmsHref(item.href)} aria-label={item.label || undefined}>
-												{iconUrl && <img src={iconUrl} alt={iconAlt} width="36" height="36" loading="lazy" decoding="async" />}
-												<span class="sr-only">{item.label || 'Some'}</span>
-											</a>
-										</li>
-									);
-								})}
-							</ul>
-						)}
-					</div>
-
-					<div class="site-footer__column">
-						<h3 class="site-footer__title">{footerNavigationLabel}</h3>
-						<ul class="site-footer__links" role="list">
-							{footerNavigation.map((item) => (
-								<li>
-									<a href={normalizeCmsHref(item.href)}>{item.label || 'Linkki'}</a>
-								</li>
-							))}
-						</ul>
-					</div>
-
-					<div class="site-footer__column site-footer__column--contact">
-						<h3 class="site-footer__title">{footerContactTitle}</h3>
-						<div class="site-footer__contact">
-							<PortableText value={footerContactContent} />
-						</div>
-					</div>
-				</div>
-				<div class="site-footer__meta">
-					<p>{footerCopyright}</p>
-					<a href={normalizeCmsHref(footerPrivacyHref)}>{footerPrivacyLabel}</a>
-					{hasGtm && (
-						<a href="#" data-cookie-preferences>Evästeasetukset</a>
+				<div class="site-footer__logo-wrap">
+					{footerLogoUrl && (
+						<SanityImage
+							image={logoDesktop || logoMobile}
+							alt={footerLogoAlt}
+							width={654}
+							height={118}
+							fit="max"
+							quality={90}
+							widths={[360, 654, 900, 1200]}
+							class="site-footer__logo"
+							loading="lazy"
+							decoding="async"
+							sizes="(min-width: 64rem) 41rem, 100vw"
+						/>
 					)}
+				</div>
+
+				<div class="site-footer__contact-grid" aria-label="Yhteystiedot">
+					<div class="site-footer__row">
+						<a class="site-footer__item site-footer__item--social" href={footerInstagramHref} aria-label={footerInstagramLabel}>
+							<svg class="site-footer__instagram-icon" viewBox="0 0 18 18" aria-hidden="true">
+								<rect x="1.5" y="1.5" width="15" height="15" rx="4" ry="4" fill="none" stroke="currentColor" stroke-width="1.5" />
+								<circle cx="9" cy="9" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5" />
+								<circle cx="13.2" cy="4.8" r="0.9" fill="currentColor" />
+							</svg>
+							<span>{footerInstagramLabel}</span>
+						</a>
+						<a class="site-footer__item" href={`mailto:${footerEmail}`}>{footerEmail}</a>
+						<a class="site-footer__item" href={footerPhoneHref}>{footerPhone}</a>
+						<span class="site-footer__item site-footer__item--spacer" aria-hidden="true"></span>
+					</div>
+					<div class="site-footer__row">
+						<span class="site-footer__item">{footerCopyright}</span>
+						<a class="site-footer__item" href={footerPrivacyHref}>{footerPrivacyLabel}</a>
+						<a class="site-footer__item" href="#" data-cookie-preferences>{footerCookiesLabel}</a>
+						<span class="site-footer__item site-footer__item--spacer" aria-hidden="true"></span>
+					</div>
 				</div>
 			</div>
 		</footer>
 		<script is:inline>
 			const header = document.querySelector('.site-header');
-			if (header instanceof HTMLElement) {
-				let previousY = window.scrollY;
-				let ticking = false;
-				const hideThreshold = 10;
-				const showThreshold = 3;
-				const hideStartOffset = 120;
-				const scrolledThreshold = 8;
-
-				const updateHeaderVisibility = () => {
-					const currentY = window.scrollY;
-					header.classList.toggle('site-header--scrolled', currentY > scrolledThreshold);
-					if (document.documentElement.classList.contains('mobile-nav-open')) {
-						header.classList.remove('site-header--hidden');
-						previousY = currentY;
-						ticking = false;
-						return;
-					}
-
-					if (currentY <= hideStartOffset) {
-						header.classList.remove('site-header--hidden');
-						previousY = currentY;
-						ticking = false;
-						return;
-					}
-
-					const delta = currentY - previousY;
-					if (delta <= -showThreshold) {
-						header.classList.remove('site-header--hidden');
-						previousY = currentY;
-					} else if (delta >= hideThreshold) {
-						if (currentY <= 0) {
-							header.classList.remove('site-header--hidden');
-						} else {
-							header.classList.add('site-header--hidden');
-						}
-						previousY = currentY;
-					}
-					ticking = false;
-				};
-
-				window.addEventListener('scroll', () => {
-					if (!ticking) {
-						window.requestAnimationFrame(updateHeaderVisibility);
-						ticking = true;
-					}
-				}, {passive: true});
-				updateHeaderVisibility();
-			}
 
 			const alignDesktopSubmenus = () => {
 				const desktopItems = document.querySelectorAll('.site-nav__item--has-submenu');
@@ -744,7 +585,6 @@ const lcpPreloadSrcset = lcpImageSource
 					mobileNav.classList.add('is-open');
 					if (mobileMenu instanceof HTMLElement) mobileMenu.hidden = false;
 					if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'true');
-					if (header instanceof HTMLElement) header.classList.remove('site-header--hidden');
 					setScrollLock();
 				};
 				const setExpanded = () => {

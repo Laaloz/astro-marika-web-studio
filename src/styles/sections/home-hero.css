@@ -20,7 +20,6 @@
     'title'
     'bottom'
     'copy';
-  gap: var(--space-6);
 }
 
 .home-hero__title-block,
@@ -40,6 +39,7 @@
 .home-hero__copy {
   grid-area: copy;
   gap: var(--space-6);
+  margin-top: var(--space-6);
   max-width: 38rem;
   justify-self: start;
   color: var(--color-heading);
@@ -139,10 +139,6 @@
     padding-block: var(--space-11);
   }
 
-  .home-hero__grid {
-    gap: var(--space-5);
-  }
-
   .home-hero__title--top,
   .home-hero__title--bottom {
     font-size: clamp(var(--font-size-H1), 18vw, 76px);
@@ -202,6 +198,6 @@
   }
 }
 
-.home-hero + .page-section {
+.home-hero + script + .page-section {
   padding-block-start: 0;
 }
