@@ -153,6 +153,14 @@ dl {
   padding-block-start: var(--section-padding-top);
 }
 
+.page-section + script + .page-section:not(.has-background) {
+  padding-block-start: 0;
+}
+
+.page-section.has-background + script + .page-section:not(.has-background) {
+  padding-block-start: var(--section-padding-top);
+}
+
 .section-container {
   width: min(100%, var(--section-container-width));
   margin-inline: auto;

@@ -69,12 +69,10 @@
 
 .site-header__logo-image--desktop {
   max-height: 2.3125rem;
-  width: auto;
 }
 
 .site-header__logo-image--mobile {
   max-height: 2.25rem;
-  width: auto;
 }
 
 .site-header__logo-fallback {
