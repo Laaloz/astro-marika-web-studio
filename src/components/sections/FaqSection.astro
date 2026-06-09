@@ -8,11 +8,10 @@ interface FaqItem {
   answer?: PortableTextBlock[]
 }
 
-const {title, body, items = [], iconColor = 'soft-green'} = Astro.props as {
+const {title, body, items = []} = Astro.props as {
   title?: string
   body?: PortableTextBlock[]
   items?: FaqItem[]
-  iconColor?: 'lavender' | 'soft-green' | 'dream-pink'
 }
 
 const hasIntro = Boolean(title && Array.isArray(body) && body.length > 0)
@@ -25,11 +24,7 @@ const accordionItems = items.filter(
 {
   hasIntro && accordionItems.length > 0 && (
     <section
-      class:list={{
-        'page-section faq-section': true,
-        'faq-section--icon-lavender': iconColor === 'lavender',
-        'faq-section--icon-dream-pink': iconColor === 'dream-pink',
-      }}
+      class="page-section faq-section"
       aria-label={title || 'FAQ'}
     >
       <div class="site-container faq-section__container">

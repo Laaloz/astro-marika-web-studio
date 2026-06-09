@@ -5,10 +5,10 @@
 
 .fifty-fifty-simple__row {
   display: grid;
-  grid-template-columns: minmax(0, 38rem) minmax(0, 35.25rem);
+  grid-template-columns: minmax(0, 38rem) minmax(0, 42.5rem);
   gap: clamp(2.5rem, 6vw, 7rem);
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
 }
 
 .fifty-fifty-simple__row--image-left .fifty-fifty-simple__content {
@@ -46,17 +46,16 @@
 .fifty-fifty-simple__media {
   justify-self: start;
   width: 100%;
-  max-width: 38rem;
 }
 
 .fifty-fifty-simple__image {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border: 1px solid #322928;
-  border-radius: 4px;
-  box-shadow: 2px 2px 0 #322928;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: none;
 }
 
 @media (max-width: 63.999rem) {
@@ -81,7 +80,6 @@
 
   .fifty-fifty-simple__media {
     width: 100%;
-    max-width: 38rem;
     justify-self: center;
   }
 }

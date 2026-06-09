@@ -2,15 +2,7 @@
   --section-padding-top: var(--space-11);
   --section-padding-bottom: var(--space-11);
   --faq-divider-color: rgb(50 34 33 / 0.3);
-  --faq-icon-bg: var(--soft-green);
-}
-
-.faq-section--icon-lavender {
-  --faq-icon-bg: var(--lavender);
-}
-
-.faq-section--icon-dream-pink {
-  --faq-icon-bg: var(--dream-pink);
+  --faq-icon-bg: var(--lemon);
 }
 
 .faq-section__grid {

@@ -2,7 +2,8 @@
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 
-const {title, body, ctaLabel, ctaHref} = Astro.props as {
+const {eyebrow, title, body, ctaLabel, ctaHref} = Astro.props as {
+  eyebrow?: string
   title?: string
   body?: PortableTextBlock[]
   ctaLabel?: string
@@ -10,6 +11,7 @@ const {title, body, ctaLabel, ctaHref} = Astro.props as {
 }
 
 const hasRequiredContent = Boolean(title && Array.isArray(body) && body.length > 0 && ctaLabel && ctaHref)
+const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
 
 const ctaBottomVector = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="162" viewBox="0 0 1440 162" fill="none" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
@@ -36,6 +38,12 @@ const ctaBottomVectorMobile = `
       <div class="site-container call-to-action__container">
         <div class="call-to-action__content">
           <div class="call-to-action__title-column">
+            {eyebrowText && (
+              <div class="call-to-action__eyebrow-wrap">
+                <span class="call-to-action__eyebrow-dot" aria-hidden="true"></span>
+                <p class="call-to-action__eyebrow">{eyebrowText}</p>
+              </div>
+            )}
             <h2 class="call-to-action__title">{title}</h2>
           </div>
 

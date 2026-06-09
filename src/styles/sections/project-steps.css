@@ -8,6 +8,34 @@
   gap: var(--space-7);
 }
 
+.project-steps__intro {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+}
+
+.project-steps__eyebrow-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text);
+}
+
+.project-steps__eyebrow-dot {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-info);
+}
+
+.project-steps__eyebrow {
+  color: #2f2a26;
+  font-size: var(--text-body-large);
+  line-height: var(--leading-button-large);
+  font-weight: 300;
+}
+
 .project-steps__title {
   color: var(--color-heading);
   font-size: var(--text-h2);
@@ -20,60 +48,35 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: var(--grid-gutter);
-  row-gap: var(--space-7);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
 }
 
 .project-step {
   display: grid;
   align-content: start;
   gap: var(--space-3);
-}
-
-.project-step__badge {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 3.1875rem;
-  height: 3.0625rem;
-  margin-bottom: var(--space-1);
-}
-
-.project-step__badge-icon {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.project-step__badge > span {
-  position: relative;
-  z-index: 1;
-  color: #fff;
-  font-family: 'Optima', var(--font-body);
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 130%;
-  letter-spacing: -0.36px;
+  padding: var(--space-7) var(--space-4);
+  border-radius: 4px;
+  background: #fdf0e6;
 }
 
 .project-step__title {
-  color: var(--color-heading);
-  font-size: var(--text-h3);
-  line-height: var(--leading-h3);
-  letter-spacing: -0.384px;
+  color: #0b0b26;
+  font-size: var(--font-size-large-caps, 20px);
+  line-height: var(--font-lineheight-large-caps, 26px);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0;
 }
 
 .project-step__body {
-  color: var(--color-text);
+  color: #0b0b26;
 }
 
 .project-step__body :where(p, li) {
   font-size: var(--text-body-normal);
-  line-height: var(--leading-body-normal);
+  line-height: 1.5;
 }
 
 @media (max-width: 67.5rem) {
@@ -82,15 +85,13 @@
   }
 }
 
-@media (min-width: 67.5rem) {
-  .project-step__body {
-    max-width: 19.5rem;
-  }
-}
-
 @media (max-width: 48rem) {
   .project-steps__container {
     gap: var(--space-5);
+  }
+
+  .project-steps__intro {
+    gap: 0;
   }
 
   .project-steps__list {

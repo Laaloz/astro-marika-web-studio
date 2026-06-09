@@ -7,26 +7,30 @@ type Step = {
   body?: PortableTextBlock[]
 }
 
-const {title, steps = []} = Astro.props as {title?: string; steps?: Step[]}
+const {eyebrow, title, steps = []} = Astro.props as {eyebrow?: string; title?: string; steps?: Step[]}
 const validSteps = steps.filter((step) => step?.title && Array.isArray(step.body) && step.body.length > 0)
+const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
 ---
 
 {
   validSteps.length > 0 && (
     <section class="page-section project-steps" aria-label={title || 'Projektin vaiheet'}>
       <div class="site-container project-steps__container">
-        {title && <h2 class="project-steps__title">{title}</h2>}
+        {(eyebrowText || title) && (
+          <div class="project-steps__intro">
+            {eyebrowText && (
+              <div class="project-steps__eyebrow-wrap">
+                <span class="project-steps__eyebrow-dot" aria-hidden="true"></span>
+                <p class="project-steps__eyebrow">{eyebrowText}</p>
+              </div>
+            )}
+            {title && <h2 class="project-steps__title">{title}</h2>}
+          </div>
+        )}
         <ol class="project-steps__list">
           {validSteps.map((step, index) => {
-            const number = String(index + 1).padStart(2, '0')
             return (
               <li class="project-step">
-                <div class="project-step__badge" aria-hidden="true">
-                  <svg class="project-step__badge-icon" xmlns="http://www.w3.org/2000/svg" width="51" height="49" viewBox="0 0 51 49" fill="none">
-                    <path d="M51 12.25C51 5.48451 45.2916 -2.95729e-07 38.25 0C31.2084 2.95729e-07 25.5 5.48451 25.5 12.25C25.5 5.48451 19.7916 7.752e-07 12.75 1.07093e-06C5.70837 1.60639e-06 -5.5732e-07 5.48451 0 12.25C3.07799e-07 19.0155 5.70837 24.5 12.75 24.5C5.70837 24.5 8.06841e-07 29.9845 1.11464e-06 36.75C1.42244e-06 43.5155 5.70837 49 12.75 49C19.7916 49 25.5 43.5155 25.5 36.75C25.5 43.5155 31.2084 49 38.25 49C45.2916 49 51 43.5155 51 36.75C51 29.9861 45.2943 24.5026 38.255 24.5C45.2943 24.4974 51 19.0139 51 12.25Z" fill="#71650B" />
-                  </svg>
-                  <span>{number}</span>
-                </div>
                 <h3 class="project-step__title">{step.title}</h3>
                 <div class="project-step__body rich-text">
                   <PortableText value={step.body} />

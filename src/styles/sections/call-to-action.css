@@ -22,7 +22,29 @@
 
 .call-to-action__title-column {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-2);
+}
+
+.call-to-action__eyebrow-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text);
+}
+
+.call-to-action__eyebrow-dot {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-info);
+}
+
+.call-to-action__eyebrow {
+  color: #2f2a26;
+  font-size: var(--text-body-large);
+  line-height: var(--leading-button-large);
+  font-weight: 300;
 }
 
 .call-to-action__title {

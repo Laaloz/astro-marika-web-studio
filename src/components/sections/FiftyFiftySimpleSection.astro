@@ -31,8 +31,10 @@ const imageOnLeft = imageSide === 'left';
               image={image}
               alt={image?.alt || ''}
               width={530}
-              height={663}
+              height={530}
               fit="crop"
+              quality={100}
+              dpr={2}
               widths={[360, 460, 530, 720, 1060, 1280, 1600]}
               class="fifty-fifty-simple__image"
               loading="lazy"
