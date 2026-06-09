@@ -15,7 +15,8 @@
 
 @media (max-width: 63.999rem) {
   .large-image-section {
-    --section-padding-top: var(--space-8);
+    --section-padding-top: var(--space-11);
+    --section-padding-bottom: var(--space-11);
   }
 
   .large-image-section__image {

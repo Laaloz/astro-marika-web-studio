@@ -10,7 +10,7 @@
 }
 
 .home-hero__container {
-  padding-block: clamp(2.5rem, 8vw, 5.5rem);
+  padding-block: var(--space-11);
 }
 
 .home-hero__grid {
@@ -136,7 +136,7 @@
 
 @media (max-width: 63.999rem) {
   .home-hero__container {
-    padding-block: var(--space-8);
+    padding-block: var(--space-11);
   }
 
   .home-hero__grid {
@@ -200,4 +200,8 @@
   .home-hero__flower {
     top: 2rem;
   }
+}
+
+.home-hero + .page-section {
+  padding-block-start: 0;
 }

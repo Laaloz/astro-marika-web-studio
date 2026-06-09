@@ -1,6 +1,6 @@
 .contact-links-section {
-  --section-padding-top: var(--space-10);
-  --section-padding-bottom: var(--space-10);
+  --section-padding-top: var(--space-11);
+  --section-padding-bottom: var(--space-11);
 }
 
 .contact-links-section__container {
@@ -74,11 +74,6 @@
 }
 
 @media (max-width: 63.999rem) {
-  .contact-links-section {
-    --section-padding-top: var(--space-8);
-    --section-padding-bottom: var(--space-8);
-  }
-
   .contact-links-section__layout {
     grid-template-columns: 1fr;
     row-gap: var(--space-5);

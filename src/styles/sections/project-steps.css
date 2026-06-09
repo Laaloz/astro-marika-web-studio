@@ -1,6 +1,6 @@
 .project-steps {
-  --section-padding-top: var(--space-10);
-  --section-padding-bottom: var(--space-10);
+  --section-padding-top: var(--space-11);
+  --section-padding-bottom: var(--space-11);
 }
 
 .project-steps__container {

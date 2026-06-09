@@ -2,8 +2,8 @@
   position: relative;
   background: transparent;
   color: var(--tittle-color);
-  --section-padding-top: clamp(4rem, 8vw, 6.5rem);
-  --section-padding-bottom: clamp(4rem, 7vw, 6rem);
+  --section-padding-top: var(--space-11);
+  --section-padding-bottom: var(--space-11);
 }
 
 .service-highlights__container {
@@ -133,11 +133,6 @@
 }
 
 @media (max-width: 47.999rem) {
-  .service-highlights {
-    --section-padding-top: var(--space-8);
-    --section-padding-bottom: var(--space-8);
-  }
-
   .service-highlights__container {
     gap: 2rem;
   }

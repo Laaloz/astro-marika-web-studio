@@ -33,7 +33,8 @@
 
 @media (max-width: 63.999rem) {
   .image-gallery-section {
-    --section-padding-top: var(--space-8);
+    --section-padding-top: var(--space-11);
+    --section-padding-bottom: var(--space-11);
   }
 
   .image-gallery-section__grid {
