@@ -68,12 +68,13 @@
   gap: var(--space-2);
 }
 
-.call-to-action__body.rich-text :global(p),
-.call-to-action__body.rich-text :global(li),
-.call-to-action__body.rich-text :global(blockquote) {
+.call-to-action__body.rich-text p,
+.call-to-action__body.rich-text li,
+.call-to-action__body.rich-text blockquote {
   color: var(--text-color);
   font-size: var(--text-body-large);
   line-height: var(--leading-body-large);
+  font-weight: 300;
 }
 
 .call-to-action__button {
@@ -136,11 +137,12 @@
     gap: var(--space-4);
   }
 
-  .call-to-action__body.rich-text :global(p),
-  .call-to-action__body.rich-text :global(li),
-  .call-to-action__body.rich-text :global(blockquote) {
+  .call-to-action__body.rich-text p,
+  .call-to-action__body.rich-text li,
+  .call-to-action__body.rich-text blockquote {
     font-size: var(--text-body-large);
     line-height: var(--leading-body-large);
+    font-weight: 300;
   }
 
   .call-to-action__button {
