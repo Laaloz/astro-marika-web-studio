@@ -93,17 +93,20 @@ const hasIconSplit = titleTopIIndex >= 0;
 		let currentShift = 0;
 		let targetShift = 0;
 		let resizeFrame = 0;
+		let heroStart = 0;
+		let heroRange = 1;
 
 		const updateMetrics = () => {
+			hero.style.setProperty('--home-hero-bottom-shift', '0px');
 			const titleRect = title.getBoundingClientRect();
 			const bottomRect = bottom.getBoundingClientRect();
+			heroStart = hero.getBoundingClientRect().top + window.scrollY;
+			heroRange = Math.max(hero.offsetHeight, 1);
 			maxShift = Math.max(bottomRect.left - titleRect.left, 0);
 		};
 
 		const update = () => {
-			const rect = hero.getBoundingClientRect();
-			const total = Math.max(hero.offsetHeight - window.innerHeight, 1);
-			const progress = Math.min(Math.max((-rect.top) / total, 0), 1);
+			const progress = Math.min(Math.max((window.scrollY - heroStart) / heroRange, 0), 1);
 			const easedProgress = progress * progress * (3 - 2 * progress);
 			targetShift = maxShift * easedProgress * motionScale;
 		};

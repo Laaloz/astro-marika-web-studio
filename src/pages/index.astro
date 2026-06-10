@@ -15,6 +15,8 @@ import AboutDesignerSection from '../components/sections/AboutDesignerSection.as
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import CallToActionSection from '../components/sections/CallToActionSection.astro';
 import ContactLinksSection from '../components/sections/ContactLinksSection.astro';
+import CenteredRichTextSection from '../components/sections/CenteredRichTextSection.astro';
+import CookieDeclarationSection from '../components/sections/CookieDeclarationSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]][0]{
@@ -118,6 +120,14 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 
 			if (block._type === 'contactLinksSection') {
 				return <ContactLinksSection {...block} />;
+			}
+
+			if (block._type === 'centeredRichTextSection') {
+				return <CenteredRichTextSection {...block} />;
+			}
+
+			if (block._type === 'cookieDeclarationSection') {
+				return <CookieDeclarationSection {...block} />;
 			}
 
 			return null;

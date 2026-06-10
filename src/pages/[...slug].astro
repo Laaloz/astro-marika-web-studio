@@ -17,6 +17,8 @@ import ReferenceSection from '../components/sections/ReferenceSection.astro';
 import CallToActionSection from '../components/sections/CallToActionSection.astro';
 import ContactFormSection from '../components/sections/ContactFormSection.astro';
 import ContactLinksSection from '../components/sections/ContactLinksSection.astro';
+import CenteredRichTextSection from '../components/sections/CenteredRichTextSection.astro';
+import CookieDeclarationSection from '../components/sections/CookieDeclarationSection.astro';
 import {sanityClient} from 'sanity:client';
 
 const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeading, $slugWithTrailing]][0]{
@@ -148,6 +150,14 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 
 			if (block._type === 'contactLinksSection') {
 				return <ContactLinksSection {...block} />;
+			}
+
+			if (block._type === 'centeredRichTextSection') {
+				return <CenteredRichTextSection {...block} />;
+			}
+
+			if (block._type === 'cookieDeclarationSection') {
+				return <CookieDeclarationSection {...block} />;
 			}
 
 			return null;

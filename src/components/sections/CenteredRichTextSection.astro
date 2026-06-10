@@ -1,0 +1,24 @@
+---
+import {PortableText} from 'astro-portabletext'
+import type {PortableTextBlock} from '@portabletext/types'
+
+const {body, internalTitle} = Astro.props as {
+  body?: PortableTextBlock[]
+  internalTitle?: string
+}
+
+const hasContent = Array.isArray(body) && body.length > 0
+const ariaLabel = internalTitle || 'Centered rich text section'
+---
+
+{
+  hasContent && (
+    <section class="page-section centered-rich-text-section" aria-label={ariaLabel}>
+      <div class="site-container centered-rich-text-section__container">
+        <div class="centered-rich-text-section__content rich-text">
+          <PortableText value={body} />
+        </div>
+      </div>
+    </section>
+  )
+}

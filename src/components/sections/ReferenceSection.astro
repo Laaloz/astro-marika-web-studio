@@ -95,9 +95,9 @@ const getCardLabel = (item: ReferenceItem) => {
 
           {hasCta && (
             <div class="reference-section__cta-wrap reference-section__cta-wrap--mobile">
-              <a class="reference-section__cta" href={ctaHref}>
+              <a class="reference-section__cta button--link-secondary" href={ctaHref}>
                 <span>{ctaLabel}</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+                <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M5 12H17" />
                   <path d="M12 7L17 12L12 17" />
                 </svg>
@@ -118,9 +118,9 @@ const getCardLabel = (item: ReferenceItem) => {
               {titleText && <h2 class="reference-section__title">{titleText}</h2>}
               {descriptionText && <p class="reference-section__description">{descriptionText}</p>}
               {hasCta && (
-                <a class="reference-section__cta" href={ctaHref}>
+                <a class="reference-section__cta button--link-secondary" href={ctaHref}>
                   <span>{ctaLabel}</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 12H17" />
                     <path d="M12 7L17 12L12 17" />
                   </svg>

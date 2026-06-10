@@ -19,6 +19,8 @@ import ReferenceSection from '../../components/sections/ReferenceSection.astro'
 import CallToActionSection from '../../components/sections/CallToActionSection.astro'
 import ContactFormSection from '../../components/sections/ContactFormSection.astro'
 import ContactLinksSection from '../../components/sections/ContactLinksSection.astro'
+import CenteredRichTextSection from '../../components/sections/CenteredRichTextSection.astro'
+import CookieDeclarationSection from '../../components/sections/CookieDeclarationSection.astro'
 
 const REFERENCE_QUERY = `*[_type == "referenceItem" && slug.current == $slug][0]{
   _id,
@@ -161,6 +163,14 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
 
       if (block._type === 'contactLinksSection') {
         return <ContactLinksSection {...block} />
+      }
+
+      if (block._type === 'centeredRichTextSection') {
+        return <CenteredRichTextSection {...block} />
+      }
+
+      if (block._type === 'cookieDeclarationSection') {
+        return <CookieDeclarationSection {...block} />
       }
 
       return null

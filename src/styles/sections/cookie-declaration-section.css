@@ -1,0 +1,20 @@
+.cookie-declaration-section {
+  --section-padding-top: var(--space-11);
+  --section-padding-bottom: var(--space-11);
+}
+
+.cookie-declaration-section__container {
+  display: flex;
+  justify-content: center;
+}
+
+.cookie-declaration-section__content {
+  width: min(100%, 48rem);
+}
+
+@media (max-width: 47.999rem) {
+  .cookie-declaration-section {
+    --section-padding-top: var(--space-9);
+    --section-padding-bottom: var(--space-9);
+  }
+}

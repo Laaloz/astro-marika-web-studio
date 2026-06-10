@@ -16,7 +16,7 @@ const {
   submitLabel?: string
   successMessage?: string
   fields?: Array<{
-    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'radio' | 'checkboxGroup' | 'checkbox' | 'file'
+    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'radio' | 'checkboxGroup' | 'checkbox' | 'file'
     name?: string
     label?: string
     linkLabel?: string
@@ -246,6 +246,27 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
                     placeholder={field.placeholder || undefined}
                     required={field.required === true}
                   ></textarea>
+                </div>
+              </div>
+            )
+          }
+
+          if (field.fieldType === 'select') {
+            return (
+              <div class={fieldClassName}>
+                <label for={fieldId}>{field.fieldLabel}{requiredMark}</label>
+                <div class="contact-form__control contact-form__control--select">
+                  <select
+                    id={fieldId}
+                    name={field.fieldName}
+                    required={field.required === true}
+                    aria-label={field.fieldLabel}
+                  >
+                    <option value="" selected>{field.placeholder || 'Valitse'}</option>
+                    {field.options.map((option) => (
+                      <option value={option}>{option}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             )

@@ -1,0 +1,29 @@
+---
+const {cookiebotId, internalTitle} = Astro.props as {
+  cookiebotId?: string
+  internalTitle?: string
+}
+
+const normalizedCookiebotId = typeof cookiebotId === 'string' ? cookiebotId.trim() : ''
+const hasContent = normalizedCookiebotId.length > 0
+const ariaLabel = internalTitle || 'Cookiebot section'
+---
+
+{
+  hasContent && (
+    <section class="page-section cookie-declaration-section" aria-label={ariaLabel}>
+      <div class="site-container cookie-declaration-section__container">
+        <div class="cookie-declaration-section__content">
+          <script
+            id="Cookiebot"
+            src="https://consent.cookiebot.com/uc.js"
+            type="text/javascript"
+            async
+            data-cbid={normalizedCookiebotId}
+            data-blockingmode="auto"
+          ></script>
+        </div>
+      </div>
+    </section>
+  )
+}

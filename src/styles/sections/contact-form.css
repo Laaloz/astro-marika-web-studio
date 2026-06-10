@@ -67,6 +67,20 @@
   min-height: 9.5rem;
 }
 
+.contact-form__control--select::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  color: var(--espresso);
+  transform: translateY(-65%) rotate(45deg);
+  pointer-events: none;
+}
+
 .contact-form__field label,
 .contact-form__fieldset legend {
   display: block;
@@ -80,6 +94,7 @@
 }
 
 .contact-form__field input,
+.contact-form__field select,
 .contact-form__field textarea {
   box-sizing: border-box;
   display: block;
@@ -102,6 +117,15 @@
   -moz-appearance: none;
 }
 
+.contact-form__field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  height: 100%;
+  min-height: 100%;
+  padding-right: 3rem;
+}
+
 .contact-form__field input {
   height: 100%;
   min-height: 100%;
@@ -116,6 +140,8 @@
 
 .contact-form__field input:focus-visible,
 .contact-form__field input:focus,
+.contact-form__field select:focus-visible,
+.contact-form__field select:focus,
 .contact-form__field textarea:focus-visible,
 .contact-form__field textarea:focus,
 .contact-form__radio input:focus-visible,
