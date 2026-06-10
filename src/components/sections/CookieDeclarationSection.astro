@@ -1,12 +1,14 @@
 ---
-const {cookiebotId, internalTitle} = Astro.props as {
+const {cookiebotId, culture = 'FI', internalTitle} = Astro.props as {
   cookiebotId?: string
+  culture?: string
   internalTitle?: string
 }
 
 const normalizedCookiebotId = typeof cookiebotId === 'string' ? cookiebotId.trim() : ''
+const normalizedCulture = typeof culture === 'string' ? culture.trim().toUpperCase() : 'FI'
 const hasContent = normalizedCookiebotId.length > 0
-const ariaLabel = internalTitle || 'Cookiebot section'
+const ariaLabel = internalTitle || 'Cookie declaration section'
 ---
 
 {
@@ -15,12 +17,11 @@ const ariaLabel = internalTitle || 'Cookiebot section'
       <div class="site-container cookie-declaration-section__container">
         <div class="cookie-declaration-section__content">
           <script
-            id="Cookiebot"
-            src="https://consent.cookiebot.com/uc.js"
+            id="CookieDeclaration"
+            src={`https://consent.cookiebot.com/${normalizedCookiebotId}/cd.js`}
             type="text/javascript"
             async
-            data-cbid={normalizedCookiebotId}
-            data-blockingmode="auto"
+            data-culture={normalizedCulture}
           ></script>
         </div>
       </div>
