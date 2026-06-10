@@ -14,37 +14,54 @@
   gap: var(--space-3);
 }
 
-.centered-rich-text-section__content :global(h2),
-.centered-rich-text-section__content :global(h3),
-.centered-rich-text-section__content :global(h4) {
+.centered-rich-text-section__content h2,
+.centered-rich-text-section__content h3,
+.centered-rich-text-section__content h4,
+.centered-rich-text-section__content h5,
+.centered-rich-text-section__content h6 {
   color: var(--espresso);
   font-family: var(--font-heading);
   font-weight: 300;
 }
 
-.centered-rich-text-section__content :global(h2) {
+.centered-rich-text-section__content h2 {
   font-size: var(--text-h2);
   line-height: var(--leading-h2);
   letter-spacing: -0.576px;
 }
 
-.centered-rich-text-section__content :global(h3) {
+.centered-rich-text-section__content h3 {
   font-size: var(--text-h3);
   line-height: var(--leading-h3);
   letter-spacing: -0.384px;
 }
 
-.centered-rich-text-section__content :global(h4) {
+.centered-rich-text-section__content h4 {
   font-size: var(--text-h4);
   line-height: var(--leading-h4);
 }
 
-.centered-rich-text-section__content.rich-text :global(p),
-.centered-rich-text-section__content.rich-text :global(li),
-.centered-rich-text-section__content.rich-text :global(blockquote) {
+.centered-rich-text-section__content h5 {
+  font-size: var(--text-h5);
+  line-height: var(--leading-h5);
+}
+
+.centered-rich-text-section__content h6 {
+  font-size: var(--text-h6);
+  line-height: var(--leading-h6);
+}
+
+.centered-rich-text-section__content.rich-text p,
+.centered-rich-text-section__content.rich-text li,
+.centered-rich-text-section__content.rich-text blockquote {
   color: var(--espresso);
   font-size: var(--text-body-normal);
   line-height: var(--leading-body-normal);
+}
+
+.centered-rich-text-section__content.rich-text p:empty,
+.centered-rich-text-section__content.rich-text p:has(br:only-child) {
+  min-height: var(--leading-body-normal);
 }
 
 @media (max-width: 47.999rem) {
@@ -53,13 +70,13 @@
     --section-padding-bottom: var(--space-9);
   }
 
-  .centered-rich-text-section__content :global(h2) {
+  .centered-rich-text-section__content h2 {
     font-size: clamp(2rem, 6vw, var(--text-h2));
     line-height: 1.15;
     letter-spacing: -0.48px;
   }
 
-  .centered-rich-text-section__content :global(h3) {
+  .centered-rich-text-section__content h3 {
     font-size: clamp(1.5rem, 4.5vw, var(--text-h3));
   }
 }
