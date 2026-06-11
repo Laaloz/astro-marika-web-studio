@@ -49,8 +49,9 @@ const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   footerCopyright,
   footerPrivacyLabel,
   footerPrivacyHref,
-  footerCookiesLabel
-  
+  footerCookiesLabel,
+  footerCookiesHref
+   
 }`;
 
 const siteSettings = await sanityClient.fetch<{
@@ -71,6 +72,7 @@ const siteSettings = await sanityClient.fetch<{
 	footerPrivacyLabel?: string;
 	footerPrivacyHref?: string;
 	footerCookiesLabel?: string;
+	footerCookiesHref?: string;
 } | null>(SITE_SETTINGS_QUERY);
 
 const defaultNavigation: NavigationItem[] = [
@@ -118,6 +120,7 @@ const footerCopyright = siteSettings?.footerCopyright;
 const footerPrivacyLabel = siteSettings?.footerPrivacyLabel;
 const footerPrivacyHref = siteSettings?.footerPrivacyHref;
 const footerCookiesLabel = siteSettings?.footerCookiesLabel;
+const footerCookiesHref = siteSettings?.footerCookiesHref || '#cookie-banner';
 
 function normalizeCmsHref(href?: string) {
 	if (!href) return '#';
@@ -509,7 +512,11 @@ const lcpPreloadSrcset = lcpImageSource
 					<div class="site-footer__row">
 						<span class="site-footer__item">{footerCopyright}</span>
 						<a class="site-footer__item" href={footerPrivacyHref}>{footerPrivacyLabel}</a>
-						<a class="site-footer__item" href="#" data-cookie-preferences>{footerCookiesLabel}</a>
+						<a
+							class="site-footer__item"
+							href={normalizeCmsHref(footerCookiesHref)}
+							data-cookie-preferences={normalizeCmsHref(footerCookiesHref) === '#cookie-banner' ? '' : undefined}
+						>{footerCookiesLabel}</a>
 						<span class="site-footer__item site-footer__item--spacer" aria-hidden="true"></span>
 					</div>
 				</div>

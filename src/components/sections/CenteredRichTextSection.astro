@@ -1,6 +1,7 @@
 ---
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
+import PortableTextTable from '../portable-text/PortableTextTable.astro'
 
 const {body, internalTitle} = Astro.props as {
   body?: PortableTextBlock[]
@@ -9,6 +10,12 @@ const {body, internalTitle} = Astro.props as {
 
 const hasContent = Array.isArray(body) && body.length > 0
 const ariaLabel = internalTitle || 'Centered rich text section'
+
+const portableTextComponents = {
+  type: {
+    table: PortableTextTable,
+  },
+}
 ---
 
 {
@@ -16,7 +23,7 @@ const ariaLabel = internalTitle || 'Centered rich text section'
     <section class="page-section centered-rich-text-section" aria-label={ariaLabel}>
       <div class="site-container centered-rich-text-section__container">
         <div class="centered-rich-text-section__content rich-text">
-          <PortableText value={body} />
+          <PortableText value={body} components={portableTextComponents} />
         </div>
       </div>
     </section>

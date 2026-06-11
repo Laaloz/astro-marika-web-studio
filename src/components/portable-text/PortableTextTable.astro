@@ -1,0 +1,55 @@
+---
+type TableRow = {
+  cells?: string[]
+}
+
+const {node} = Astro.props as {
+  node?: {
+    caption?: string
+    hasHeaderRow?: boolean
+    rows?: TableRow[]
+  }
+}
+
+const rows = Array.isArray(node?.rows)
+  ? node.rows
+      .map((row) => ({
+        cells: Array.isArray(row?.cells)
+          ? row.cells.map((cell) => (typeof cell === 'string' ? cell.trim() : ''))
+          : [],
+      }))
+      .filter((row) => row.cells.some(Boolean))
+  : []
+
+const hasHeaderRow = Boolean(node?.hasHeaderRow) && rows.length > 0
+const headerCells = hasHeaderRow ? rows[0]?.cells ?? [] : []
+const bodyRows = hasHeaderRow ? rows.slice(1) : rows
+const contentRows = hasHeaderRow ? bodyRows : rows
+const hasTable = rows.length > 0
+---
+
+{
+  hasTable && (
+    <div class="portable-text-table-wrap">
+      <table class="portable-text-table">
+        {node?.caption && <caption>{node.caption}</caption>}
+        {hasHeaderRow && (
+          <thead>
+            <tr>
+              {headerCells.map((cell) => (
+                <th scope="col">{cell}</th>
+              ))}
+            </tr>
+          </thead>
+        )}
+        <tbody>
+          {contentRows.map((row) => (
+            <tr>
+              {row.cells.map((cell) => <td>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

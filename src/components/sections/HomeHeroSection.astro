@@ -83,65 +83,61 @@ const hasIconSplit = titleTopIIndex >= 0;
 	const title = hero?.querySelector('[data-home-hero-title]');
 	const bottom = hero?.querySelector('[data-home-hero-bottom]');
 	if (hero && title && bottom) {
-		const isDesktop = window.matchMedia('(min-width: 64rem)').matches;
-		const motionScale = 1;
-		const followStrength = isDesktop ? 0.05 : 0.08;
-		const settleThreshold = isDesktop ? 0.08 : 0.05;
+		const desktopMedia = window.matchMedia('(min-width: 64rem)');
+		const reduceMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
 		let frame = 0;
-		let animateFrame = 0;
 		let maxShift = 0;
-		let currentShift = 0;
-		let targetShift = 0;
 		let resizeFrame = 0;
-		let heroStart = 0;
-		let heroRange = 1;
+		let isShifted = false;
 
 		const updateMetrics = () => {
-			hero.style.setProperty('--home-hero-bottom-shift', '0px');
+			hero.style.setProperty('--home-hero-bottom-shift-progress', '0');
 			const titleRect = title.getBoundingClientRect();
 			const bottomRect = bottom.getBoundingClientRect();
-			heroStart = hero.getBoundingClientRect().top + window.scrollY;
-			heroRange = Math.max(hero.offsetHeight, 1);
 			maxShift = Math.max(bottomRect.left - titleRect.left, 0);
+			hero.style.setProperty('--home-hero-bottom-shift', `${maxShift}px`);
+			hero.style.setProperty('--home-hero-bottom-shift-progress', isShifted ? '1' : '0');
 		};
 
-		const update = () => {
-			const progress = Math.min(Math.max((window.scrollY - heroStart) / heroRange, 0), 1);
-			const easedProgress = progress * progress * (3 - 2 * progress);
-			targetShift = maxShift * easedProgress * motionScale;
+		const getThresholds = () => {
+			const isDesktop = desktopMedia.matches;
+			return {
+				enter: isDesktop ? 72 : 48,
+				exit: isDesktop ? 24 : 16,
+			};
 		};
 
-		const animate = () => {
-			currentShift += (targetShift - currentShift) * followStrength;
-			if (Math.abs(targetShift - currentShift) < settleThreshold) {
-				currentShift = targetShift;
+		const updateState = () => {
+			if (reduceMotionMedia.matches) {
+				isShifted = false;
+				hero.style.setProperty('--home-hero-bottom-shift-progress', '0');
+				return;
 			}
-			hero.style.setProperty('--home-hero-bottom-shift', `${currentShift}px`);
-			if (currentShift !== targetShift) {
-				animateFrame = window.requestAnimationFrame(animate);
+
+			const {enter, exit} = getThresholds();
+			const nextShifted = isShifted ? window.scrollY > exit : window.scrollY > enter;
+
+			if (nextShifted !== isShifted) {
+				isShifted = nextShifted;
+				hero.style.setProperty('--home-hero-bottom-shift-progress', isShifted ? '1' : '0');
 			}
 		};
 
 		const requestUpdate = () => {
 			window.cancelAnimationFrame(frame);
-			frame = window.requestAnimationFrame(update);
-			window.cancelAnimationFrame(animateFrame);
-			animateFrame = window.requestAnimationFrame(animate);
+			frame = window.requestAnimationFrame(updateState);
 		};
 
 		const requestLateRefresh = () => {
 			window.cancelAnimationFrame(frame);
 			frame = window.requestAnimationFrame(() => {
-				window.cancelAnimationFrame(frame);
-				frame = window.requestAnimationFrame(update);
-				window.cancelAnimationFrame(animateFrame);
-				animateFrame = window.requestAnimationFrame(animate);
+				refresh();
 			});
 		};
 
 		const refresh = () => {
 			updateMetrics();
-			requestUpdate();
+			updateState();
 		};
 
 		const requestResizeRefresh = () => {
@@ -151,6 +147,8 @@ const hasIconSplit = titleTopIIndex >= 0;
 
 		window.addEventListener('scroll', requestUpdate, { passive: true });
 		window.addEventListener('resize', requestResizeRefresh, { passive: true });
+		desktopMedia.addEventListener('change', requestResizeRefresh);
+		reduceMotionMedia.addEventListener('change', requestResizeRefresh);
 		window.addEventListener('load', requestLateRefresh, { passive: true });
 		window.addEventListener('pageshow', requestLateRefresh, { passive: true });
 		if (document.fonts?.ready) {
