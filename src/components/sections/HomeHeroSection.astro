@@ -89,14 +89,13 @@ const hasIconSplit = titleTopIIndex >= 0;
 		let maxShift = 0;
 		let resizeFrame = 0;
 		let isShifted = false;
+		let lastViewportWidth = window.innerWidth;
 
 		const updateMetrics = () => {
-			hero.style.setProperty('--home-hero-bottom-shift-progress', '0');
 			const titleRect = title.getBoundingClientRect();
 			const bottomRect = bottom.getBoundingClientRect();
 			maxShift = Math.max(bottomRect.left - titleRect.left, 0);
 			hero.style.setProperty('--home-hero-bottom-shift', `${maxShift}px`);
-			hero.style.setProperty('--home-hero-bottom-shift-progress', isShifted ? '1' : '0');
 		};
 
 		const getThresholds = () => {
@@ -141,6 +140,9 @@ const hasIconSplit = titleTopIIndex >= 0;
 		};
 
 		const requestResizeRefresh = () => {
+			const nextViewportWidth = window.innerWidth;
+			if (nextViewportWidth === lastViewportWidth) return;
+			lastViewportWidth = nextViewportWidth;
 			window.cancelAnimationFrame(resizeFrame);
 			resizeFrame = window.requestAnimationFrame(refresh);
 		};
