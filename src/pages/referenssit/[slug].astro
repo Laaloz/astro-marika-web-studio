@@ -33,7 +33,7 @@ const REFERENCE_QUERY = `*[_type == "referenceItem" && slug.current == $slug][0]
     ...,
     alt
   },
-  "metaDescription": pageBuilder[_type == "heroSection"][0].description,
+  "metaDescription": coalesce(seoDescription, pageBuilder[_type == "heroSection"][0].description),
   "metaImage": coalesce(pageBuilder[_type == "heroSection"][0].image, image),
   pageBuilder[]{
     ...,

@@ -11,7 +11,12 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
 }`;
 const post = await sanityClient.fetch<SanityDocument>(POST_QUERY, Astro.params);
 
-const postDescription = typeof post?.excerpt === 'string' ? post.excerpt.trim().slice(0, 160) : undefined;
+const postDescription =
+  typeof post?.seoDescription === 'string' && post.seoDescription.trim().length > 0
+    ? post.seoDescription.trim()
+    : typeof post?.excerpt === 'string'
+      ? post.excerpt.trim().slice(0, 160)
+      : undefined;
 
 export async function getStaticPaths(): Promise<{ params: { slug: string } }> {
   const SLUGS_QUERY = `*[_type == "post" && defined(slug.current)]{

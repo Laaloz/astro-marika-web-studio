@@ -21,7 +21,7 @@ import {sanityClient} from 'sanity:client';
 
 const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]][0]{
   title,
-  "metaDescription": pageBuilder[_type == "heroSection"][0].description,
+  "metaDescription": coalesce(seoDescription, pageBuilder[_type == "heroSection"][0].description),
   "metaImage": pageBuilder[_type == "heroSection"][0].image,
   pageBuilder[]{
     ...,
