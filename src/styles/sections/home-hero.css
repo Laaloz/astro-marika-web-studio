@@ -160,7 +160,7 @@
 
   .home-hero__title--top,
   .home-hero__title--bottom {
-    font-size: clamp(var(--font-size-H1), 18vw, 76px);
+    font-size: 96px;
     line-height: 0.96;
   }
 
