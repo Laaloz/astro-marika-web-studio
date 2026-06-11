@@ -1,0 +1,100 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+const content = {
+	title: '404 | Marika Web Studio',
+	description: 'Hakemaasi sivua ei löytynyt.',
+	noindex: true,
+};
+---
+
+<MainLayout content={content}>
+	<section class="not-found page-section">
+		<div class="site-container">
+			<div class="not-found__layout">
+				<div class="not-found__content">
+					<h1 class="not-found__title">Hups! Tämä sivu taisi eksyä. Mutta sinun ei tarvitse. Palataanko etusivulle?</h1>
+					<div class="not-found__actions">
+						<a class="button button--primary-brand--accent" href="/">
+							<span>Palaa etusivulle</span>
+						</a>
+					</div>
+				</div>
+
+				<div class="not-found__art" aria-hidden="true">
+					<svg class="not-found__icon" xmlns="http://www.w3.org/2000/svg" width="312" height="312" viewBox="0 0 312 312" fill="none">
+						<path d="M267.101 126.231C294.865 132.505 312 142.202 312 156C312 169.798 294.865 179.495 267.101 185.769C288.01 205.085 298.001 222.05 291.101 234C284.202 245.949 264.514 245.78 237.332 237.331C245.782 264.513 245.951 284.201 234.002 291.1C222.052 297.999 205.086 288.008 185.769 267.099C179.496 294.865 169.798 312 156 312C142.202 312 132.505 294.865 126.231 267.101C106.916 288.009 89.9508 297.999 78.0016 291.1C66.052 284.201 66.2216 264.513 74.6706 237.331C47.4885 245.78 27.8005 245.949 20.9015 234C14.0026 222.051 23.9931 205.085 44.9013 185.769C17.1354 179.496 -2.35067e-06 169.798 0 156C6.03137e-07 142.202 17.1354 132.504 44.9013 126.231C23.9931 106.915 14.0026 89.9492 20.9016 78C27.8005 66.0508 47.4885 66.2199 74.6706 74.669C66.2216 47.4868 66.052 27.799 78.0016 20.9001C89.9508 14.0012 106.916 23.9912 126.231 44.8984C132.505 17.1344 142.202 0 156 0C169.798 0 179.496 17.1355 185.769 44.9013C205.086 23.9921 222.052 14.0009 234.002 20.9001C245.951 27.799 245.782 47.4868 237.332 74.669C264.514 66.2199 284.202 66.0508 291.101 78C298.001 89.9496 288.01 106.915 267.101 126.231Z" fill="#FFDE70"/>
+						<ellipse cx="108" cy="146" rx="34" ry="38" fill="#FFFDF8"/>
+						<ellipse cx="203" cy="146" rx="34" ry="38" fill="#FFFDF8"/>
+						<circle cx="115" cy="142" r="16" fill="#1E1B4B"/>
+						<circle cx="210" cy="142" r="16" fill="#1E1B4B"/>
+						<path d="M86 111C95 100 108 97 123 104" stroke="#3B2A1C" stroke-width="4" stroke-linecap="round"/>
+						<path d="M191 104C206 97 219 100 228 111" stroke="#3B2A1C" stroke-width="4" stroke-linecap="round"/>
+						<path d="M145 216C154 213 163 213 172 216" stroke="#3B2A1C" stroke-width="5" stroke-linecap="round"/>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</section>
+</MainLayout>
+
+<style>
+	.not-found {
+		--section-padding-top: calc(72px + clamp(2rem, 6vw, 4rem));
+		--section-padding-bottom: clamp(4rem, 8vw, 6rem);
+	}
+
+	.not-found__layout {
+		display: grid;
+		min-height: min(70vh, 40rem);
+		align-content: start;
+		justify-items: start;
+		gap: clamp(2rem, 4vw, 2.75rem);
+	}
+
+	.not-found__icon {
+		width: clamp(9rem, 15vw, 11rem);
+		height: auto;
+	}
+
+	.not-found__content {
+		display: grid;
+		gap: 1.5rem;
+		max-width: 32rem;
+		text-align: left;
+	}
+
+	.not-found__title {
+		font-size: clamp(2rem, 4.2vw, 3.5rem);
+		line-height: 1.08;
+		color: var(--espresso);
+	}
+
+	.not-found__art {
+		padding-top: clamp(0.5rem, 2vw, 1.25rem);
+		padding-left: clamp(0.25rem, 1vw, 0.75rem);
+	}
+
+	.not-found__actions {
+		display: flex;
+		justify-content: flex-start;
+	}
+
+	@media (max-width: 47.999rem) {
+		.not-found__layout {
+			min-height: auto;
+		}
+
+		.not-found__actions {
+			width: 100%;
+		}
+
+		.not-found__actions .button {
+			width: 100%;
+		}
+
+		.not-found__icon {
+			width: 8.5rem;
+		}
+	}
+</style>
