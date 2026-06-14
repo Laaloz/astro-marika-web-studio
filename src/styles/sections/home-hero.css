@@ -155,7 +155,7 @@
 
 @media (max-width: 63.999rem) {
   .home-hero {
-    --section-padding-top: calc(var(--space-7) + var(--mobile-header-height, 72px));
+    --section-padding-top: calc(var(--space-9) + var(--mobile-header-height, 72px));
   }
 
   .home-hero__copy {
