@@ -62,6 +62,7 @@
   line-height: var(--leading-h1);
   letter-spacing: 0;
   font-weight: 300;
+  overflow-wrap: anywhere;
 }
 
 .reference-hero__link {
