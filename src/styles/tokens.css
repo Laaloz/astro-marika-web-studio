@@ -203,8 +203,8 @@
     --font-size-small: 0.875rem;
     --font-size-large-caps: 1.25rem;
     --font-lineheight-large-caps: 1.625rem;
-    --font-size-h1extra: 17.5rem;
-    --font-lineheight-h1-extra: 17.5rem;
+    --font-size-h1extra: clamp(6.5625rem, 18vw, 17.5rem);
+    --font-lineheight-h1-extra: var(--font-size-h1extra);
 
     --font-lineheight-h1: 6.5rem;
     --font-lineheight-h2: 3.4375rem;
