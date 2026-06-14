@@ -181,7 +181,7 @@
   }
 
   .two-column-content__title {
-    font-size: clamp(2rem, 6vw, var(--text-h2));
-    line-height: 1.15;
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
   }
 }

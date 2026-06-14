@@ -74,8 +74,9 @@
   }
 
   .fifty-fifty-simple__title {
-    font-size: clamp(2rem, 6vw, var(--text-h2));
-    letter-spacing: -0.7px;
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
+    letter-spacing: -1.2px;
   }
 
   .fifty-fifty-simple__media {

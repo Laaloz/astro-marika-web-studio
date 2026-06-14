@@ -59,8 +59,8 @@
   }
 
   .subpage-hero__title {
-    font-size: clamp(2.75rem, 11vw, 4.125rem);
-    line-height: 0.98;
+    font-size: var(--font-size-H1, 44px);
+    line-height: var(--Font-lineheight-H1, 4.75rem);
   }
 
   .subpage-hero__title-icon {

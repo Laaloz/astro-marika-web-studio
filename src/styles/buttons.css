@@ -20,6 +20,8 @@
   font-weight: 300;
   line-height: var(--font-lineheight-large, 26px);
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition:
     border-color 160ms ease,
     background-color 160ms ease,
@@ -27,11 +29,42 @@
   position: relative;
 }
 
-.button:hover,
+.button:visited {
+  color: var(--button-brand-fg);
+}
+
 .button:focus-visible {
   background-color: var(--button-brand-hover-bg);
   border-color: var(--button-brand-hover-border);
   color: var(--button-brand-hover-fg);
+}
+
+.button:active {
+  background-color: var(--button-brand-hover-bg);
+  border-color: var(--button-brand-hover-border);
+  color: var(--button-brand-hover-fg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background-color: var(--button-brand-hover-bg);
+    border-color: var(--button-brand-hover-border);
+    color: var(--button-brand-hover-fg);
+  }
+}
+
+@media (hover: none) {
+  .button:hover {
+    background-color: var(--button-brand-bg);
+    border-color: var(--button-brand-border);
+    color: var(--button-brand-fg);
+  }
+
+  .button:active {
+    background-color: var(--button-brand-hover-bg);
+    border-color: var(--button-brand-hover-border);
+    color: var(--button-brand-hover-fg);
+  }
 }
 
 .button--primary {

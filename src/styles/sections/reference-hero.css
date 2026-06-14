@@ -12,9 +12,8 @@
 
 .reference-hero__image-wrap {
   width: 100%;
-  max-width: 32.75rem;
   justify-self: start;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 5 / 4;
   border-radius: 2px;
   overflow: hidden;
 }
@@ -23,6 +22,8 @@
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
 }
 
 .reference-hero__image--placeholder {
@@ -132,8 +133,8 @@
 
   .reference-hero__title {
     max-width: 22rem;
-    font-size: clamp(2.25rem, 9vw, 3.25rem);
-    line-height: 1.05;
+    font-size: var(--text-h1);
+    line-height: var(--leading-h1);
   }
 
   .reference-hero__link {

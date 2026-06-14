@@ -44,8 +44,8 @@ const hasExternalLink = Boolean(linkHref)
               <SanityImage
                 image={image}
                 alt={image.alt || titleText}
-                width={524}
-                height={524}
+                width={1200}
+                height={960}
                 fit="crop"
                 quality={100}
                 dpr={2}
@@ -54,7 +54,7 @@ const hasExternalLink = Boolean(linkHref)
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
-                sizes="(min-width: 80rem) 32.75rem, (min-width: 56rem) 42vw, 100vw"
+                sizes="(min-width: 80rem) 42rem, (min-width: 56rem) 42vw, 100vw"
               />
             ) : (
               <div class="reference-hero__image reference-hero__image--placeholder"></div>

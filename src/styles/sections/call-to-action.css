@@ -128,9 +128,9 @@
   }
 
   .call-to-action__title {
-    font-size: 2.5rem;
-    line-height: 3rem;
-    letter-spacing: -0.48px;
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
+    letter-spacing: -0.576px;
   }
 
   .call-to-action__body-column {

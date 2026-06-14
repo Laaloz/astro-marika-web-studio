@@ -141,6 +141,11 @@
   --leading-h5: var(--font-lineheight-h5);
   --text-h6: var(--font-size-h6);
   --leading-h6: var(--font-lineheight-h6);
+  --text-home-hero-title-top: 105px;
+  --leading-home-hero-title-top: 0.96;
+  --text-home-hero-title-bottom: 96px;
+  --leading-home-hero-title-bottom: 0.96;
+  --text-footer-logo-fallback: 3rem;
 
   --grid-gutter: var(--spacing-gutter-grid-gutter);
   --grid-margin: var(--spacing-gutter-grid-margin);
@@ -235,5 +240,10 @@
     --leading-h5: var(--font-lineheight-h5);
     --text-h6: var(--font-size-h6);
     --leading-h6: var(--font-lineheight-h6);
+    --text-home-hero-title-top: var(--font-size-h1extra);
+    --leading-home-hero-title-top: var(--font-lineheight-h1-extra);
+    --text-home-hero-title-bottom: var(--font-size-h1extra);
+    --leading-home-hero-title-bottom: 0.9;
+    --text-footer-logo-fallback: 7rem;
   }
 }

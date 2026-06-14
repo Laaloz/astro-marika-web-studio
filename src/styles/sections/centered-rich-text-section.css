@@ -108,13 +108,14 @@
   }
 
   .centered-rich-text-section__content h2 {
-    font-size: clamp(2rem, 6vw, var(--text-h2));
-    line-height: 1.15;
-    letter-spacing: -0.48px;
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
+    letter-spacing: -0.576px;
   }
 
   .centered-rich-text-section__content h3 {
-    font-size: clamp(1.5rem, 4.5vw, var(--text-h3));
+    font-size: var(--text-h3);
+    line-height: var(--leading-h3);
   }
 
   .centered-rich-text-section__content .portable-text-table {
