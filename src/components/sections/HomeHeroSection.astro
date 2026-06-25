@@ -33,7 +33,7 @@ const hasIconSplit = titleTopIIndex >= 0;
 			<div class="home-hero__grid">
 				<div class="home-hero__title-block" data-home-hero-title-block>
 					{hasTitleTop && (
-						<h1 class="home-hero__title home-hero__title--top" data-home-hero-title>
+						<h1 class="home-hero__title home-hero__title--top" data-home-hero-title aria-label={titleBottom ? `${titleTopText} ${titleBottom}` : titleTopText}>
 							{hasIconSplit ? (
 								<>
 									<span class="home-hero__title-text">{titleTopPrefix}</span>
@@ -72,7 +72,7 @@ const hasIconSplit = titleTopIIndex >= 0;
 					</div>
 				</div>
 
-				<h2 class="home-hero__title home-hero__title--bottom" data-home-hero-bottom>{titleBottom}</h2>
+				<p class="home-hero__title home-hero__title--bottom" data-home-hero-bottom aria-hidden="true">{titleBottom}</p>
 			</div>
 		</div>
 	</div>
