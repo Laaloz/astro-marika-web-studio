@@ -19,6 +19,31 @@ const accordionItems = items.filter(
   (item): item is FaqItem & {question: string; answer: PortableTextBlock[]} =>
     Boolean(item?.question && Array.isArray(item?.answer) && item.answer.length > 0),
 )
+
+// Litistä Portable Text pelkäksi tekstiksi FAQ-strukturoitua dataa varten
+const toPlainText = (blocks: PortableTextBlock[] = []) =>
+  blocks
+    .map((block) =>
+      block._type === 'block' && Array.isArray(block.children)
+        ? block.children.map((child) => (child as {text?: string}).text || '').join('')
+        : '',
+    )
+    .join('\n')
+    .trim()
+
+// FAQPage-strukturoitu data (voi näkyä suoraan Googlen tuloksissa ja AI-vastauksissa)
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: accordionItems.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: toPlainText(item.answer),
+    },
+  })),
+}
 ---
 
 {
@@ -27,6 +52,7 @@ const accordionItems = items.filter(
       class="page-section faq-section"
       aria-label={title || 'FAQ'}
     >
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
       <div class="site-container faq-section__container">
         <div class="faq-section__grid">
           <div class="faq-section__intro">
