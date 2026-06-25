@@ -63,6 +63,10 @@ const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeadin
 }`;
 
 export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
+  // Etusivu renderöidään osoitteeseen "/" index.astro:ssa, joten näitä slugeja
+  // ei generoida uudelleen tänne (estää duplicate content -ongelman, esim. /etusivu/).
+  const HOMEPAGE_SLUGS = ['home', 'etusivu'];
+
   const pages = await sanityClient.fetch<Array<{slug?: string}>>(
     `*[_type == "page" && defined(slug.current)]{ "slug": slug.current }`
   )
@@ -72,6 +76,7 @@ export async function getStaticPaths(): Promise<{params: {slug: string}}[]> {
       pages
         .map((page) => (typeof page.slug === 'string' ? page.slug.trim().replace(/^\/+|\/+$/g, '') : ''))
         .filter(Boolean)
+        .filter((slug) => !HOMEPAGE_SLUGS.includes(slug))
     )
   )
 
