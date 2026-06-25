@@ -33,8 +33,14 @@ const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
 const descriptionText = typeof description === 'string' ? description.trim() : ''
 const titleText = typeof title === 'string' ? title.trim() : ''
 const introAlignmentClass = textAlignment === 'left' ? 'reference-section__intro--left' : ''
-const leftColumnCards = cards.filter((_, index) => index % 2 === 1)
-const rightColumnCards = cards.filter((_, index) => index % 2 === 0)
+
+// Each card is rendered exactly once. We keep its original index so CSS can
+// linearise the columns back into a single ordered stream on mobile.
+const cardsWithIndex = cards.map((item, index) => ({item, index}))
+// Desktop splits into two independent columns: the intro + CTA live in the
+// left column together with the odd-indexed cards, even-indexed cards go right.
+const leftColumnCards = cardsWithIndex.filter(({index}) => index % 2 === 1)
+const rightColumnCards = cardsWithIndex.filter(({index}) => index % 2 === 0)
 
 const areaLabels: Record<string, string> = {
   verkkosivusto: 'Verkkosivut',
@@ -48,27 +54,47 @@ const getCardLabel = (item: ReferenceItem) => {
   const areaKey = Array.isArray(item.areas) ? item.areas[0] : ''
   return typeof areaKey === 'string' ? areaLabels[areaKey] || areaKey : ''
 }
+
+// A 5:4 source covers both layouts: mobile shows it as-is, desktop (16:10)
+// trims the top/bottom via object-fit: cover.
+const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw'
 ---
 
 {
   cards.length > 0 && (
     <section class="page-section reference-section" aria-label={eyebrowText || titleText || 'Portfolio'}>
       <div class="site-container reference-section__container">
-        <div class="reference-section__mobile">
-          <div class:list={['reference-section__intro', introAlignmentClass]}>
-            {eyebrowText && (
-              <div class="reference-section__eyebrow-wrap">
-                <span class="reference-section__eyebrow-dot" aria-hidden="true"></span>
-                <p class="reference-section__eyebrow">{eyebrowText}</p>
+        <div class="reference-section__grid">
+          <div class="reference-section__column reference-section__column--left">
+            <div class:list={['reference-section__intro', introAlignmentClass]}>
+              {eyebrowText && (
+                <div class="reference-section__eyebrow-wrap">
+                  <span class="reference-section__eyebrow-dot" aria-hidden="true"></span>
+                  <p class="reference-section__eyebrow">{eyebrowText}</p>
+                </div>
+              )}
+              {titleText && <h2 class="reference-section__title">{titleText}</h2>}
+              {descriptionText && <p class="reference-section__description">{descriptionText}</p>}
+            </div>
+
+            {hasCta && (
+              <div class="reference-section__cta-wrap">
+                <a class="reference-section__cta button--link-secondary" href={ctaHref}>
+                  <span>{ctaLabel}</span>
+                  <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12H17" />
+                    <path d="M12 7L17 12L12 17" />
+                  </svg>
+                </a>
               </div>
             )}
-            {titleText && <h2 class="reference-section__title">{titleText}</h2>}
-            {descriptionText && <p class="reference-section__description">{descriptionText}</p>}
-          </div>
 
-          <div class="reference-section__cards reference-section__cards--mobile">
-            {cards.map((item) => (
-              <a class="reference-card" href={`/referenssit/${item.slug?.current}`}>
+            {leftColumnCards.map(({item, index}) => (
+              <a
+                class="reference-card"
+                style={`--card-order:${index + 1}`}
+                href={`/referenssit/${item.slug?.current}`}
+              >
                 <div class="reference-card__image-wrap">
                   {item.image ? (
                     <SanityImage
@@ -81,68 +107,7 @@ const getCardLabel = (item: ReferenceItem) => {
                       dpr={2}
                       widths={[320, 480, 640, 800, 960, 1200, 1440, 1920, 2400]}
                       class="reference-card__image"
-                      sizes="100vw"
-                    />
-                  ) : (
-                    <div class="reference-card__image reference-card__image--placeholder"></div>
-                  )}
-                </div>
-                <h3 class="reference-card__title">{item.title}</h3>
-                {getCardLabel(item) && <div class="reference-card__badge">{getCardLabel(item)}</div>}
-              </a>
-            ))}
-          </div>
-
-          {hasCta && (
-            <div class="reference-section__cta-wrap reference-section__cta-wrap--mobile">
-              <a class="reference-section__cta button--link-secondary" href={ctaHref}>
-                <span>{ctaLabel}</span>
-                <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M5 12H17" />
-                  <path d="M12 7L17 12L12 17" />
-                </svg>
-              </a>
-            </div>
-          )}
-        </div>
-
-        <div class="reference-section__desktop">
-          <div class="reference-section__column reference-section__column--intro">
-            <div class:list={['reference-section__intro', introAlignmentClass]}>
-              {eyebrowText && (
-                <div class="reference-section__eyebrow-wrap">
-                  <span class="reference-section__eyebrow-dot" aria-hidden="true"></span>
-                  <p class="reference-section__eyebrow">{eyebrowText}</p>
-                </div>
-              )}
-              {titleText && <h2 class="reference-section__title">{titleText}</h2>}
-              {descriptionText && <p class="reference-section__description">{descriptionText}</p>}
-              {hasCta && (
-                <a class="reference-section__cta button--link-secondary" href={ctaHref}>
-                  <span>{ctaLabel}</span>
-                  <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M5 12H17" />
-                    <path d="M12 7L17 12L12 17" />
-                  </svg>
-                </a>
-              )}
-            </div>
-
-            {leftColumnCards.map((item) => (
-              <a class="reference-card" href={`/referenssit/${item.slug?.current}`}>
-                <div class="reference-card__image-wrap">
-                  {item.image ? (
-                    <SanityImage
-                      image={item.image}
-                      alt={item.image.alt || item.title || ''}
-                      width={1200}
-                      height={800}
-                      fit="crop"
-                      quality={100}
-                      dpr={2}
-                      widths={[320, 480, 640, 800, 960, 1200, 1440, 1920, 2400]}
-                      class="reference-card__image"
-                      sizes="(min-width: 80rem) 38rem, (min-width: 56rem) 36vw, 100vw"
+                      sizes={cardImageSizes}
                     />
                   ) : (
                     <div class="reference-card__image reference-card__image--placeholder"></div>
@@ -155,22 +120,26 @@ const getCardLabel = (item: ReferenceItem) => {
           </div>
 
           {rightColumnCards.length > 0 && (
-            <div class="reference-section__column reference-section__column--cards">
-              {rightColumnCards.map((item) => (
-                <a class="reference-card" href={`/referenssit/${item.slug?.current}`}>
+            <div class="reference-section__column reference-section__column--right">
+              {rightColumnCards.map(({item, index}) => (
+                <a
+                  class="reference-card"
+                  style={`--card-order:${index + 1}`}
+                  href={`/referenssit/${item.slug?.current}`}
+                >
                   <div class="reference-card__image-wrap">
                     {item.image ? (
                       <SanityImage
                         image={item.image}
                         alt={item.image.alt || item.title || ''}
                         width={1200}
-                        height={800}
+                        height={960}
                         fit="crop"
                         quality={100}
                         dpr={2}
                         widths={[320, 480, 640, 800, 960, 1200, 1440, 1920, 2400]}
                         class="reference-card__image"
-                        sizes="(min-width: 80rem) 38rem, (min-width: 56rem) 36vw, 100vw"
+                        sizes={cardImageSizes}
                       />
                     ) : (
                       <div class="reference-card__image reference-card__image--placeholder"></div>

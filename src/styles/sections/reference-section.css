@@ -7,13 +7,44 @@
   gap: var(--space-6);
 }
 
-.reference-section__mobile {
+/*
+ * A single DOM tree drives both layouts. On desktop the grid lays out two
+ * independent columns; on mobile the columns become `display: contents` so all
+ * their children collapse into one ordered flex stream (see the mobile query).
+ */
+.reference-section__grid {
   display: grid;
-  gap: var(--space-6);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: start;
 }
 
-.reference-section__desktop {
-  display: none;
+.reference-section__column {
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+}
+
+/* Vertical rhythm within each desktop column. */
+.reference-section__column > * + * {
+  margin-top: var(--space-11);
+}
+
+.reference-section__column--left > .reference-section__cta-wrap {
+  margin-top: var(--space-4);
+}
+
+/*
+ * Ordering keeps a single source order while letting each layout reorder:
+ *   intro (0) → CTA (1) → cards (original index + 1).
+ * On mobile the CTA jumps to the end (order: 1000).
+ */
+.reference-card {
+  order: var(--card-order, 0);
+}
+
+.reference-section__cta-wrap {
+  order: 1;
 }
 
 .reference-section__intro {
@@ -26,6 +57,14 @@
 .reference-section__intro--left {
   justify-items: start;
   text-align: left;
+}
+
+.reference-section__intro > * + * {
+  margin-top: var(--space-1);
+}
+
+.reference-section__intro > .reference-section__description {
+  margin-top: var(--space-3);
 }
 
 .reference-section__eyebrow-wrap {
@@ -65,15 +104,21 @@
   line-height: 1.4;
 }
 
+.reference-section__cta-wrap {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .reference-section__cta {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
   width: fit-content;
-  margin-top: var(--space-4);
   padding: 0.5rem 0;
   border: 0;
-  color: #3b2115;
+  border-bottom-width: 1.75px;
+  border-bottom-color: var(--espresso-border);
+  color: var(--espresso);
   font-size: var(--text-body-large);
   font-weight: 300;
   line-height: var(--leading-body-large);
@@ -88,43 +133,6 @@
 .reference-section__cta:hover svg,
 .reference-section__cta:focus-visible svg {
   transform: translateX(0.18rem);
-}
-
-.reference-section__cards {
-  display: grid;
-  gap: var(--space-7);
-}
-
-.reference-section__cards--mobile {
-  grid-template-columns: 1fr;
-}
-
-.reference-section__desktop {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(3rem, 6vw, 6rem);
-  align-items: start;
-}
-
-.reference-section__column {
-  display: grid;
-  gap: var(--space-11);
-}
-
-.reference-section__column--intro {
-  align-content: start;
-  gap: var(--space-11);
-}
-
-.reference-section__intro {
-  gap: 0;
-}
-
-.reference-section__intro > * + *:not(.reference-section__cta) {
-  margin-top: var(--space-1);
-}
-
-.reference-section__intro > .reference-section__description {
-  margin-top: var(--space-3);
 }
 
 .reference-card {
@@ -201,38 +209,21 @@
   opacity: 1;
 }
 
-.reference-section__cta-wrap {
-  display: flex;
-  justify-content: center;
-}
+@media (min-width: 48rem) {
+  .reference-section {
+    padding-top: 8.75rem;
+  }
 
-.reference-section__cta-wrap--mobile {
-  justify-content: flex-start;
-  margin-top: 0;
-}
+  .reference-section__intro {
+    max-width: 26.5rem;
+  }
 
-.reference-section__cta-wrap--mobile .reference-section__cta {
-  margin-top: 0;
-}
+  .reference-card__image {
+    aspect-ratio: 16 / 10;
+  }
 
-.reference-section__cta {
-  border-bottom-width: 1.75px;
-  color: var(--espresso);
-  border-bottom-color: var(--espresso-border);
-}
-
-.reference-section__cta svg {
-  transition: transform 180ms ease;
-}
-
-.reference-section__cta:hover svg,
-.reference-section__cta:focus-visible svg {
-  transform: translateX(0.18rem);
-}
-
-@media (max-width: 74rem) {
-  .reference-section__desktop {
-    gap: clamp(3rem, 6vw, 6rem);
+  .reference-card__badge {
+    display: inline-flex;
   }
 }
 
@@ -241,12 +232,26 @@
     padding-top: var(--space-10);
   }
 
-  .reference-section__mobile {
-    display: grid;
+  /* Collapse the two columns into a single ordered stream. */
+  .reference-section__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
   }
 
-  .reference-section__desktop {
-    display: none;
+  .reference-section__column {
+    display: contents;
+  }
+
+  /* Container gap handles spacing now, so drop the desktop column margins. */
+  .reference-section__column > * + *,
+  .reference-section__column--left > .reference-section__cta-wrap {
+    margin-top: 0;
+  }
+
+  /* CTA moves below every card on mobile. */
+  .reference-section__cta-wrap {
+    order: 1000;
   }
 
   .reference-section__title {
@@ -265,36 +270,5 @@
   .reference-card__badge {
     display: inline-flex;
     opacity: 1;
-  }
-
-  .reference-section__cards {
-    gap: var(--space-7);
-  }
-
-}
-
-@media (min-width: 48rem) {
-  .reference-section {
-    padding-top: 8.75rem;
-  }
-
-  .reference-section__mobile {
-    display: none;
-  }
-
-  .reference-section__desktop {
-    display: grid;
-  }
-
-  .reference-section__intro {
-    max-width: 26.5rem;
-  }
-
-  .reference-card__image {
-    aspect-ratio: 16 / 10;
-  }
-
-  .reference-card__badge {
-    display: inline-flex;
   }
 }
