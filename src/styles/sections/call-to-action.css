@@ -77,6 +77,13 @@
   font-weight: 300;
 }
 
+.call-to-action__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .call-to-action__button {
   justify-self: start;
   width: fit-content;

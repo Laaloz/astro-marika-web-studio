@@ -10,15 +10,18 @@ const portableTextComponents = {
   },
 };
 
-const {title, body, image, imageSide = 'left'} = Astro.props as {
+const {title, body, image, imageSide = 'left', imageAspect = 'square'} = Astro.props as {
   title?: string;
   body?: PortableTextBlock[];
   image?: {alt?: string};
   imageSide?: 'left' | 'right';
+  imageAspect?: 'square' | 'landscape';
 };
 
 const hasContent = Boolean(title && Array.isArray(body) && body.length > 0 && image);
 const imageOnLeft = imageSide === 'left';
+const isLandscape = imageAspect === 'landscape';
+const imageClass = `fifty-fifty-simple__image${isLandscape ? ' fifty-fifty-simple__image--landscape' : ''}`;
 ---
 
 {
@@ -37,13 +40,13 @@ const imageOnLeft = imageSide === 'left';
             <SanityImage
               image={image}
               alt={image?.alt || ''}
-              width={530}
-              height={530}
+              width={isLandscape ? 1040 : 530}
+              height={isLandscape ? 832 : 530}
               fit="crop"
               quality={100}
               dpr={2}
               widths={[360, 460, 530, 720, 1060, 1280, 1600]}
-              class="fifty-fifty-simple__image"
+              class={imageClass}
               loading="lazy"
               decoding="async"
               sizes="(min-width: 80rem) 33.125rem, (min-width: 48rem) 40vw, 100vw"
