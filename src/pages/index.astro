@@ -40,6 +40,7 @@ const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]
           title,
           slug,
           areas,
+          shortDescription,
           image {
             ...,
             alt
@@ -50,6 +51,7 @@ const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]
           title,
           slug,
           areas,
+          shortDescription,
           image {
             ...,
             alt
@@ -64,7 +66,7 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 ---
 
 
-<MainLayout content={{ title: `${homepage?.title || 'Marika Web Studio'} | Marika Web Studio`, description: homepage?.metaDescription, image: homepage?.metaImage }}>
+<MainLayout content={{ title: `${homepage?.title || 'Studio Maura'} | Studio Maura`, description: homepage?.metaDescription, image: homepage?.metaImage }}>
 		{(homepage?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'heroSection') {
 				return <HomeHeroSection {...block} />;

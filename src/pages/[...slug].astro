@@ -42,6 +42,7 @@ const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeadin
           title,
           slug,
           areas,
+          shortDescription,
           image {
             ...,
             alt
@@ -52,6 +53,7 @@ const PAGE_QUERY = `*[_type == "page" && slug.current in [$slug, $slugWithLeadin
           title,
           slug,
           areas,
+          shortDescription,
           image {
             ...,
             alt
@@ -91,7 +93,7 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 });
 ---
 
-<MainLayout content={{title: `${page?.title || 'Page'} | Marika Web Studio`, description: page?.metaDescription, image: page?.metaImage}}>
+<MainLayout content={{title: `${page?.title || 'Page'} | Studio Maura`, description: page?.metaDescription, image: page?.metaImage}}>
 		{(page?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'subpageHeroSection') {
 				return <SubpageHeroSection {...block} />;

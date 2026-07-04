@@ -1,5 +1,5 @@
 ---
-title: 'Markdown | Marika Web Studio'
+title: 'Markdown | Studio Maura'
 layout: ../layouts/main.astro
 ---
 

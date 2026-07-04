@@ -140,6 +140,35 @@
   border-color: var(--button-brand-hover-border);
 }
 
+.two-column-content__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: fit-content;
+  justify-self: start;
+  margin-top: var(--space-2);
+  padding: 0.5rem 0;
+  border-bottom: 1.75px solid var(--espresso-border);
+  color: var(--espresso);
+  font-size: var(--text-body-large);
+  font-weight: 300;
+  line-height: var(--leading-body-large);
+  text-decoration: none;
+}
+
+.two-column-content__link svg {
+  width: 1.3125rem;
+  height: 1.3125rem;
+  flex: none;
+  color: var(--color-info);
+  transition: transform 180ms ease;
+}
+
+.two-column-content__link:hover svg,
+.two-column-content__link:focus-visible svg {
+  transform: translateX(0.18rem);
+}
+
 .two-column-content--right-only .two-column-content__body {
   grid-column: 2;
 }

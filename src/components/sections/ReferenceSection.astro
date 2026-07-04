@@ -7,6 +7,7 @@ interface ReferenceItem {
   slug?: {current?: string}
   image?: {alt?: string}
   areas?: string[]
+  shortDescription?: string
 }
 
 const {
@@ -114,7 +115,12 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
                   )}
                 </div>
                 <h3 class="reference-card__title">{item.title}</h3>
-                {getCardLabel(item) && <div class="reference-card__badge">{getCardLabel(item)}</div>}
+                {(getCardLabel(item) || item.shortDescription) && (
+                  <div class="reference-card__meta">
+                    {getCardLabel(item) && <span class="reference-card__badge">{getCardLabel(item)}</span>}
+                    {item.shortDescription && <p class="reference-card__description">{item.shortDescription}</p>}
+                  </div>
+                )}
               </a>
             ))}
           </div>
@@ -146,7 +152,12 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
                     )}
                   </div>
                   <h3 class="reference-card__title">{item.title}</h3>
-                  {getCardLabel(item) && <div class="reference-card__badge">{getCardLabel(item)}</div>}
+                  {(getCardLabel(item) || item.shortDescription) && (
+                    <div class="reference-card__meta">
+                      {getCardLabel(item) && <span class="reference-card__badge">{getCardLabel(item)}</span>}
+                      {item.shortDescription && <p class="reference-card__description">{item.shortDescription}</p>}
+                    </div>
+                  )}
                 </a>
               ))}
             </div>

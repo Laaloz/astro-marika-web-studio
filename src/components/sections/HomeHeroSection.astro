@@ -3,6 +3,7 @@ const {
 	titleTop,
 	titleBottom,
 	description,
+	tagline,
 	primaryCtaLabel,
 	primaryCtaHref,
 	secondaryCtaLabel,
@@ -11,12 +12,14 @@ const {
 	titleTop?: string;
 	titleBottom?: string;
 	description?: string;
+	tagline?: string;
 	primaryCtaLabel?: string;
 	primaryCtaHref?: string;
 	secondaryCtaLabel?: string;
 	secondaryCtaHref?: string;
 };
 
+const hasTagline = Boolean(typeof tagline === 'string' && tagline.trim());
 const hasPrimaryCta = Boolean(primaryCtaLabel && primaryCtaHref);
 const hasSecondaryCta = Boolean(secondaryCtaLabel && secondaryCtaHref);
 const titleTopText = typeof titleTop === 'string' ? titleTop.trim() : '';
@@ -27,7 +30,7 @@ const hasTitleTop = titleTopText.length > 0;
 const hasIconSplit = titleTopIIndex >= 0;
 ---
 
-<section class="page-section home-hero" data-home-hero aria-label="Marika Web Studio">
+<section class="page-section home-hero" data-home-hero aria-label="Studio Maura">
 	<div class="home-hero__stage">
 		<div class="site-container home-hero__container">
 			<div class="home-hero__grid">
@@ -53,20 +56,23 @@ const hasIconSplit = titleTopIIndex >= 0;
 				</div>
 
 				<div class="home-hero__copy">
-					<p>{description}</p>
+					<div class="home-hero__text">
+						<p>{description}</p>
+						{hasTagline && <p class="home-hero__tagline">{tagline}</p>}
+					</div>
 					<div class="home-hero__actions">
 						{hasPrimaryCta && (
-							<a class="button button--primary-brand--accent home-hero__button home-hero__button--secondary" href={primaryCtaHref}>
+							<a class="button button--primary-brand home-hero__button home-hero__button--primary" href={primaryCtaHref}>
 								<span>{primaryCtaLabel}</span>
-							</a>
-						)}
-						{hasSecondaryCta && (
-							<a class="button button--primary-brand home-hero__button home-hero__button--primary" href={secondaryCtaHref}>
-								<span>{secondaryCtaLabel}</span>
 								<svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 								<path d="M5 12H17" />
 								<path d="M12 7L17 12L12 17" />
 								</svg>
+							</a>
+						)}
+						{hasSecondaryCta && (
+							<a class="button button--primary-brand--accent home-hero__button home-hero__button--secondary" href={secondaryCtaHref}>
+								<span>{secondaryCtaLabel}</span>
 							</a>
 						)}
 					</div>

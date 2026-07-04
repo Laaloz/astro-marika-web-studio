@@ -10,6 +10,7 @@ const {
   ctaLabel,
   ctaHref,
   image,
+  imageCaption,
 } = Astro.props as {
   eyebrow?: string;
   title?: string;
@@ -17,62 +18,77 @@ const {
   ctaLabel?: string;
   ctaHref?: string;
   image?: {alt?: string};
+  imageCaption?: string;
 };
 
 const hasContent = Boolean(eyebrow && title && Array.isArray(body) && body.length > 0);
 const hasCta = Boolean(ctaLabel && ctaHref);
+const hasCaption = Boolean(typeof imageCaption === 'string' && imageCaption.trim());
+
+// *Tähdillä* merkityt osat otsikossa renderöidään kursiivilla (<em>).
+// Parittomat indeksit splitin jälkeen ovat tähtien sisällä olleita osia.
+const titleParts = (typeof title === 'string' ? title : '')
+  .split(/\*([^*]+)\*/g)
+  .map((text, index) => ({text, em: index % 2 === 1}))
+  .filter((part) => part.text.length > 0);
 ---
 
 {
   hasContent && (
 <section class="page-section has-background about-designer" aria-label={eyebrow}>
-  <div class="about-designer__container">
-    <div class="about-designer__content">
-      <div class="about-designer__text-wrap">
-        <div class="about-designer__heading">
-          <div class="about-designer__eyebrow-wrap">
-            <span class="about-designer__eyebrow-dot" aria-hidden="true"></span>
-            <p class="about-designer__eyebrow">{eyebrow}</p>
-          </div>
-          <h2 class="about-designer__title">{title}</h2>
+  <div class="site-container about-designer__container">
+    <div class="about-designer__grid">
+      <div class="about-designer__content">
+        <div class="about-designer__eyebrow-wrap">
+          <span class="about-designer__eyebrow-dot" aria-hidden="true"></span>
+          <p class="about-designer__eyebrow">{eyebrow}</p>
         </div>
+        <h2 class="about-designer__title">{titleParts.map((part) => (part.em ? <em>{part.text}</em> : part.text))}</h2>
 
         <div class="about-designer__body">
           <PortableText value={body} />
         </div>
+
+        {hasCta && (
+        <a class="button button--primary-brand about-designer__cta" href={ctaHref}>
+          <span>{ctaLabel}</span>
+          <svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12H17" />
+            <path d="M12 7L17 12L12 17" />
+          </svg>
+        </a>
+        )}
       </div>
 
-      {hasCta && (
-      <a class="button button--primary-brand home-hero__button home-hero__button--primary about-designer__cta" href={ctaHref}>
-        <span>{ctaLabel}</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
-        </svg>
-      </a>
-      )}
+      <div class="about-designer__media">
+        <figure class="about-designer__figure">
+          <div class="about-designer__polaroid">
+            {
+              image ? (
+                <SanityImage
+                  image={image}
+                  alt={image.alt || ''}
+                  width={880}
+                  height={1056}
+                  fit="crop"
+                  widths={[360, 440, 640, 880, 1280]}
+                  class="about-designer__image"
+                  loading="lazy"
+                  decoding="async"
+                  sizes="(min-width: 64rem) 27.5rem, 100vw"
+                />
+              ) : (
+                <div class="about-designer__image about-designer__image--placeholder"></div>
+              )
+            }
+          </div>
+          {hasCaption && (
+            <figcaption class="about-designer__caption">{imageCaption}</figcaption>
+          )}
+        </figure>
+      </div>
     </div>
-
-    <figure class="about-designer__image-wrap">
-      {
-        image ? (
-          <SanityImage
-            image={image}
-            alt={image.alt || ''}
-            width={521}
-            height={635}
-            fit="crop"
-            widths={[360, 521, 680, 1042, 1280]}
-            class="about-designer__image"
-            loading="lazy"
-            decoding="async"
-            sizes="(min-width: 64rem) 33rem, 100vw"
-          />
-        ) : (
-          <div class="about-designer__image about-designer__image--placeholder"></div>
-        )
-      }
-    </figure>
-</div>
+  </div>
 </section>
   )
 }

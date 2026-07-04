@@ -183,8 +183,15 @@
   color: #2a1a0f;
 }
 
+.reference-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  flex-wrap: wrap;
+}
+
 .reference-card__badge {
-  display: none;
+  display: inline-flex;
   align-items: center;
   width: fit-content;
   padding: 0.375rem 0.75rem;
@@ -194,19 +201,20 @@
   font-family: var(--font-body);
   font-size: var(--text-body-small);
   font-weight: 400;
-  line-height: var(--leading-body-small);
-  opacity: 0;
-  transition: opacity 180ms ease;
+  line-height: 1;
+}
+
+.reference-card__description {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: var(--text-body-normal);
+  font-weight: 300;
+  line-height: 1.4;
 }
 
 .reference-card:hover .reference-card__image,
 .reference-card:focus-visible .reference-card__image {
   transform: scale(1.03);
-}
-
-.reference-card:hover .reference-card__badge,
-.reference-card:focus-visible .reference-card__badge {
-  opacity: 1;
 }
 
 @media (min-width: 48rem) {
@@ -220,10 +228,6 @@
 
   .reference-card__image {
     aspect-ratio: 16 / 10;
-  }
-
-  .reference-card__badge {
-    display: inline-flex;
   }
 }
 
@@ -265,10 +269,5 @@
 
   .reference-card__title {
     font-size: var(--text-h3);
-  }
-
-  .reference-card__badge {
-    display: inline-flex;
-    opacity: 1;
   }
 }

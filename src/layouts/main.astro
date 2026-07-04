@@ -157,7 +157,7 @@ const menuItemId = (item: NavigationItem) => {
 };
 const navItemAnchorId = (scope: 'desktop' | 'mobile', index: number) => `${scope}-nav-item-${index}`;
 
-const defaultTitle = siteSettings?.seoTitle || siteSettings?.siteTitle || 'Marika Web Studio';
+const defaultTitle = siteSettings?.seoTitle || siteSettings?.siteTitle || 'Studio Maura';
 const defaultDescription =
 	siteSettings?.seoDescription ||
 	siteSettings?.siteDescription ||
@@ -181,7 +181,7 @@ const siteUrl = Astro.site?.href;
 const organizationSchema = {
 	'@context': 'https://schema.org',
 	'@type': 'Organization',
-	name: siteSettings?.siteTitle || 'Marika Web Studio',
+	name: siteSettings?.siteTitle || 'Studio Maura',
 	description: defaultDescription,
 	...(siteUrl ? { url: siteUrl } : {}),
 	...(logoDesktopUrl ? { logo: logoDesktopUrl } : {}),

@@ -2,6 +2,7 @@
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import PortableTextImage from '../portable-text/PortableTextImage.astro'
+import PortableTextPullQuote from '../portable-text/PortableTextPullQuote.astro'
 
 const {
   leftEyebrow,
@@ -14,6 +15,7 @@ const {
   leftCtaHref,
   rightCtaLabel,
   rightCtaHref,
+  ctaStyle = 'button',
   backgroundStyle = 'none',
 } = Astro.props as {
   leftEyebrow?: string
@@ -26,6 +28,7 @@ const {
   leftCtaHref?: string
   rightCtaLabel?: string
   rightCtaHref?: string
+  ctaStyle?: 'button' | 'link'
   backgroundStyle?: 'none' | 'brown'
 }
 
@@ -41,10 +44,14 @@ const hasLeftContent = Boolean(hasLeftEyebrow || hasTitle || hasLeftBody || hasL
 const hasRightContent = Boolean(hasRightEyebrow || hasRightTitle || hasBody || hasRightCta)
 const hasContent = Boolean(hasLeftContent || hasRightContent)
 const hasBackground = backgroundStyle === 'brown'
+const isLinkCta = ctaStyle === 'link'
 
 const portableTextComponents = {
   type: {
     image: PortableTextImage,
+  },
+  block: {
+    pullQuote: PortableTextPullQuote,
   },
 }
 ---
@@ -81,14 +88,21 @@ const portableTextComponents = {
                 </div>
               )}
 
-              {hasLeftCta && (
+              {hasLeftCta && (isLinkCta ? (
+                <a class="two-column-content__link" href={leftCtaHref}>
+                  <span>{leftCtaLabel}</span>
+                  <svg viewBox="0 0 21 21" aria-hidden="true">
+                    <path d="M17.6148 10.9375H0V9.47917H17.6148L9.16781 1.03214L10.2083 0L20.4167 10.2083L10.2083 20.4167L9.16781 19.3845L17.6148 10.9375Z" fill="currentColor" />
+                  </svg>
+                </a>
+              ) : (
                 <a class="button button--primary-outline two-column-content__button" href={leftCtaHref}>
                   <span>{leftCtaLabel}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
                   </svg>
                 </a>
-              )}
+              ))}
             </div>
           )}
 
@@ -114,14 +128,21 @@ const portableTextComponents = {
                 </div>
               )}
 
-              {hasRightCta && (
+              {hasRightCta && (isLinkCta ? (
+                <a class="two-column-content__link" href={rightCtaHref}>
+                  <span>{rightCtaLabel}</span>
+                  <svg viewBox="0 0 21 21" aria-hidden="true">
+                    <path d="M17.6148 10.9375H0V9.47917H17.6148L9.16781 1.03214L10.2083 0L20.4167 10.2083L10.2083 20.4167L9.16781 19.3845L17.6148 10.9375Z" fill="currentColor" />
+                  </svg>
+                </a>
+              ) : (
                 <a class="button button--primary-outline two-column-content__button" href={rightCtaHref}>
                   <span>{rightCtaLabel}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
                   </svg>
                 </a>
-              )}
+              ))}
             </div>
           )}
         </div>

@@ -2,6 +2,7 @@
 interface ServiceItem {
   _key?: string
   title?: string
+  subtitle?: string
   buttonHref?: string
 }
 
@@ -40,6 +41,7 @@ const cards = items.filter((item) => item?.title && item?.buttonHref)
                     <path d="M17.6148 10.9375H0V9.47917H17.6148L9.16781 1.03214L10.2083 0L20.4167 10.2083L10.2083 20.4167L9.16781 19.3845L17.6148 10.9375Z" fill="currentColor"/>
                   </svg>
                 </div>
+                {item.subtitle && <p class="service-card__subtitle">{item.subtitle}</p>}
               </a>
             )
           })}

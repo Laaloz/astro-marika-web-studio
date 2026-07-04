@@ -14,7 +14,7 @@ const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
 
 {
   validSteps.length > 0 && (
-    <section class="page-section project-steps" aria-label={title || 'Projektin vaiheet'}>
+    <section id="prosessi" class="page-section project-steps" aria-label={title || 'Projektin vaiheet'}>
       <div class="site-container project-steps__container">
         {(eyebrowText || title) && (
           <div class="project-steps__intro">
