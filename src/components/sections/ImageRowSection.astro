@@ -1,0 +1,73 @@
+---
+import SanityImage from '../SanityImage.astro'
+
+interface RowImage {
+  _key?: string
+  alt?: string
+  asset?: unknown
+}
+
+const {eyebrow, title, images = [], ctaLabel, ctaHref} = Astro.props as {
+  eyebrow?: string
+  title?: string
+  images?: RowImage[]
+  ctaLabel?: string
+  ctaHref?: string
+}
+
+const validImages = images.filter((image) => image?.asset)
+const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
+const titleText = typeof title === 'string' ? title.trim() : ''
+const hasCta = Boolean(ctaLabel && ctaHref)
+---
+
+{
+  validImages.length > 0 && (
+    <section class="page-section image-row" aria-label={titleText || eyebrowText || 'Työnäytteet'}>
+      <div class="site-container image-row__container">
+        {(eyebrowText || titleText) && (
+          <div class="image-row__intro">
+            {eyebrowText && (
+              <div class="image-row__eyebrow-wrap">
+                <span class="image-row__eyebrow-dot" aria-hidden="true"></span>
+                <p class="image-row__eyebrow">{eyebrowText}</p>
+              </div>
+            )}
+            {titleText && <h2 class="image-row__title">{titleText}</h2>}
+          </div>
+        )}
+
+        <div class="image-row__grid">
+          {validImages.map((image) => (
+            <div class="image-row__item">
+              <SanityImage
+                image={image}
+                alt={image.alt || ''}
+                width={560}
+                height={700}
+                fit="crop"
+                quality={90}
+                dpr={2}
+                widths={[320, 420, 560, 720, 1120]}
+                class="image-row__image"
+                loading="lazy"
+                decoding="async"
+                sizes="(min-width: 64rem) 28rem, (min-width: 48rem) 33vw, 100vw"
+              />
+            </div>
+          ))}
+        </div>
+
+        {hasCta && (
+          <a class="image-row__cta reference-section__cta button--link-secondary" href={ctaHref}>
+            <span>{ctaLabel}</span>
+            <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12H17" />
+              <path d="M12 7L17 12L12 17" />
+            </svg>
+          </a>
+        )}
+      </div>
+    </section>
+  )
+}

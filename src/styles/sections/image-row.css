@@ -1,0 +1,69 @@
+/* "Näytteitä töistä" -tyylinen minigalleria: eyebrow + otsikko, kuvarivi ja tekstilinkki. */
+.image-row__container {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-6);
+}
+
+.image-row__intro {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+}
+
+.image-row__eyebrow-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text);
+}
+
+.image-row__eyebrow-dot {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-info);
+}
+
+.image-row__eyebrow {
+  color: #2f2a26;
+  font-size: var(--text-body-large);
+  line-height: var(--leading-button-large);
+  font-weight: 300;
+}
+
+.image-row__title {
+  color: var(--color-heading);
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+  letter-spacing: -0.576px;
+}
+
+.image-row__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.image-row__item {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  line-height: 0;
+}
+
+.image-row__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+@media (max-width: 63.999rem) {
+  .image-row__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}

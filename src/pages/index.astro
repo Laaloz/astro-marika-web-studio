@@ -10,6 +10,7 @@ import FaqSection from '../components/sections/FaqSection.astro';
 import PackageShowcaseSection from '../components/sections/PackageShowcaseSection.astro';
 import LargeImageSection from '../components/sections/LargeImageSection.astro';
 import ImageGallerySection from '../components/sections/ImageGallerySection.astro';
+import ImageRowSection from '../components/sections/ImageRowSection.astro';
 import ProjectStepsSection from '../components/sections/ProjectStepsSection.astro';
 import AboutDesignerSection from '../components/sections/AboutDesignerSection.astro';
 import ReferenceSection from '../components/sections/ReferenceSection.astro';
@@ -102,6 +103,10 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 
 			if (block._type === 'imageGallerySection') {
 				return <ImageGallerySection {...block} />;
+			}
+
+			if (block._type === 'imageRowSection') {
+				return <ImageRowSection {...block} />;
 			}
 
 			if (block._type === 'projectStepsSection') {

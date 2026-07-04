@@ -2,6 +2,13 @@
 import {PortableText} from 'astro-portabletext';
 import type {PortableTextBlock} from '@portabletext/types';
 import SanityImage from '../SanityImage.astro';
+import PortableTextPriceNote from '../portable-text/PortableTextPriceNote.astro';
+
+const portableTextComponents = {
+  block: {
+    priceNote: PortableTextPriceNote,
+  },
+};
 
 const {title, body, image, imageSide = 'left'} = Astro.props as {
   title?: string;
@@ -22,7 +29,7 @@ const imageOnLeft = imageSide === 'left';
           <div class="fifty-fifty-simple__content">
             <h2 class="fifty-fifty-simple__title">{title}</h2>
             <div class="fifty-fifty-simple__body rich-text">
-              <PortableText value={body} />
+              <PortableText value={body} components={portableTextComponents} />
             </div>
           </div>
 
