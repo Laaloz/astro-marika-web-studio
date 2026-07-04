@@ -22,7 +22,7 @@ import {sanityClient} from 'sanity:client';
 
 const HOMEPAGE_QUERY = `*[_type == "page" && slug.current in ["home", "etusivu"]][0]{
   title,
-  "metaDescription": coalesce(seoDescription, pageBuilder[_type == "heroSection"][0].description),
+  "metaDescription": seoDescription,
   "metaImage": pageBuilder[_type == "heroSection"][0].image,
   pageBuilder[]{
     ...,
@@ -71,7 +71,9 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 ---
 
 
-<MainLayout content={{ title: `${homepage?.title || 'Studio Maura'} | Studio Maura`, description: homepage?.metaDescription, image: homepage?.metaImage }}>
+{/* Etusivu käyttää Site Settingsin SEO-otsikkoa ja -kuvausta (main.astron fallbackit),
+    ellei page-dokumentille ole asetettu omaa seoDescriptionia. */}
+<MainLayout content={{ description: homepage?.metaDescription, image: homepage?.metaImage }}>
 		{(homepage?.pageBuilder || []).map((block: SanityDocument) => {
 			if (block._type === 'heroSection') {
 				return <HomeHeroSection {...block} />;
