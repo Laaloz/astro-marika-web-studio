@@ -88,6 +88,8 @@
   --space-11: var(--spacing-11);
 
   --font-heading: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  /* Kursiivinostot: upright-leikkaus + selaimen kallistus (ei aitoa italicia). */
+  --font-heading-slanted: 'Fraunces Upright', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
   --font-size-h1: 4.75rem;

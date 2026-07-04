@@ -190,12 +190,23 @@
 .rich-text p.pull-quote {
   margin: 0;
   color: var(--espresso);
-  font-family: var(--font-heading);
+  font-family: var(--font-heading-slanted);
   font-size: 1.75rem;
   font-style: italic;
   font-weight: 300;
   line-height: 1.25;
   font-variation-settings: 'SOFT' 0, 'WONK' 1;
+}
+
+/* Small muted price line, e.g. "Paketit alkaen 900 €". Negative top margin
+   tucks it closer to the preceding paragraph (matches the design handoff and
+   the service-card subtitles on the homepage). */
+.rich-text p.price-note {
+  margin: -0.25rem 0 0;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 1.4;
 }
 
 @media (max-width: 48rem) {

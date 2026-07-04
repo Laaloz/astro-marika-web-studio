@@ -3,6 +3,7 @@ import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import PortableTextImage from '../portable-text/PortableTextImage.astro'
 import PortableTextPullQuote from '../portable-text/PortableTextPullQuote.astro'
+import PortableTextPriceNote from '../portable-text/PortableTextPriceNote.astro'
 
 const {
   leftEyebrow,
@@ -52,6 +53,7 @@ const portableTextComponents = {
   },
   block: {
     pullQuote: PortableTextPullQuote,
+    priceNote: PortableTextPriceNote,
   },
 }
 ---

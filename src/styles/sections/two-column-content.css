@@ -66,14 +66,21 @@
 .two-column-content__left-body :where(.portable-text-image) {
   margin: var(--space-2) 0 0;
   width: 100%;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
+}
+
+/* Image-only left column (mirrored service section): no extra top offset. */
+.two-column-content__left-body :where(.portable-text-image:first-child) {
+  margin-top: 0;
 }
 
 .two-column-content__left-body :where(.portable-text-image__img) {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
 .two-column-content__body {
@@ -103,7 +110,7 @@
 .two-column-content__body :where(.portable-text-image) {
   margin: 0;
   width: 100%;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
@@ -111,6 +118,8 @@
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
 .two-column-content__title--right {
@@ -125,7 +134,13 @@
   --button-brand-hover-fg: var(--espresso);
   --button-brand-hover-border: #322221;
   justify-self: start;
-  margin-top: var(--space-3);
+  /* Column gap alone (32px) matches the design; extra margin made it 56px. */
+  margin-top: 0;
+}
+
+/* Right column's gap is 24px, so top up the button to the same 32px total. */
+.two-column-content__body .two-column-content__button {
+  margin-top: var(--space-1);
 }
 
 .two-column-content--brown .two-column-content__button {
