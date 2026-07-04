@@ -301,6 +301,32 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
     <script is:inline>
       const contactForms = document.querySelectorAll('.contact-form[data-netlify="true"]')
 
+      // Esitäyttö query-parametreista, esim. /ota-yhteytta?interestedIn=Verkkosivut
+      // &description=... — paketti-CTA:t käyttävät tätä (ks. Verkkosivut-handoff).
+      const prefillParams = new URLSearchParams(window.location.search)
+      contactForms.forEach((form) => {
+        if (!(form instanceof HTMLFormElement)) return
+        prefillParams.forEach((value, key) => {
+          if (key === 'form-status' || !value) return
+          const fields = form.querySelectorAll(`[name="${CSS.escape(key)}"]`)
+          fields.forEach((field) => {
+            if (field instanceof HTMLInputElement && (field.type === 'checkbox' || field.type === 'radio')) {
+              if (field.value === value) field.checked = true
+            } else if (field instanceof HTMLTextAreaElement || field instanceof HTMLInputElement) {
+              if (!field.value) field.value = value
+            } else if (field instanceof HTMLSelectElement) {
+              // Salli osittainen osuma (esim. ?verkkosivupaketti=Maura Mini),
+              // jotta linkit eivät hajoa kun optioiden tekstejä hiotaan CMS:ssä.
+              const wanted = value.trim().toLowerCase()
+              const match = [...field.options].find(
+                (option) => option.value.trim().toLowerCase().startsWith(wanted)
+              )
+              if (match) field.value = match.value
+            }
+          })
+        })
+      })
+
       contactForms.forEach((form) => {
         if (!(form instanceof HTMLFormElement)) return
         const submitButton = form.querySelector('[data-submit-button]')

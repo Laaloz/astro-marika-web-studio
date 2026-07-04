@@ -8,10 +8,21 @@
   gap: 0;
 }
 
+/* Only used on the Verkkosivut service page; heading + intro are centered per design. */
 .fifty-fifty-highlights__intro {
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: var(--space-1);
+  text-align: center;
+}
+
+.fifty-fifty-highlights__section-intro {
+  max-width: 32.5rem;
+  margin-top: var(--space-1);
+  color: var(--color-text);
+  font-size: var(--text-body-normal);
+  font-weight: 300;
+  line-height: 1.5;
 }
 
 .fifty-fifty-highlights__eyebrow-wrap {
@@ -126,6 +137,47 @@
 
 .fifty-fifty-highlights__cta-wrap {
   margin-top: var(--space-6);
+}
+
+/* Always-visible schedule/price block below the accordion (design handoff). */
+.fifty-fifty-highlights__facts {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.fifty-fifty-highlights__fact {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.fifty-fifty-highlights__fact-label {
+  color: var(--color-text);
+  font-size: var(--text-body-normal);
+  font-weight: 700;
+  line-height: 1.375rem;
+}
+
+.fifty-fifty-highlights__fact-value {
+  color: var(--color-text);
+  font-size: var(--text-body-normal);
+  font-weight: 300;
+  line-height: 1.375rem;
+}
+
+.fifty-fifty-highlights__payment-note {
+  margin-top: 0.25rem;
+  color: var(--color-muted-strong);
+  font-size: var(--text-body-small);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.fifty-fifty-highlights__secondary-cta {
+  margin-top: var(--space-4);
+  padding: 0.875rem 1.25rem;
+  font-size: var(--text-body-medium);
+  line-height: 1.5rem;
 }
 
 .fifty-fifty-highlights__media {

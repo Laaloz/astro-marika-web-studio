@@ -7,16 +7,22 @@ type Step = {
   body?: PortableTextBlock[]
 }
 
-const {eyebrow, title, steps = []} = Astro.props as {eyebrow?: string; title?: string; steps?: Step[]}
+const {eyebrow, title, intro, steps = []} = Astro.props as {
+  eyebrow?: string
+  title?: string
+  intro?: string
+  steps?: Step[]
+}
 const validSteps = steps.filter((step) => step?.title && Array.isArray(step.body) && step.body.length > 0)
 const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
+const introText = typeof intro === 'string' ? intro.trim() : ''
 ---
 
 {
   validSteps.length > 0 && (
     <section id="prosessi" class="page-section project-steps" aria-label={title || 'Projektin vaiheet'}>
       <div class="site-container project-steps__container">
-        {(eyebrowText || title) && (
+        {(eyebrowText || title || introText) && (
           <div class="project-steps__intro">
             {eyebrowText && (
               <div class="project-steps__eyebrow-wrap">
@@ -25,12 +31,14 @@ const eyebrowText = typeof eyebrow === 'string' ? eyebrow.trim() : ''
               </div>
             )}
             {title && <h2 class="project-steps__title">{title}</h2>}
+            {introText && <p class="project-steps__lead">{introText}</p>}
           </div>
         )}
         <ol class="project-steps__list">
           {validSteps.map((step, index) => {
             return (
               <li class="project-step">
+                <p class="project-step__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</p>
                 <h3 class="project-step__title">{step.title}</h3>
                 <div class="project-step__body rich-text">
                   <PortableText value={step.body} />
