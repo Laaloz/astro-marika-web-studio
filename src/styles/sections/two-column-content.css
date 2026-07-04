@@ -53,12 +53,14 @@
 .two-column-content__left-body {
   color: var(--color-text);
   display: grid;
-  gap: var(--space-1);
+  gap: 1.25rem;
 }
 
-.two-column-content__left-body :where(p, li) {
+/* Plain p/li selectors (not :where) so this outranks the global .rich-text p rule. */
+.two-column-content__left-body p,
+.two-column-content__left-body li {
   font-size: var(--text-body-normal);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .two-column-content__left-body :where(.portable-text-image) {
@@ -85,12 +87,13 @@
 
 .two-column-content__body-text {
   display: grid;
-  gap: var(--space-1);
+  gap: 1.25rem;
 }
 
-.two-column-content__body :where(p, li) {
+.two-column-content__body p,
+.two-column-content__body li {
   font-size: var(--text-body-normal);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .two-column-content__body :where(p + p) {
@@ -140,33 +143,10 @@
   border-color: var(--button-brand-hover-border);
 }
 
+/* Shares .reference-section__cta + .button--link-secondary styling (underline + blue arrow). */
 .two-column-content__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  width: fit-content;
   justify-self: start;
   margin-top: var(--space-2);
-  padding: 0.5rem 0;
-  border-bottom: 1.75px solid var(--espresso-border);
-  color: var(--espresso);
-  font-size: var(--text-body-large);
-  font-weight: 300;
-  line-height: var(--leading-body-large);
-  text-decoration: none;
-}
-
-.two-column-content__link svg {
-  width: 1.3125rem;
-  height: 1.3125rem;
-  flex: none;
-  color: var(--color-info);
-  transition: transform 180ms ease;
-}
-
-.two-column-content__link:hover svg,
-.two-column-content__link:focus-visible svg {
-  transform: translateX(0.18rem);
 }
 
 .two-column-content--right-only .two-column-content__body {

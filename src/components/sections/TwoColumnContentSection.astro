@@ -89,10 +89,11 @@ const portableTextComponents = {
               )}
 
               {hasLeftCta && (isLinkCta ? (
-                <a class="two-column-content__link" href={leftCtaHref}>
+                <a class="two-column-content__link reference-section__cta button--link-secondary" href={leftCtaHref}>
                   <span>{leftCtaLabel}</span>
-                  <svg viewBox="0 0 21 21" aria-hidden="true">
-                    <path d="M17.6148 10.9375H0V9.47917H17.6148L9.16781 1.03214L10.2083 0L20.4167 10.2083L10.2083 20.4167L9.16781 19.3845L17.6148 10.9375Z" fill="currentColor" />
+                  <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12H17" />
+                    <path d="M12 7L17 12L12 17" />
                   </svg>
                 </a>
               ) : (
@@ -129,10 +130,11 @@ const portableTextComponents = {
               )}
 
               {hasRightCta && (isLinkCta ? (
-                <a class="two-column-content__link" href={rightCtaHref}>
+                <a class="two-column-content__link reference-section__cta button--link-secondary" href={rightCtaHref}>
                   <span>{rightCtaLabel}</span>
-                  <svg viewBox="0 0 21 21" aria-hidden="true">
-                    <path d="M17.6148 10.9375H0V9.47917H17.6148L9.16781 1.03214L10.2083 0L20.4167 10.2083L10.2083 20.4167L9.16781 19.3845L17.6148 10.9375Z" fill="currentColor" />
+                  <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12H17" />
+                    <path d="M12 7L17 12L12 17" />
                   </svg>
                 </a>
               ) : (

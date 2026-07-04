@@ -116,8 +116,7 @@
   width: fit-content;
   padding: 0.5rem 0;
   border: 0;
-  border-bottom-width: 1.75px;
-  border-bottom-color: var(--espresso-border);
+  border-bottom: 1.75px solid var(--espresso-border);
   color: var(--espresso);
   font-size: var(--text-body-large);
   font-weight: 300;
