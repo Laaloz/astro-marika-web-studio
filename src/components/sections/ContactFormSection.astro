@@ -1,10 +1,15 @@
 ---
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
+import SanityImage from '../SanityImage.astro'
 
 const {
   heading,
   introText,
+  image,
+  contactPrompt,
+  contactEmail,
+  contactPhone,
   formName = 'contact',
   submitLabel = 'Lähetä',
   successMessage = 'Kiitos viestistä! Palaan sinulle pian.',
@@ -12,11 +17,15 @@ const {
 } = Astro.props as {
   heading?: string
   introText?: string
+  image?: {alt?: string; asset?: unknown}
+  contactPrompt?: string
+  contactEmail?: string
+  contactPhone?: string
   formName?: string
   submitLabel?: string
   successMessage?: string
   fields?: Array<{
-    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'radio' | 'checkboxGroup' | 'checkbox' | 'file'
+    fieldType?: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'radio' | 'checkboxGroup' | 'checkbox' | 'file' | 'heading'
     name?: string
     label?: string
     linkLabel?: string
@@ -115,19 +124,55 @@ const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : 
   })
   .filter((field) => Boolean(field.fieldName && field.fieldLabel))
 
-const sectionHeading = heading || 'Yhteydenotto'
+const sectionHeading = (heading || '').trim()
 const sectionIntro = introText || ''
+const hasImage = Boolean(image && (image as {asset?: unknown}).asset)
+const contactPromptText = typeof contactPrompt === 'string' ? contactPrompt.trim() : ''
+const contactEmailText = typeof contactEmail === 'string' ? contactEmail.trim() : ''
+const contactPhoneText = typeof contactPhone === 'string' ? contactPhone.trim() : ''
+const contactPhoneHref = contactPhoneText ? `tel:${contactPhoneText.replace(/[^+\d]/g, '')}` : undefined
+const hasDirectContact = Boolean(contactEmailText || contactPhoneText)
 const formStatus = Astro.url.searchParams.get('form-status')
 const showSuccessMessage = formStatus === 'success'
 const showErrorMessage = formStatus === 'error'
 const successActionPath = `${Astro.url.pathname}?form-status=success`
 ---
 
-<section class="page-section contact-form-section" aria-label={sectionHeading}>
+<section class="page-section contact-form-section" aria-label={sectionHeading || 'Yhteydenotto'}>
   <div class="site-container contact-form-section__container">
-    <div class="contact-form-section__intro">
-      <h2>{sectionHeading}</h2>
-      {sectionIntro && <p>{sectionIntro}</p>}
+    <div class="contact-form-section__aside">
+      <div class="contact-form-section__intro">
+        {sectionHeading && <h2>{sectionHeading}</h2>}
+        {sectionIntro && <p>{sectionIntro}</p>}
+      </div>
+
+      {hasImage && (
+        <SanityImage
+          image={image}
+          alt={image?.alt || ''}
+          width={640}
+          height={800}
+          fit="crop"
+          quality={90}
+          widths={[320, 480, 640, 960]}
+          class="contact-form-section__image"
+          loading="lazy"
+          decoding="async"
+          sizes="(min-width: 64rem) 20rem, 100vw"
+        />
+      )}
+
+      {hasDirectContact && (
+        <div class="contact-form-section__direct">
+          {contactPromptText && <p class="contact-form-section__direct-prompt">{contactPromptText}</p>}
+          {contactEmailText && (
+            <a class="contact-form-section__direct-link" href={`mailto:${contactEmailText}`}>{contactEmailText}</a>
+          )}
+          {contactPhoneText && (
+            <a class="contact-form-section__direct-link" href={contactPhoneHref}>{contactPhoneText}</a>
+          )}
+        </div>
+      )}
     </div>
 
     <form
@@ -159,7 +204,11 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           const fieldId = `${safeFormName}-${field.fieldName}-${index}`
           const isFullWidth = field.width === 'full'
           const fieldClassName = `contact-form__field contact-form__field--${isFullWidth ? 'full' : 'half'}`
-          const requiredMark = field.required === true ? ' *' : ''
+          const requiredMark = field.required === true ? '*' : ''
+
+          if (field.fieldType === 'heading') {
+            return <h2 class="contact-form__group-heading">{field.fieldLabel}</h2>
+          }
 
           if (field.fieldType === 'radio') {
             return (

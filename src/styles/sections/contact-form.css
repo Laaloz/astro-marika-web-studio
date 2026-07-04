@@ -3,10 +3,69 @@
   gap: var(--space-5);
 }
 
+.contact-form-section__aside {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: var(--space-4);
+}
+
 .contact-form-section__intro {
   display: grid;
   gap: var(--space-2);
   max-width: 26rem;
+}
+
+.contact-form-section__image {
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+/* Suora oikopolku lomakkeen rinnalla: lyhyt saate + sähköposti- ja puhelinlinkit. */
+.contact-form-section__direct {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.contact-form-section__direct-prompt {
+  margin-bottom: 0.25rem;
+  color: var(--color-muted-strong);
+  font-size: var(--text-body-normal);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.contact-form-section__direct-link {
+  width: fit-content;
+  color: var(--tittle-color);
+  font-size: var(--text-body-medium);
+  font-weight: 300;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.contact-form-section__direct-link[href^='mailto:'] {
+  text-decoration: underline;
+}
+
+/* Lomakkeen ryhmäotsikko (fieldType: heading), esim. "Yhteystiedot" / "Projektisi". */
+.contact-form__group-heading {
+  grid-column: 1 / -1;
+  color: var(--tittle-color);
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 300;
+  line-height: 1.2;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+}
+
+.contact-form__group-heading:not(:first-child) {
+  margin-top: var(--space-3);
 }
 
 .contact-form-section__intro h2 {
