@@ -175,18 +175,32 @@ const socialImagePath =
 		: urlFor(socialImageSource)?.width(1200).height(630).fit('crop').url();
 const socialImageUrl = socialImagePath ? new URL(socialImagePath, Astro.url).href : undefined;
 
-// Structured data: Organization (näkyy joka sivulla, auttaa Googlea ja AI-hakuja
-// ymmärtämään kuka yritys on, yhteystiedot ja some-profiilit)
+// Structured data: ProfessionalService (LocalBusiness-alatyyppi). Näkyy joka
+// sivulla ja auttaa Googlea sekä AI-hakuja ymmärtämään kuka yritys on, missä se
+// toimii, mitä palveluita se tarjoaa, yhteystiedot ja some-profiilit.
 const siteUrl = Astro.site?.href;
 const organizationSchema = {
 	'@context': 'https://schema.org',
-	'@type': 'Organization',
+	'@type': 'ProfessionalService',
 	name: siteSettings?.siteTitle || 'Studio Maura',
 	description: defaultDescription,
 	...(siteUrl ? { url: siteUrl } : {}),
+	...(siteUrl ? { '@id': `${siteUrl}#organization` } : {}),
 	...(logoDesktopUrl ? { logo: logoDesktopUrl } : {}),
+	...(socialImageUrl ? { image: socialImageUrl } : {}),
 	...(siteSettings?.footerEmail ? { email: siteSettings.footerEmail } : {}),
 	...(siteSettings?.footerPhone ? { telephone: siteSettings.footerPhone } : {}),
+	address: {
+		'@type': 'PostalAddress',
+		addressLocality: 'Jyväskylä',
+		addressCountry: 'FI',
+	},
+	areaServed: [
+		{ '@type': 'City', name: 'Jyväskylä' },
+		{ '@type': 'Country', name: 'Finland' },
+	],
+	knowsLanguage: ['fi'],
+	serviceType: ['Verkkosivujen suunnittelu', 'Visuaaliset materiaalit'],
 	...(siteSettings?.footerInstagramHref ? { sameAs: [siteSettings.footerInstagramHref] } : {}),
 };
 
