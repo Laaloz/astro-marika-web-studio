@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import SanityImage from '../SanityImage.astro';
 
 const {
@@ -53,12 +54,12 @@ const hasSecondaryCta = secondaryCtaLabel && secondaryCtaHref;
 
 			<div class="actions-row hero-block__actions">
 				{hasPrimaryCta && (
-					<a class="button button--primary-brand--accent hero-block__button hero-block__button--secondary" href={primaryCtaHref}>
+					<a class="button button--primary-brand--accent hero-block__button hero-block__button--secondary" href={normalizeHref(primaryCtaHref)}>
 						<span>{primaryCtaLabel}</span>
 					</a>
 				)}
 				{hasSecondaryCta && (
-					<a class="button button--primary-brand hero-block__button hero-block__button--primary" href={secondaryCtaHref}>
+					<a class="button button--primary-brand hero-block__button hero-block__button--primary" href={normalizeHref(secondaryCtaHref)}>
 						<span>{secondaryCtaLabel}</span>
 						<svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 							<path d="M5 12H17" />

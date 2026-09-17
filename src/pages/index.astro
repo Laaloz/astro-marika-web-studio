@@ -74,7 +74,7 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 {/* Etusivu käyttää Site Settingsin SEO-otsikkoa ja -kuvausta (main.astron fallbackit),
     ellei page-dokumentille ole asetettu omaa seoDescriptionia. */}
 <MainLayout content={{ description: homepage?.metaDescription, image: homepage?.metaImage }}>
-		{(homepage?.pageBuilder || []).map((block: SanityDocument) => {
+		{(homepage?.pageBuilder || []).map((block: SanityDocument, index: number) => {
 			if (block._type === 'heroSection') {
 				return <HomeHeroSection {...block} />;
 			}
@@ -88,7 +88,7 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 			}
 
 			if (block._type === 'fiftyFiftySimpleSection') {
-				return <FiftyFiftySimpleSection {...block} />;
+				return <FiftyFiftySimpleSection {...block} priority={index <= 1} />;
 			}
 
 			if (block._type === 'twoColumnContentSection') {
@@ -124,7 +124,7 @@ const homepage = await sanityClient.fetch<SanityDocument | null>(HOMEPAGE_QUERY)
 			}
 
 			if (block._type === 'referenceSection') {
-				return <ReferenceSection {...block} />;
+				return <ReferenceSection {...block} priority={index <= 1} />;
 			}
 
 			if (block._type === 'callToActionSection') {

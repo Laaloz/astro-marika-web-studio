@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import {PortableText} from 'astro-portabletext';
 import type {PortableTextBlock} from '@portabletext/types';
 import SanityImage from '../SanityImage.astro';
@@ -114,14 +115,14 @@ const introText = typeof intro === 'string' ? intro.trim() : '';
                       </div>
                     )}
                     {item.ctaLabel && item.ctaHref && (
-                      <a class="button button--primary-brand--accent fifty-fifty-highlights__secondary-cta" href={item.ctaHref}>
+                      <a class="button button--primary-brand--accent fifty-fifty-highlights__secondary-cta" href={normalizeHref(item.ctaHref)}>
                         <span>{item.ctaLabel}</span>
                       </a>
                     )}
                     </>
                   ) : (
                     <div class="fifty-fifty-highlights__cta-wrap">
-                      <a class="button button--primary-accent" href={item.ctaHref}>
+                      <a class="button button--primary-accent" href={normalizeHref(item.ctaHref)}>
                         <span>{item.ctaLabel}</span>
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                           <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
@@ -142,7 +143,7 @@ const introText = typeof intro === 'string' ? intro.trim() : '';
                   class="fifty-fifty-highlights__image"
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
-                  sizes="(min-width: 64rem) 29rem, (min-width: 48rem) 40vw, 100vw"
+                  sizes="(min-width: 64rem) 29rem, (min-width: 48rem) 40vw, calc(100vw - 2rem)"
                 />
               </div>
             </article>

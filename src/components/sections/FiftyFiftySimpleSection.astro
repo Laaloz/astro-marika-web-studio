@@ -10,8 +10,11 @@ const portableTextComponents = {
   },
 };
 
-const {title, body, image, imageSide = 'left', imageAspect = 'square'} = Astro.props as {
+// priority: osio on sivun yläosassa (heti heron jälkeen), jolloin kuva on
+// yleensä sivun LCP-elementti ja se ladataan heti korkealla prioriteetilla.
+const {title, body, image, imageSide = 'left', imageAspect = 'square', priority = false} = Astro.props as {
   title?: string;
+  priority?: boolean;
   body?: PortableTextBlock[];
   image?: {alt?: string};
   imageSide?: 'left' | 'right';
@@ -43,13 +46,12 @@ const imageClass = `fifty-fifty-simple__image${isLandscape ? ' fifty-fifty-simpl
               width={isLandscape ? 1040 : 530}
               height={isLandscape ? 832 : 530}
               fit="crop"
-              quality={100}
-              dpr={2}
-              widths={[360, 460, 530, 720, 1060, 1280, 1600]}
+              widths={[360, 460, 530, 720, 800, 1060, 1280, 1600]}
               class={imageClass}
-              loading="lazy"
+              loading={priority ? 'eager' : 'lazy'}
+              fetchpriority={priority ? 'high' : undefined}
               decoding="async"
-              sizes="(min-width: 80rem) 33.125rem, (min-width: 48rem) 40vw, 100vw"
+              sizes="(min-width: 80rem) 33.125rem, (min-width: 48rem) 40vw, calc(100vw - 2rem)"
             />
           </div>
         </article>

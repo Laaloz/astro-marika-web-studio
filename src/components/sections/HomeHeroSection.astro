@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 const {
 	titleTop,
 	titleBottom,
@@ -62,7 +63,7 @@ const hasIconSplit = titleTopIIndex >= 0;
 					</div>
 					<div class="home-hero__actions">
 						{hasPrimaryCta && (
-							<a class="button button--primary-brand home-hero__button home-hero__button--primary" href={primaryCtaHref}>
+							<a class="button button--primary-brand home-hero__button home-hero__button--primary" href={normalizeHref(primaryCtaHref)}>
 								<span>{primaryCtaLabel}</span>
 								<svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 								<path d="M5 12H17" />
@@ -71,7 +72,7 @@ const hasIconSplit = titleTopIIndex >= 0;
 							</a>
 						)}
 						{hasSecondaryCta && (
-							<a class="button button--primary-brand--accent home-hero__button home-hero__button--secondary" href={secondaryCtaHref}>
+							<a class="button button--primary-brand--accent home-hero__button home-hero__button--secondary" href={normalizeHref(secondaryCtaHref)}>
 								<span>{secondaryCtaLabel}</span>
 							</a>
 						)}

@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import SanityImage from '../SanityImage.astro';
 import {PortableText} from 'astro-portabletext';
 import type {PortableTextBlock} from '@portabletext/types';
@@ -50,7 +51,7 @@ const titleParts = (typeof title === 'string' ? title : '')
         </div>
 
         {hasCta && (
-        <a class="button button--primary-brand about-designer__cta" href={ctaHref}>
+        <a class="button button--primary-brand about-designer__cta" href={normalizeHref(ctaHref)}>
           <span>{ctaLabel}</span>
           <svg class="button__arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M5 12H17" />
@@ -75,7 +76,7 @@ const titleParts = (typeof title === 'string' ? title : '')
                   class="about-designer__image"
                   loading="lazy"
                   decoding="async"
-                  sizes="(min-width: 64rem) 27.5rem, 100vw"
+                  sizes="(min-width: 64rem) 27.5rem, calc(100vw - 2rem)"
                 />
               ) : (
                 <div class="about-designer__image about-designer__image--placeholder"></div>

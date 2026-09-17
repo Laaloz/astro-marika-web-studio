@@ -100,7 +100,7 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
       heroExternalLinkLabel={reference?.heroExternalLinkLabel}
     />
 
-    {(reference?.pageBuilder || []).map((block: SanityDocument) => {
+    {(reference?.pageBuilder || []).map((block: SanityDocument, index: number) => {
       if (block._type === 'subpageHeroSection') {
         return <SubpageHeroSection {...block} />
       }
@@ -118,7 +118,7 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
       }
 
       if (block._type === 'fiftyFiftySimpleSection') {
-        return <FiftyFiftySimpleSection {...block} />
+        return <FiftyFiftySimpleSection {...block} priority={index <= 1} />
       }
 
       if (block._type === 'twoColumnContentSection') {
@@ -150,7 +150,7 @@ const reference = await sanityClient.fetch<SanityDocument | null>(REFERENCE_QUER
       }
 
       if (block._type === 'referenceSection') {
-        return <ReferenceSection {...block} />
+        return <ReferenceSection {...block} priority={index <= 1} />
       }
 
       if (block._type === 'callToActionSection') {

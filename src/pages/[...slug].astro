@@ -99,7 +99,7 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 ---
 
 <MainLayout content={{title: `${page?.title || 'Page'} | Studio Maura`, description: page?.metaDescription, image: page?.metaImage}}>
-		{(page?.pageBuilder || []).map((block: SanityDocument) => {
+		{(page?.pageBuilder || []).map((block: SanityDocument, index: number) => {
 			if (block._type === 'subpageHeroSection') {
 				return <SubpageHeroSection {...block} />;
 			}
@@ -117,7 +117,7 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 			}
 
 			if (block._type === 'fiftyFiftySimpleSection') {
-				return <FiftyFiftySimpleSection {...block} />;
+				return <FiftyFiftySimpleSection {...block} priority={index <= 1} />;
 			}
 
 			if (block._type === 'twoColumnContentSection') {
@@ -153,7 +153,7 @@ const page = await sanityClient.fetch<SanityDocument | null>(PAGE_QUERY, {
 			}
 
 			if (block._type === 'referenceSection') {
-				return <ReferenceSection {...block} />;
+				return <ReferenceSection {...block} priority={index <= 1} />;
 			}
 
 			if (block._type === 'callToActionSection') {

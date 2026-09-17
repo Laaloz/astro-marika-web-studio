@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import SanityImage from '../SanityImage.astro'
@@ -83,21 +84,7 @@ const defaultFields = [
   },
 ]
 
-const normalizeCmsHref = (href?: string) => {
-  if (!href) return '#'
-  if (
-    href.startsWith('/') ||
-    href.startsWith('http://') ||
-    href.startsWith('https://') ||
-    href.startsWith('mailto:') ||
-    href.startsWith('tel:') ||
-    href.startsWith('#')
-  ) {
-    return href
-  }
-
-  return `/${href}`
-}
+const normalizeCmsHref = (href?: string) => normalizeHref(href)
 
 const normalizedFields = (Array.isArray(fields) && fields.length > 0 ? fields : defaultFields)
   .map((field, index) => {
@@ -158,7 +145,7 @@ const successActionPath = `${Astro.url.pathname}?form-status=success`
           class="contact-form-section__image"
           loading="lazy"
           decoding="async"
-          sizes="(min-width: 64rem) 20rem, 100vw"
+          sizes="(min-width: 64rem) 20rem, calc(100vw - 2rem)"
         />
       )}
 

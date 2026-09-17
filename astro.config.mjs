@@ -19,6 +19,12 @@ export default defineConfig({
   adapter: netlify({
     middlewareMode: "edge",
   }),
+  build: {
+    // Koko sivuston CSS on n. 14 kt pakattuna. Inlinettynä se ei ole enää
+    // erillinen renderöinnin estävä pyyntö, mikä leikkaa mobiilissa
+    // ensimmäisestä maalauksesta (FCP/LCP) yhden verkkokierroksen.
+    inlineStylesheets: "always",
+  },
   image: {
     remotePatterns: [{
       protocol: "https",

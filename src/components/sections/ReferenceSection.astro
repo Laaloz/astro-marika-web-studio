@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import SanityImage from '../SanityImage.astro'
 
 interface ReferenceItem {
@@ -20,6 +21,7 @@ const {
   ctaLabel,
   ctaHref,
   references = [],
+  priority = false,
 } = Astro.props as {
   eyebrow?: string
   title?: string
@@ -28,6 +30,7 @@ const {
   ctaLabel?: string
   ctaHref?: string
   references?: ReferenceItem[]
+  priority?: boolean
 }
 
 const cards = references.filter((item) => item?.title && item?.slug?.current)
@@ -60,7 +63,7 @@ const getCardLabel = (item: ReferenceItem) => {
 
 // A 5:4 source covers both layouts: mobile shows it as-is, desktop (16:10)
 // trims the top/bottom via object-fit: cover.
-const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw'
+const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, calc(100vw - 2rem)'
 ---
 
 {
@@ -82,7 +85,7 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
 
             {hasCta && (
               <div class="reference-section__cta-wrap">
-                <a class="reference-section__cta button--link-secondary" href={ctaHref}>
+                <a class="reference-section__cta button--link-secondary" href={normalizeHref(ctaHref)}>
                   <span>{ctaLabel}</span>
                   <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 12H17" />
@@ -96,7 +99,7 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
               <a
                 class="reference-card"
                 style={`--card-order:${index + 1}`}
-                href={`/referenssit/${item.slug?.current}`}
+                href={normalizeHref(`/referenssit/${item.slug?.current}`)}
               >
                 <div class="reference-card__image-wrap">
                   {item.image ? (
@@ -106,10 +109,10 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
                       width={1200}
                       height={960}
                       fit="crop"
-                      quality={100}
-                      dpr={2}
                       widths={[320, 480, 640, 800, 960, 1200, 1440, 1920, 2400]}
                       class="reference-card__image"
+                      loading={priority && index === 0 ? 'eager' : 'lazy'}
+                      fetchpriority={priority && index === 0 ? 'high' : undefined}
                       sizes={cardImageSizes}
                     />
                   ) : (
@@ -138,7 +141,7 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
                 <a
                   class="reference-card"
                   style={`--card-order:${index + 1}`}
-                  href={`/referenssit/${item.slug?.current}`}
+                  href={normalizeHref(`/referenssit/${item.slug?.current}`)}
                 >
                   <div class="reference-card__image-wrap">
                     {item.image ? (
@@ -148,10 +151,10 @@ const cardImageSizes = '(min-width: 80rem) 38rem, (min-width: 48rem) 36vw, 100vw
                         width={1200}
                         height={960}
                         fit="crop"
-                        quality={100}
-                        dpr={2}
                         widths={[320, 480, 640, 800, 960, 1200, 1440, 1920, 2400]}
                         class="reference-card__image"
+                        loading={priority && index === 0 ? 'eager' : 'lazy'}
+                        fetchpriority={priority && index === 0 ? 'high' : undefined}
                         sizes={cardImageSizes}
                       />
                     ) : (

@@ -1,7 +1,10 @@
 ---
 import '../styles/global.css';
+// Otsikkofontin URL buildin hashilla, jotta se voidaan esiladata headissa.
+import frauncesNormalUrl from '@fontsource-variable/fraunces/files/fraunces-latin-standard-normal.woff2?url';
 import {sanityClient} from 'sanity:client';
 import {urlFor} from '../lib/sanityImage';
+import {normalizeHref} from '../lib/links';
 import SanityImage from '../components/SanityImage.astro';
 import type {SanityImageSource} from '@sanity/image-url';
 
@@ -86,12 +89,22 @@ const navigation = Array.isArray(siteSettings?.mainNavigation) && siteSettings.m
 	? siteSettings.mainNavigation
 	: defaultNavigation;
 
+// Sisäiset linkit saavat loppukauttaviivan (ks. src/lib/links.ts), jotta
+// Netlify ei tee jokaisesta navigoinnista 301-uudelleenohjausta.
+const normalizeCmsHref = (href?: string) => normalizeHref(href);
+
+const normalizePath = (path: string) => {
+	const plainPath = path.split('#')[0]?.split('?')[0] || '/';
+	const trimmed = plainPath.replace(/\/+$/, '');
+	return trimmed === '' ? '/' : trimmed;
+};
+
 const headerCtaLabel = 'Ota yhteyttä';
 const headerCtaHref = '/ota-yhteytta';
 const isHeaderCtaItem = (item: NavigationLink) => {
 	const label = (item.label || '').trim().toLowerCase();
 	const href = normalizeCmsHref(item.href);
-	return label === headerCtaLabel.toLowerCase() || href === headerCtaHref;
+	return label === headerCtaLabel.toLowerCase() || normalizePath(href) === normalizePath(headerCtaHref);
 };
 const headerCtaSource = navigation.find(isHeaderCtaItem);
 const headerCta = {
@@ -121,26 +134,6 @@ const footerPrivacyLabel = siteSettings?.footerPrivacyLabel;
 const footerPrivacyHref = siteSettings?.footerPrivacyHref;
 const footerCookiesLabel = siteSettings?.footerCookiesLabel;
 const footerCookiesHref = siteSettings?.footerCookiesHref || '#cookie-banner';
-
-function normalizeCmsHref(href?: string) {
-	if (!href) return '#';
-	if (
-		href.startsWith('/') ||
-		href.startsWith('http') ||
-		href.startsWith('mailto:') ||
-		href.startsWith('tel:') ||
-		href.startsWith('#')
-	) {
-		return href;
-	}
-	return `/${href}`;
-}
-
-const normalizePath = (path: string) => {
-	const plainPath = path.split('#')[0]?.split('?')[0] || '/';
-	const trimmed = plainPath.replace(/\/+$/, '');
-	return trimmed === '' ? '/' : trimmed;
-};
 
 const currentPath = normalizePath(Astro.url.pathname);
 const isInternalPath = (href?: string) => {
@@ -204,25 +197,17 @@ const organizationSchema = {
 	...(siteSettings?.footerInstagramHref ? { sameAs: [siteSettings.footerInstagramHref] } : {}),
 };
 
-// Preload LCP hero image if it's a Sanity image (not a plain string)
-const lcpImageSource = content.image && typeof content.image !== 'string' ? content.image : null;
-const lcpPreloadWidths = [320, 420, 527, 640, 1054, 1280, 1600, 2000];
-const lcpPreloadSrcset = lcpImageSource
-	? lcpPreloadWidths
-			.map((w) => {
-				const h = Math.round(791 * w / 527);
-			return `${urlFor(lcpImageSource)?.width(w).height(h).fit('crop').quality(90).url()} ${w}w`;
-			})
-			.filter(Boolean)
-			.join(', ')
-	: null;
+// Hero-kuvaa ei enää esiladata headissa: aiempi preload-srcset rakennettiin eri
+// mitoilla (527x791) kuin hero-komponenttien oikeat <img>-srcsetit, joten selain
+// latasi kaksi eri kuvaa. Hero-kuvat ovat HTML:ssä heti headerin jälkeen
+// `fetchpriority="high"`-attribuutilla, mikä riittää LCP:n priorisointiin.
 ---
 
 
 <html lang="fi">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		{hasGtm && (
 			<script is:inline>
 				window.dataLayer = window.dataLayer || [];
@@ -260,24 +245,53 @@ const lcpPreloadSrcset = lcpImageSource
 		)}
 		{hasGtm && (
 			<script is:inline define:vars={{gtmId}}>
-				(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-				})(window,document,'script','dataLayer',gtmId);
+				/*
+				 * GTM (ja sen kautta Cookiebot, GA4 ym.) ladataan vasta, kun käyttäjä
+				 * koskee sivuun ensimmäisen kerran tai viimeistään 3,5 s load-tapahtuman
+				 * jälkeen. Yhteensä n. 300 kt kolmannen osapuolen JS:ää ei silloin
+				 * kilpaile sisällön kanssa kaistasta eikä pääsäikeestä hitaalla
+				 * mobiiliyhteydellä, eikä evästedialogi maalaudu ennen sivun omaa
+				 * sisältöä. Consent Mode -oletukset (kaikki kielletty) on asetettu jo
+				 * yllä, joten mitään ei tallenneta ennen suostumusta.
+				 */
+				(function () {
+					var loaded = false;
+					var fallbackTimer = 0;
+					var listenerOptions = { passive: true };
+					var events = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'mousemove'];
+
+					function loadGtm() {
+						if (loaded) return;
+						loaded = true;
+						window.clearTimeout(fallbackTimer);
+						events.forEach(function (name) {
+							window.removeEventListener(name, loadGtm, listenerOptions);
+						});
+						(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+						new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+						j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+						'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+						})(window,document,'script','dataLayer',gtmId);
+					}
+
+					function armFallback() {
+						fallbackTimer = window.setTimeout(loadGtm, 3500);
+					}
+
+					events.forEach(function (name) {
+						window.addEventListener(name, loadGtm, listenerOptions);
+					});
+
+					if (document.readyState === 'complete') {
+						armFallback();
+					} else {
+						window.addEventListener('load', armFallback);
+					}
+				})();
 			</script>
 		)}
 		<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-		{lcpPreloadSrcset && (
-			<link
-				rel="preload"
-				as="image"
-				imagesrcset={lcpPreloadSrcset}
-				imagesizes="(min-width: 64rem) 38rem, 100vw"
-				fetchpriority="high"
-			/>
-		)}
-		{hasGtm && <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />}
+		<link rel="preload" href={frauncesNormalUrl} as="font" type="font/woff2" crossorigin />
 		<link rel="icon" href="/favicon.ico" sizes="48x48" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		{canonical && <link rel="canonical" href={canonical} />}
@@ -541,7 +555,7 @@ const lcpPreloadSrcset = lcpImageSource
 					</div>
 					<div class="site-footer__row">
 						<span class="site-footer__item">{footerCopyright}</span>
-						<a class="site-footer__item" href={footerPrivacyHref}>{footerPrivacyLabel}</a>
+						<a class="site-footer__item" href={normalizeCmsHref(footerPrivacyHref)}>{footerPrivacyLabel}</a>
 						<a
 							class="site-footer__item"
 							href={normalizeCmsHref(footerCookiesHref)}
@@ -635,8 +649,9 @@ const lcpPreloadSrcset = lcpImageSource
 					mobileNav.style.setProperty('--mobile-header-height', mobileHeaderHeight);
 					document.documentElement.style.setProperty('--mobile-header-height', mobileHeaderHeight);
 				};
-				setExpanded();
+				// Mitataan ensin, kirjoitetaan vasta sitten (välttää forced reflown).
 				setMobileHeaderHeight();
+				setExpanded();
 				if (trigger instanceof HTMLElement) {
 					trigger.addEventListener('click', () => {
 						if (isOpen) {
@@ -692,8 +707,15 @@ const lcpPreloadSrcset = lcpImageSource
 				});
 			}
 
-			alignDesktopSubmenus();
-			window.addEventListener('resize', alignDesktopSubmenus);
+			// Työpöytävalikon alavalikot asemoidaan vain työpöytäleveyksillä. Mobiilissa
+			// valikko on piilossa, ja mittaaminen aiheuttaisi turhia pakotettuja
+			// uudelleenlaskentoja (forced reflow) heti sivun latauduttua.
+			const desktopNavMedia = window.matchMedia('(min-width: 64rem)');
+			const alignDesktopSubmenusIfNeeded = () => {
+				if (desktopNavMedia.matches) alignDesktopSubmenus();
+			};
+			alignDesktopSubmenusIfNeeded();
+			window.addEventListener('resize', alignDesktopSubmenusIfNeeded);
 
 			const cookiePreferenceLinks = document.querySelectorAll('[data-cookie-preferences]');
 			cookiePreferenceLinks.forEach((link) => {

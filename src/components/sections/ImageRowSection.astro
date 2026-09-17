@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import SanityImage from '../SanityImage.astro'
 
 interface RowImage {
@@ -46,20 +47,18 @@ const hasCta = Boolean(ctaLabel && ctaHref)
                 width={560}
                 height={700}
                 fit="crop"
-                quality={90}
-                dpr={2}
                 widths={[320, 420, 560, 720, 1120]}
                 class="image-row__image"
                 loading="lazy"
                 decoding="async"
-                sizes="(min-width: 64rem) 28rem, (min-width: 48rem) 33vw, 100vw"
+                sizes="(min-width: 64rem) 28rem, (min-width: 48rem) 33vw, calc(100vw - 2rem)"
               />
             </div>
           ))}
         </div>
 
         {hasCta && (
-          <a class="image-row__cta reference-section__cta button--link-secondary" href={ctaHref}>
+          <a class="image-row__cta reference-section__cta button--link-secondary" href={normalizeHref(ctaHref)}>
             <span>{ctaLabel}</span>
             <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12H17" />

@@ -16,6 +16,7 @@ seuraavan buildin jälkeen.
 - [Rakenne](#rakenne)
 - [Sisältömalli ja sivunrakentaja](#sisältömalli-ja-sivunrakentaja)
 - [SEO ja löydettävyys](#seo-ja-löydettävyys)
+- [Suorituskyky](#suorituskyky)
 - [Julkaisu](#julkaisu)
 
 ## Teknologiat
@@ -181,6 +182,41 @@ erikseen).
   lähettää URL:t osoitteeseen `api.indexnow.org` tuotantobuildin jälkeen.
   Epäonnistuminen ei kaada buildia.
 - Sivu voi pyytää `noindex`-tagin (`404.astro` tekee näin).
+
+## Suorituskyky
+
+Tavoitteena on Lighthouse-mobiilipisteet 90+. Näihin ratkaisuihin nojataan,
+joten älä pura niitä vahingossa:
+
+- **CSS inlinetetään HTML:ään** (`build.inlineStylesheets: "always"` tiedostossa
+  `astro.config.mjs`). Koko sivuston CSS on n. 14 kt pakattuna, ja inlinettynä
+  se ei ole erillinen renderöinnin estävä pyyntö.
+- **Fontit**: Inter ja Fraunces (normaali leikkaus) esiladataan headissa.
+  Frauncesin hashattu URL tulee `?url`-importista `main.astro`:ssa.
+- **GTM ladataan viiveellä** (`main.astro`): vasta ensimmäisestä kosketuksesta,
+  vierityksestä tai näppäinpainalluksesta, tai viimeistään 3,5 s `load`-tapahtuman
+  jälkeen. GTM tuo mukanaan Cookiebotin, GA4:n ym. (yhteensä n. 300 kt JS:ää),
+  jotka muuten kilpailevat sisällön kanssa hitaalla mobiiliyhteydellä, ja
+  Cookiebotin dialogi oli mobiilissa sivun LCP-elementti. Consent Mode -oletukset
+  asetetaan edelleen heti, joten mitään ei tallenneta ennen suostumusta.
+- **Kuvat**: `SanityImage` käyttää oletuslaatua 85 ilman `dpr`-kerrointa.
+  Yhdistelmä `quality={100}` + `dpr={2}` tuotti 3–10-kertaisesti tarpeellista
+  raskaampia kuvia (esim. 500 kt yhdestä 380 px leveästä kuvasta). Tarkkuus
+  tulee `widths`/`sizes`-srcsetistä, jonka selain valitsee näytön tiheyden
+  mukaan. Hero-kuvilla on `loading="eager"` ja `fetchpriority="high"`, erillistä
+  preload-tagia ei tarvita.
+- **Sisäiset linkit loppukauttaviivalla** (`src/lib/links.ts`, `normalizeHref`).
+  Sivut renderöidään hakemistoina, joten `/palvelut` ilman kauttaviivaa on
+  Netlifyssä 301-uudelleenohjaus, joka maksaa mobiilissa helposti puoli
+  sekuntia. Käytä apuria kaikissa CMS:stä tulevissa ja koodiin kirjoitetuissa
+  sisäisissä linkeissä.
+- **Swiper** ladataan ytimenä + Navigation- ja Pagination-moduuleina
+  (`swiper/element`, ei `swiper/element/bundle`), n. 100 kt vs. 184 kt.
+
+Mittaus: PageSpeed Insights tai `npx lighthouse <url> --preset=perf
+--form-factor=mobile --screenEmulation.mobile`. Huomaa, että Cookiebot näyttää
+dialogin vain rekisteröidyllä domainilla, joten paikallinen mittaus ei kerro sen
+vaikutusta.
 
 ## Julkaisu
 

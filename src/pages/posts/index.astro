@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import type { SanityDocument } from "@sanity/client";
 import { sanityClient } from "sanity:client";
 import MainLayout from "../../layouts/main.astro";
@@ -31,7 +32,7 @@ const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY);
           <ul class="post-list">
             {posts.map((post) => (
               <li>
-                <a class="post-link-card" href={`/posts/${post.slug.current}`}>
+                <a class="post-link-card" href={normalizeHref(`/posts/${post.slug.current}`)}>
                   <p class="eyebrow">Post</p>
                   <h3>{post.title}</h3>
                   <p class="post-meta">{new Date(post.publishedAt).toLocaleDateString('fi-FI')}</p>

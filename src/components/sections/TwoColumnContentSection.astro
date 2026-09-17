@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import PortableTextImage from '../portable-text/PortableTextImage.astro'
@@ -91,7 +92,7 @@ const portableTextComponents = {
               )}
 
               {hasLeftCta && (isLinkCta ? (
-                <a class="two-column-content__link reference-section__cta button--link-secondary" href={leftCtaHref}>
+                <a class="two-column-content__link reference-section__cta button--link-secondary" href={normalizeHref(leftCtaHref)}>
                   <span>{leftCtaLabel}</span>
                   <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 12H17" />
@@ -99,7 +100,7 @@ const portableTextComponents = {
                   </svg>
                 </a>
               ) : (
-                <a class="button button--primary-outline two-column-content__button" href={leftCtaHref}>
+                <a class="button button--primary-outline two-column-content__button" href={normalizeHref(leftCtaHref)}>
                   <span>{leftCtaLabel}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
@@ -132,7 +133,7 @@ const portableTextComponents = {
               )}
 
               {hasRightCta && (isLinkCta ? (
-                <a class="two-column-content__link reference-section__cta button--link-secondary" href={rightCtaHref}>
+                <a class="two-column-content__link reference-section__cta button--link-secondary" href={normalizeHref(rightCtaHref)}>
                   <span>{rightCtaLabel}</span>
                   <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 12H17" />
@@ -140,7 +141,7 @@ const portableTextComponents = {
                   </svg>
                 </a>
               ) : (
-                <a class="button button--primary-outline two-column-content__button" href={rightCtaHref}>
+                <a class="button button--primary-outline two-column-content__button" href={normalizeHref(rightCtaHref)}>
                   <span>{rightCtaLabel}</span>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />

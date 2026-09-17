@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 import SanityImage from '../SanityImage.astro'
@@ -74,11 +75,11 @@ const sliderId = `package-showcase-${_key || 'section'}`
                     width={643}
                     height={804}
                     fit="crop"
-                    widths={[420, 560, 643, 860, 1286, 1600, 1920]}
+                    widths={[420, 560, 643, 720, 860, 1286, 1600, 1920]}
                     class="package-showcase__image"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
-                    sizes="(min-width: 80rem) 40rem, (min-width: 64rem) 50vw, 100vw"
+                    sizes="(min-width: 80rem) 40rem, (min-width: 64rem) 50vw, calc(100vw - 2rem)"
                   />
                 </swiper-slide>
               ))}
@@ -92,11 +93,11 @@ const sliderId = `package-showcase-${_key || 'section'}`
                   width={643}
                   height={804}
                   fit="crop"
-                  widths={[420, 560, 643, 860, 1286, 1600, 1920]}
+                  widths={[420, 560, 643, 720, 860, 1286, 1600, 1920]}
                   class="package-showcase__image"
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
-                  sizes="(min-width: 80rem) 40rem, (min-width: 64rem) 50vw, 100vw"
+                  sizes="(min-width: 80rem) 40rem, (min-width: 64rem) 50vw, calc(100vw - 2rem)"
                 />
               </div>
             ))
@@ -138,7 +139,7 @@ const sliderId = `package-showcase-${_key || 'section'}`
             </div>
           </div>
 
-          <a class="button button--primary-brand home-hero__button home-hero__button--primary package-showcase__cta" href={ctaHref}>
+          <a class="button button--primary-brand home-hero__button home-hero__button--primary package-showcase__cta" href={normalizeHref(ctaHref)}>
             <span>{ctaLabel}</span>
             <svg class="button__arrow" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12H17" />
@@ -170,7 +171,12 @@ const sliderId = `package-showcase-${_key || 'section'}`
 }
 
 <script>
-  import { register } from 'swiper/element/bundle'
+  // Vain Swiperin ydin + tarvittavat moduulit: koko `swiper/element/bundle`
+  // painaa n. 180 kt (kaikki moduulit ja niiden tyylit), tästä jää
+  // murto-osa. Nappien ja pallojen tyylit ovat omassa CSS:ssä
+  // (package-showcase.css), joten moduulien omia tyylejä ei tarvita.
+  import { register } from 'swiper/element'
+  import { Navigation, Pagination } from 'swiper/modules'
 
   register()
 
@@ -185,6 +191,7 @@ const sliderId = `package-showcase-${_key || 'section'}`
     const paginationElement = rootElement.querySelector('.package-showcase__pagination')
 
     Object.assign(sliderElement, {
+      modules: [Navigation, Pagination],
       speed: 260,
       slidesPerView: 1,
       spaceBetween: 0,

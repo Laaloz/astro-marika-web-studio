@@ -1,4 +1,5 @@
 ---
+import {normalizeHref} from '../../lib/links'
 import {PortableText} from 'astro-portabletext'
 import type {PortableTextBlock} from '@portabletext/types'
 
@@ -56,14 +57,14 @@ const ctaBottomVectorMobile = `
             </div>
 
             <div class="call-to-action__actions">
-              <a class="button button--primary-brand home-hero__button home-hero__button--primary call-to-action__button" href={ctaHref}>
+              <a class="button button--primary-brand home-hero__button home-hero__button--primary call-to-action__button" href={normalizeHref(ctaHref)}>
                 <span>{ctaLabel}</span>
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M16.627 12.75H4.5V11.25H16.627L10.9308 5.55375L12 4.5L19.5 12L12 19.5L10.9308 18.4462L16.627 12.75Z" />
                 </svg>
               </a>
               {hasSecondaryCta && (
-                <a class="button button--primary-brand--accent call-to-action__button" href={secondaryCtaHref}>
+                <a class="button button--primary-brand--accent call-to-action__button" href={normalizeHref(secondaryCtaHref)}>
                   <span>{secondaryCtaLabel}</span>
                 </a>
               )}
