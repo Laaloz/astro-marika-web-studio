@@ -179,7 +179,7 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 	A: {
 		world: 'Leikkisä ja luova',
 		experience:
-			'Sun asiakas viihtyy sun sivuilla ja löytää koko ajan jotain uutta. Persoonalliset yksityiskohdat herättää uteliaisuuden, ja tutustumisesta tulee elämys.',
+			'Sun sivuista välittyy persoonallisuus ja luovuus. Ne kertovat, että yritykselläsi on oma tapansa tehdä asioita, eikä kaikkea tarvitse tehdä samalla tavalla kuin muut.',
 		palette: [
 			{name: 'taivas', hex: '#99B7F5'},
 			{name: 'metsä', hex: '#267F53'},
@@ -193,7 +193,7 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 	B: {
 		world: 'Maanläheinen ja ajaton',
 		experience:
-			'Sun asiakkaalle tulee heti tervetullut olo. Lämmin tunnelma tekee lähestymisestä helppoa, ja suhun on mutkatonta tutustua.',
+			'Sun sivuista välittyy lämpö ja aitous. Ne kertovat, että yrityksesi on helposti lähestyttävä ja että tekemisessäsi arvostetaan laatua ja huolellisuutta.',
 		palette: [
 			{name: 'voikreemi', hex: '#EDE2D0'},
 			{name: 'vehnä', hex: '#E9D2A9'},
@@ -207,7 +207,7 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 	C: {
 		world: 'Moderni ja rohkea',
 		experience:
-			'Sun asiakas tuntee heti, että sulla on jotain sanottavaa. Vahva ilme pysäyttää ja jää mieleen.',
+			'Sun sivuista välittyy itsevarmuus ja vahva oma näkemys. Ne kertovat, että tiedät mitä teet etkä pelkää erottua joukosta.',
 		palette: [
 			{name: 'musta', hex: '#030303'},
 			{name: 'yön\u00ADsininen', hex: '#131936'},
@@ -221,7 +221,7 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 	D: {
 		world: 'Rauhallinen ja minimalistinen',
 		experience:
-			'Sun asiakas saa hengähtää ja keskittyä olennaiseen. Selkeä ja tasapainoinen ilme tekee tutustumisesta helppoa ja miellyttävää.',
+			'Sun sivuista välittyy rauhallisuus ja varmuus. Ne kertovat, että uskot yksinkertaisuuden voimaan etkä tarvitse ylimääräistä tehdäksesi vaikutuksen.',
 		palette: [
 			{name: 'helmi', hex: '#F6F2EF'},
 			{name: 'satama', hex: '#B0C0CC'},
