@@ -147,6 +147,18 @@ export const KEYWORDS: Record<StyleKey, string> = {
 	D: 'RAUHA',
 };
 
+/** Maailman tunniste lomakkeen tiedoissa. */
+export const WORLD_IDS: Record<StyleKey, string> = {
+	A: 'leikkisa',
+	B: 'maanlaheinen',
+	C: 'moderni',
+	D: 'rauhallinen',
+};
+
+export function isValidEmail(email: string): boolean {
+	return /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/.test(email.trim());
+}
+
 export interface PaletteColor {
 	/** Pitkissä nimissä on pehmeä tavuviiva (\u00AD), jotta nimi mahtuu pallon alle puhelimella. */
 	name: string;

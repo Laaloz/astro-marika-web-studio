@@ -71,7 +71,11 @@ asennusaikaiset build-skriptit; ne käyttävät valmiita binäärejä.
 | `PUBLIC_SITE_URL` tai `SITE_URL` | Sivuston kanoninen osoite (`site` Astro-konfiguraatiossa): canonical-linkit, sitemap ja OG-osoitteet. Netlifyn tuotantobuildissa käytetään Netlifyn omaa `URL`-muuttujaa, jos näitä ei ole asetettu. |
 | `CONTEXT` | Netlifyn asettama. Arvolla `production` IndexNow-ping ajetaan buildin jälkeen; paikalliset ja preview-buildit ohittavat sen. |
 
-Paikallisesti muuttujat laitetaan `.env`-tiedostoon (gitignoressa).
+| `EMAIL_PROVIDER` | Tyylitestin sähköpostityökalu: `none`, `mailerlite` tai `brevo`. Arvolla `none` tietoja ei viedä työkaluun. Vastaukset tallentuvat silti Netlify Formsiin (lomake `tyylitesti`). |
+| `MAILERLITE_API_KEY`, `MAILERLITE_GROUP_ID` | MailerLiten avain ja ryhmä, ks. `src/lib/subscribe.ts`. |
+| `BREVO_API_KEY`, `BREVO_LIST_ID` | Brevon avain ja lista, ks. `src/lib/subscribe.ts`. |
+
+Paikallisesti muuttujat laitetaan `.env`-tiedostoon (gitignoressa), mallina `.env.example`.
 
 ## Rakenne
 

@@ -133,7 +133,71 @@ const content = {
 				))
 			}
 
-			<section class="tyylitesti__loading" data-step="6" aria-live="polite" hidden>
+			<section class="tyylitesti__email" data-step="6" hidden>
+				<h2 class="tyylitesti__email-title">Melkein valmista!</h2>
+				<p class="tyylitesti__body">Kerro sun sähköposti ja yrityksen nimi, niin näet sun tuloksen heti.</p>
+
+				<!-- Netlify Forms tallentaa vastaukset ja lähettää niistä ilmoituksen sähköpostiin. -->
+				<form
+					class="tyylitesti__form"
+					name="tyylitesti"
+					method="POST"
+					novalidate
+					netlify
+					data-netlify="true"
+					netlify-honeypot="website"
+					data-email-form
+				>
+					<input type="hidden" name="form-name" value="tyylitesti" />
+					<input type="hidden" name="world" />
+					<input type="hidden" name="keyword" />
+					<input type="hidden" name="timestamp" />
+					<div class="tyylitesti__field">
+						<label for="tyylitesti-email">Sähköposti</label>
+						<input
+							id="tyylitesti-email"
+							name="email"
+							type="email"
+							required
+							autocomplete="email"
+							inputmode="email"
+							aria-describedby="tyylitesti-email-error"
+						/>
+						<p class="tyylitesti__error" id="tyylitesti-email-error" hidden>Tarkistatko vielä sähköpostin?</p>
+					</div>
+
+					<div class="tyylitesti__field">
+						<label for="tyylitesti-company">Yrityksen nimi</label>
+						<input
+							id="tyylitesti-company"
+							name="companyName"
+							type="text"
+							required
+							maxlength="200"
+							autocomplete="organization"
+							aria-describedby="tyylitesti-company-error"
+						/>
+						<p class="tyylitesti__error" id="tyylitesti-company-error" hidden>Kirjoitathan yrityksen nimen.</p>
+					</div>
+
+					<div class="tyylitesti__honeypot" aria-hidden="true">
+						<label for="tyylitesti-website">Verkkosivu</label>
+						<input id="tyylitesti-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+					</div>
+
+					<button type="submit" class="tyylitesti__button tyylitesti__email-submit">Näytä mun tulos</button>
+				</form>
+
+				<p class="tyylitesti__small">
+					Sun tiedot on turvassa, enkä jaa niitä kenellekään.
+					<a href="/tietosuoja/" target="_blank" rel="noopener">Tietosuojaseloste</a>
+				</p>
+				<button type="button" class="tyylitesti__restart tyylitesti__email-back" data-back>
+					← Takaisin viimeiseen kysymykseen
+				</button>
+			</section>
+
+			<section class="tyylitesti__loading" data-step="7" aria-live="polite" hidden>
 				<div class="tyylitesti__loader" aria-hidden="true">
 					{
 						loaderCells.map((cell) => (
@@ -149,7 +213,7 @@ const content = {
 				<p class="tyylitesti__loading-text">Kootaan sun <em>maailmaa</em>…</p>
 			</section>
 
-			<section class="tyylitesti__result" data-step="7" hidden>
+			<section class="tyylitesti__result" data-step="8" hidden>
 				<div class="tyylitesti__result-section tyylitesti__result-head">
 					<p class="tyylitesti__section-title">Tämä tunnelma tukee sun yrityksen persoonaa</p>
 					<h1 class="tyylitesti__result-title"><span data-world></span></h1>
@@ -202,12 +266,15 @@ const content = {
 </MainLayout>
 
 <script>
-	import {KEYWORDS, QUESTION_COUNT, RESULTS, scoreAnswers} from '../lib/tyylitesti';
+	import {KEYWORDS, QUESTION_COUNT, RESULTS, WORLD_IDS, isValidEmail, scoreAnswers} from '../lib/tyylitesti';
 	import type {Answers, StyleKey} from '../lib/tyylitesti';
 
 	const STEP_INTRO = 0;
-	const STEP_LOADING = 6;
-	const STEP_RESULT = 7;
+	const STEP_EMAIL = 6;
+	const STEP_LOADING = 7;
+	const STEP_RESULT = 8;
+	const FORM_URL = '/tyylitesti/';
+	const SUBSCRIBE_URL = '/api/tyylitesti/subscribe';
 	const AUTO_ADVANCE_MS = 550;
 	const LOADING_MS = 2200;
 	const LOADING_MS_REDUCED = 600;
@@ -226,6 +293,10 @@ const content = {
 		const progressFill = root.querySelector<HTMLElement>('[data-progress-fill]')!;
 		const copyButton = root.querySelector<HTMLButtonElement>('[data-copy]')!;
 		const keywordEl = root.querySelector<HTMLElement>('[data-keyword]')!;
+		const emailForm = root.querySelector<HTMLFormElement>('[data-email-form]')!;
+		const emailInput = emailForm.elements.namedItem('email') as HTMLInputElement;
+		const companyInput = emailForm.elements.namedItem('companyName') as HTMLInputElement;
+		const honeypotInput = emailForm.elements.namedItem('website') as HTMLInputElement;
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 		let step = STEP_INTRO;
@@ -234,6 +305,9 @@ const content = {
 		let loadingTimer: number | undefined;
 		let copiedTimer: number | undefined;
 		let trackedResult = '';
+		// Tulokseen pääsee vasta, kun lomake on lähetetty näillä vastauksilla.
+		let formSubmitted = false;
+		let lastSent = '';
 
 		const clearTimers = () => {
 			window.clearTimeout(autoTimer);
@@ -249,7 +323,65 @@ const content = {
 		/** Historiasta tuleva askel voi olla sellainen, johon ei ole vielä vastauksia. */
 		const clampStep = (target: number) => {
 			const answered = answeredUpTo();
-			return answered === QUESTION_COUNT ? target : Math.min(target, answered + 1);
+			if (answered < QUESTION_COUNT) return Math.min(target, answered + 1);
+			return formSubmitted ? target : Math.min(target, STEP_EMAIL);
+		};
+
+		const showFieldError = (input: HTMLInputElement, invalid: boolean) => {
+			input.setAttribute('aria-invalid', String(invalid));
+			const error = root.querySelector<HTMLElement>(`#${input.getAttribute('aria-describedby')}`);
+			if (error) error.hidden = !invalid;
+		};
+
+		const validateForm = () => {
+			const emailOk = isValidEmail(emailInput.value);
+			const companyOk = companyInput.value.trim().length > 0;
+			showFieldError(emailInput, !emailOk);
+			showFieldError(companyInput, !companyOk);
+			if (!emailOk) emailInput.focus();
+			else if (!companyOk) companyInput.focus();
+			return emailOk && companyOk;
+		};
+
+		/** Lähetys ei jää odottamaan vastausta eikä virhe näy käyttäjälle: tulos näytetään aina. */
+		const sendSubscription = () => {
+			const key = scoreAnswers(answers);
+			const email = emailInput.value.trim();
+			const companyName = companyInput.value.trim();
+			const sendKey = JSON.stringify([email, companyName, key]);
+			if (sendKey === lastSent) return;
+			lastSent = sendKey;
+
+			const timestamp = new Date().toISOString();
+			const setHidden = (name: string, value: string) => {
+				(emailForm.elements.namedItem(name) as HTMLInputElement).value = value;
+			};
+			setHidden('world', WORLD_IDS[key]);
+			setHidden('keyword', KEYWORDS[key]);
+			setHidden('timestamp', timestamp);
+
+			// Netlify Forms: vastaus tallentuu Netlifyyn, ja siitä tulee ilmoitus sähköpostiin.
+			void fetch(FORM_URL, {
+				method: 'POST',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				keepalive: true,
+				body: new URLSearchParams(new FormData(emailForm) as unknown as Record<string, string>).toString(),
+			}).catch(() => {});
+
+			// Sähköpostityökalu: tekee mitään vasta, kun työkalu on kytketty, ks. src/lib/subscribe.ts.
+			void fetch(SUBSCRIBE_URL, {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				keepalive: true,
+				body: JSON.stringify({
+					email,
+					companyName,
+					world: WORLD_IDS[key],
+					keyword: KEYWORDS[key],
+					timestamp,
+					website: honeypotInput.value,
+				}),
+			}).catch(() => {});
 		};
 
 		const animateIn = (direction: number) => {
@@ -334,7 +466,7 @@ const content = {
 
 			const isQuestion = step >= 1 && step <= QUESTION_COUNT;
 			progress.hidden = !isQuestion;
-			root.classList.toggle('is-result', step === STEP_RESULT);
+			root.classList.toggle('is-plain', step === STEP_EMAIL || step === STEP_RESULT);
 			if (isQuestion) {
 				progressLabel.textContent = `${step}/${QUESTION_COUNT}`;
 				progressBar.setAttribute('aria-valuenow', String(step));
@@ -348,7 +480,7 @@ const content = {
 				loadingTimer = window.setTimeout(
 					() => {
 						step = STEP_RESULT;
-						// Latausnäkymää ei jätetä historiaan, jotta takaisin vie kysymykseen 5.
+						// Latausnäkymää ei jätetä historiaan, jotta takaisin vie lomakkeeseen.
 						history.replaceState({tyylitestiStep: step}, '');
 						render(1);
 					},
@@ -395,6 +527,7 @@ const content = {
 			const pick = target.closest<HTMLElement>('[data-pick]');
 			if (pick) {
 				const question = step;
+				if (answers[question] !== pick.dataset.pick) formSubmitted = false;
 				answers[question] = pick.dataset.pick as StyleKey;
 				syncSelection();
 				window.clearTimeout(autoTimer);
@@ -412,7 +545,32 @@ const content = {
 			else if (target.closest('[data-restart]')) {
 				answers = {};
 				trackedResult = '';
+				formSubmitted = false;
+				lastSent = '';
+				emailForm.reset();
+				showFieldError(emailInput, false);
+				showFieldError(companyInput, false);
 				go(STEP_INTRO);
+			}
+		});
+
+		emailForm.addEventListener('submit', (event) => {
+			event.preventDefault();
+			if (!validateForm()) return;
+			formSubmitted = true;
+			sendSubscription();
+			go(STEP_LOADING);
+		});
+
+		// Virhe poistuu heti, kun kenttä on korjattu.
+		emailInput.addEventListener('input', () => {
+			if (emailInput.getAttribute('aria-invalid') === 'true' && isValidEmail(emailInput.value)) {
+				showFieldError(emailInput, false);
+			}
+		});
+		companyInput.addEventListener('input', () => {
+			if (companyInput.getAttribute('aria-invalid') === 'true' && companyInput.value.trim()) {
+				showFieldError(companyInput, false);
 			}
 		});
 
