@@ -687,6 +687,19 @@
   color: var(--tt-wine);
 }
 
+/* Puhelimella koodisana ja Kopioi mahtuvat samalle riville, ja napin teksti pysyy yhdellä rivillä. */
+@media (max-width: 29.99rem) {
+  .tyylitesti__keyword {
+    padding: 10px 14px;
+  }
+
+  .tyylitesti .tyylitesti__button--link {
+    width: 100%;
+    padding: 0 16px;
+    text-align: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tyylitesti *,
   .tyylitesti *::before,

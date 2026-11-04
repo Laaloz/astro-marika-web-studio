@@ -236,20 +236,19 @@ const content = {
 				</div>
 
 				<div class="tyylitesti__invite">
-					<p class="tyylitesti__dm">Vastaavatko sun nykyiset sivut sitä, mitä haluat ihanneasiakkaasi kokevan?</p>
+					<p class="tyylitesti__dm">Sun sivujesi herättämä tunne voi ratkaista, varaako ihanneasiakas ajan.</p>
 					<p class="tyylitesti__dm">
-						Laita mulle Instagramissa viesti <strong data-keyword-inline></strong> ja linkki sun verkkosivuille. Katson niitä
-						asiakkaasi silmin ja kerron sulle 3 asiaa, joilla sun yrityksen persoonallisuus, osaaminen ja visuaalinen ilme
-						pääsisivät paremmin esiin.
+						Lähetä mulle DM: <strong data-keyword-inline></strong> + linkki sun someen tai kotisivuille. Kerron 3 kohtaa, joilla
+						saat palvelukokemuksesi tunnelman välittymään jo ennen ajanvarausta.
 					</p>
-					<p class="tyylitesti__small">Ilmaista, ei sitoumusta.</p>
+					<p class="tyylitesti__small">Maksutta, ei sitoumusta.</p>
 					<div class="tyylitesti__keyword-row">
 						<span class="tyylitesti__keyword" data-keyword></span>
 						<button type="button" class="tyylitesti__copy" aria-live="polite" data-copy>Kopioi</button>
 					</div>
 					<div class="tyylitesti__invite-actions">
 						<a class="tyylitesti__button tyylitesti__button--link" href={INSTAGRAM_URL} target="_blank" rel="noopener">
-							Avaa @studiomaura.design
+							<span>Lähetä <span data-keyword-button></span> Instagramissa</span>
 						</a>
 						<button type="button" class="tyylitesti__restart" data-restart>Tee testi uudestaan</button>
 					</div>
@@ -434,6 +433,7 @@ const content = {
 				setText('[data-shapes]', result.shapes);
 				setText('[data-images]', result.images);
 				setText('[data-keyword-inline]', KEYWORDS[key]);
+				setText('[data-keyword-button]', KEYWORDS[key]);
 				keywordEl.textContent = KEYWORDS[key];
 
 				root.querySelector<HTMLElement>('[data-palette]')!.replaceChildren(
