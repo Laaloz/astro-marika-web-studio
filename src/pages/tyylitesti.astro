@@ -1,0 +1,431 @@
+---
+import {Image} from 'astro:assets';
+import type {ImageMetadata} from 'astro';
+import MainLayout from '../layouts/main.astro';
+import {QUESTIONS, STYLE_KEYS} from '../lib/tyylitesti';
+import '../styles/tyylitesti.css';
+
+import kaupunkiItalia from '../assets/tyylitesti/kaupunki-italia.webp';
+import metsa from '../assets/tyylitesti/metsa.webp';
+import kaupunkiIlta from '../assets/tyylitesti/kaupunki-ilta.webp';
+import jarvi from '../assets/tyylitesti/jarvi.webp';
+
+const IMAGES: Record<string, ImageMetadata> = {
+	'kaupunki-italia': kaupunkiItalia,
+	metsa,
+	'kaupunki-ilta': kaupunkiIlta,
+	jarvi,
+};
+
+const INSTAGRAM_URL = 'https://www.instagram.com/studiomaura.design/';
+
+const LOADER_COLORS = ['#FCD0CD', '#CEE0FB', '#D1C360', '#FFF7EC'];
+const loaderCells = Array.from({length: 16}, (_, index) => ({
+	color: LOADER_COLORS[index % 4],
+	delay: ((index * 7) % 16) * 110,
+	round: index % 5 === 0,
+}));
+
+const content = {
+	title: 'Millainen on sun yrityksen maailma? | Studio Maura',
+	description:
+		'Testi palvelualan yrittäjälle: vastaa 5 kysymykseen, niin näet, millainen tunnelma sun kotisivuille kuuluu.',
+};
+---
+
+<MainLayout content={content}>
+	<div class="tyylitesti" data-tyylitesti>
+		<div class="tyylitesti__progress" data-progress hidden>
+			<div class="tyylitesti__progress-row">
+				<span class="tyylitesti__progress-label" data-progress-label aria-live="polite">1/5</span>
+			</div>
+			<div
+				class="tyylitesti__progress-track"
+				role="progressbar"
+				aria-label="Testin eteneminen"
+				aria-valuemin="0"
+				aria-valuemax="5"
+				aria-valuenow="1"
+				data-progress-bar
+			>
+				<div class="tyylitesti__progress-fill" data-progress-fill></div>
+			</div>
+		</div>
+
+		<div class="tyylitesti__stage" tabindex="-1" data-stage>
+			<section class="tyylitesti__intro" data-step="0">
+				<h1 class="tyylitesti__title">Millainen on sun yrityksen <em>maailma</em>?</h1>
+				<p class="tyylitesti__lead">
+					Testi palvelualan yrittäjälle, joka haluaa, että ihanneasiakas tuntee sun sivuilla: tää on
+					just mua varten.
+				</p>
+				<p class="tyylitesti__body">
+					Vastaa 5 kysymykseen, niin näet, millainen tunnelma sun kotisivuille kuuluu, jotta ne
+					herättää asiakkaassa tunteen ja tarpeen valita juuri sut.
+				</p>
+				<div class="tyylitesti__card tyylitesti__gets">
+					<h2 class="tyylitesti__label tyylitesti__label--wine">Saat</h2>
+					<ul class="tyylitesti__gets-list">
+						<li><span style="background:#FCD0CD"></span>suunnan sun yrityksen tunnelmaan</li>
+						<li><span style="background:#CEE0FB"></span>esimerkkivärit, muodot ja kuvat, jotka tukee sitä sun sivuilla</li>
+					</ul>
+				</div>
+				<div class="tyylitesti__start">
+					<button type="button" class="tyylitesti__button" data-start>Aloita testi</button>
+					<span class="tyylitesti__hint">Vie noin 2 minuuttia</span>
+				</div>
+				<noscript>
+					<p class="tyylitesti__body">
+						Testi tarvitsee toimiakseen JavaScriptin. Voit myös laittaa mulle viestiä Instagramissa:
+						<a href={INSTAGRAM_URL} rel="noopener">@studiomaura.design</a>
+					</p>
+				</noscript>
+			</section>
+
+			{
+				QUESTIONS.map((question, questionIndex) => (
+					<section class="tyylitesti__question" data-step={questionIndex + 1} hidden>
+						<button type="button" class="tyylitesti__back" data-back>
+							← Edellinen
+						</button>
+						<span class="tyylitesti__label tyylitesti__label--wine">Kysymys {questionIndex + 1}</span>
+						<h2 class="tyylitesti__question-title">{question.pre}<em>{question.em}</em>{question.post}</h2>
+
+						{question.type === 'text' ? (
+							<div class="tyylitesti__options">
+								{question.options.map((option, optionIndex) => (
+									<button
+										type="button"
+										class="tyylitesti__option"
+										aria-pressed="false"
+										data-pick={STYLE_KEYS[optionIndex]}
+									>
+										{option.label}
+									</button>
+								))}
+							</div>
+						) : (
+							<div class="tyylitesti__image-grid" data-image-grid>
+								{question.options.map((option, optionIndex) => (
+									<button
+										type="button"
+										class="tyylitesti__image-option"
+										aria-pressed="false"
+										aria-label={option.label}
+										title={option.label}
+										data-pick={STYLE_KEYS[optionIndex]}
+									>
+										<Image
+											src={IMAGES[option.image!]}
+											alt=""
+											widths={[320, 640, 800]}
+											sizes="(max-width: 688px) 50vw, 314px"
+											loading="lazy"
+											decoding="async"
+											format="webp"
+										/>
+										<span class="tyylitesti__image-name">{option.short}</span>
+									</button>
+								))}
+							</div>
+						)}
+					</section>
+				))
+			}
+
+			<section class="tyylitesti__loading" data-step="6" aria-live="polite" hidden>
+				<div class="tyylitesti__loader" aria-hidden="true">
+					{
+						loaderCells.map((cell) => (
+							<span class="tyylitesti__loader-cell">
+								<span
+									class:list={['tyylitesti__loader-fill', {'is-round': cell.round}]}
+									style={`background:${cell.color};animation-delay:${cell.delay}ms`}
+								/>
+							</span>
+						))
+					}
+				</div>
+				<p class="tyylitesti__loading-text">Kootaan sun <em>maailmaa</em>…</p>
+			</section>
+
+			<section class="tyylitesti__result" data-step="7" hidden>
+				<div class="tyylitesti__result-section tyylitesti__result-head">
+					<p class="tyylitesti__section-title">Tämä tunnelma tukee sun yrityksen persoonaa</p>
+					<h1 class="tyylitesti__result-title"><span data-world></span></h1>
+				</div>
+
+				<div class="tyylitesti__result-section">
+					<h2 class="tyylitesti__section-title">Näin sun ihanneasiakas sen kokee</h2>
+					<p class="tyylitesti__italic" data-experience></p>
+				</div>
+
+				<div class="tyylitesti__result-section">
+					<h2 class="tyylitesti__section-title">Sulle sopii</h2>
+
+					<div class="tyylitesti__fit">
+						<h3 class="tyylitesti__fit-label">Värit</h3>
+						<ul class="tyylitesti__palette" data-palette></ul>
+						<p class="tyylitesti__italic">Esimerkiksi nämä värit sopisivat sun sivujen tunnelmaan</p>
+					</div>
+					<div class="tyylitesti__fit">
+						<h3 class="tyylitesti__fit-label">Muodot</h3>
+						<p class="tyylitesti__italic" data-shapes></p>
+					</div>
+					<div class="tyylitesti__fit">
+						<h3 class="tyylitesti__fit-label">Kuvat</h3>
+						<p class="tyylitesti__italic" data-images></p>
+					</div>
+				</div>
+
+				<div class="tyylitesti__invite">
+					<p class="tyylitesti__dm">
+						Vastaako sun nykyiset sivut sitä, mitä sä haluut sun ihanneasiakkaan kokevan? Laita mulle DM <strong data-keyword-inline></strong> ja linkki
+						sun sivuihin, niin mä katon ne niin kuin sun asiakas ne näkee. Kerron 3 asiaa, joilla sun osaaminen ja
+						persoona näkyy sivuilla vielä paremmin.
+					</p>
+					<p class="tyylitesti__small">Ilmaista, ei sitoumusta.</p>
+					<div class="tyylitesti__keyword-row">
+						<span class="tyylitesti__keyword" data-keyword></span>
+						<button type="button" class="tyylitesti__copy" aria-live="polite" data-copy>Kopioi</button>
+					</div>
+					<div class="tyylitesti__invite-actions">
+						<a class="tyylitesti__button tyylitesti__button--link" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+							Avaa @studiomaura.design
+						</a>
+						<button type="button" class="tyylitesti__restart" data-restart>Tee testi uudestaan</button>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</MainLayout>
+
+<script>
+	import {KEYWORDS, QUESTION_COUNT, RESULTS, scoreAnswers} from '../lib/tyylitesti';
+	import type {Answers, StyleKey} from '../lib/tyylitesti';
+
+	const STEP_INTRO = 0;
+	const STEP_LOADING = 6;
+	const STEP_RESULT = 7;
+	const AUTO_ADVANCE_MS = 550;
+	const LOADING_MS = 2200;
+	const LOADING_MS_REDUCED = 600;
+	const COPIED_MS = 1800;
+	const IMAGE_QUESTION = 4;
+
+	const root = document.querySelector<HTMLElement>('[data-tyylitesti]');
+	if (root) initQuiz(root);
+
+	function initQuiz(root: HTMLElement) {
+		const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+		const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+		const progress = root.querySelector<HTMLElement>('[data-progress]')!;
+		const progressLabel = root.querySelector<HTMLElement>('[data-progress-label]')!;
+		const progressBar = root.querySelector<HTMLElement>('[data-progress-bar]')!;
+		const progressFill = root.querySelector<HTMLElement>('[data-progress-fill]')!;
+		const copyButton = root.querySelector<HTMLButtonElement>('[data-copy]')!;
+		const keywordEl = root.querySelector<HTMLElement>('[data-keyword]')!;
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+		let step = STEP_INTRO;
+		let answers: Answers = {};
+		let autoTimer: number | undefined;
+		let loadingTimer: number | undefined;
+		let copiedTimer: number | undefined;
+		let trackedResult = '';
+
+		const clearTimers = () => {
+			window.clearTimeout(autoTimer);
+			window.clearTimeout(loadingTimer);
+		};
+
+		const answeredUpTo = () => {
+			let count = 0;
+			while (count < QUESTION_COUNT && answers[count + 1]) count++;
+			return count;
+		};
+
+		/** Historiasta tuleva askel voi olla sellainen, johon ei ole vielä vastauksia. */
+		const clampStep = (target: number) => {
+			const answered = answeredUpTo();
+			return answered === QUESTION_COUNT ? target : Math.min(target, answered + 1);
+		};
+
+		const animateIn = (direction: number) => {
+			if (reducedMotion.matches) return;
+			stage.animate(
+				[
+					{opacity: 0, transform: `translateX(${18 * direction}px)`},
+					{opacity: 1, transform: 'none'},
+				],
+				{duration: 320, easing: 'cubic-bezier(.2,.7,.2,1)'},
+			);
+		};
+
+		const resetViewport = () => {
+			// Juuren oma yläpadding varaa tilan sivuston kiinteälle headerille.
+			const top = root.getBoundingClientRect().top + window.scrollY;
+			window.scrollTo({top: Math.max(0, top), behavior: 'instant'});
+			stage.focus({preventScroll: true});
+		};
+
+		const syncSelection = () => {
+			steps.forEach((section) => {
+				const question = Number(section.dataset.step);
+				const picked = answers[question];
+				section.querySelector('[data-image-grid]')?.classList.toggle('has-pick', Boolean(picked));
+				section.querySelectorAll<HTMLElement>('[data-pick]').forEach((button) => {
+					button.setAttribute('aria-pressed', String(button.dataset.pick === picked));
+				});
+			});
+		};
+
+		const preloadImages = () => {
+			root
+				.querySelectorAll<HTMLImageElement>(`[data-step="${IMAGE_QUESTION}"] img`)
+				.forEach((image) => {
+					image.loading = 'eager';
+				});
+		};
+
+		const renderResult = () => {
+			const key: StyleKey = scoreAnswers(answers);
+
+			setCopied(false);
+
+			// Sama vastausyhdistelmä rakennetaan ja lasketaan vain kerran, vaikka selaimessa palattaisiin takaisin.
+			const answerKey = JSON.stringify(answers);
+			if (trackedResult !== answerKey) {
+				trackedResult = answerKey;
+
+				const result = RESULTS[key];
+				const setText = (selector: string, text: string) => {
+					root.querySelector<HTMLElement>(selector)!.textContent = text;
+				};
+				setText('[data-world]', result.world);
+				setText('[data-experience]', result.experience);
+				setText('[data-shapes]', result.shapes);
+				setText('[data-images]', result.images);
+				setText('[data-keyword-inline]', KEYWORDS[key]);
+				keywordEl.textContent = KEYWORDS[key];
+
+				root.querySelector<HTMLElement>('[data-palette]')!.replaceChildren(
+					...result.palette.map(({name, hex}) => {
+						const item = document.createElement('li');
+						const ball = document.createElement('span');
+						ball.className = 'tyylitesti__palette-ball';
+						ball.style.background = hex;
+						item.append(ball, name);
+						return item;
+					}),
+				);
+
+				const w = window as unknown as {dataLayer?: unknown[]};
+				w.dataLayer = w.dataLayer || [];
+				w.dataLayer.push({event: 'tyylitesti_valmis', tyyli: key});
+			}
+		};
+
+		const render = (direction: number) => {
+			steps.forEach((section) => {
+				section.hidden = Number(section.dataset.step) !== step;
+			});
+
+			const isQuestion = step >= 1 && step <= QUESTION_COUNT;
+			progress.hidden = !isQuestion;
+			root.classList.toggle('is-result', step === STEP_RESULT);
+			if (isQuestion) {
+				progressLabel.textContent = `${step}/${QUESTION_COUNT}`;
+				progressBar.setAttribute('aria-valuenow', String(step));
+				progressFill.style.width = `${step * 20}%`;
+			}
+			if (step >= IMAGE_QUESTION - 1) preloadImages();
+
+			syncSelection();
+			if (step === STEP_RESULT) renderResult();
+			if (step === STEP_LOADING) {
+				loadingTimer = window.setTimeout(
+					() => {
+						step = STEP_RESULT;
+						// Latausnäkymää ei jätetä historiaan, jotta takaisin vie kysymykseen 5.
+						history.replaceState({tyylitestiStep: step}, '');
+						render(1);
+					},
+					reducedMotion.matches ? LOADING_MS_REDUCED : LOADING_MS,
+				);
+			}
+
+			resetViewport();
+			animateIn(direction);
+		};
+
+		const go = (next: number) => {
+			clearTimers();
+			const direction = next >= step ? 1 : -1;
+			step = next;
+			history.pushState({tyylitestiStep: step}, '');
+			render(direction);
+		};
+
+		function setCopied(copied: boolean) {
+			window.clearTimeout(copiedTimer);
+			copyButton.textContent = copied ? 'Kopioitu!' : 'Kopioi';
+			if (copied) copiedTimer = window.setTimeout(() => setCopied(false), COPIED_MS);
+		}
+
+		const copyKeyword = async () => {
+			const keyword = keywordEl.textContent ?? '';
+			try {
+				await navigator.clipboard.writeText(keyword);
+				setCopied(true);
+			} catch {
+				// Kopiointi ei onnistunut: valitaan sana, jotta sen voi kopioida käsin.
+				const selection = window.getSelection();
+				const range = document.createRange();
+				range.selectNodeContents(keywordEl);
+				selection?.removeAllRanges();
+				selection?.addRange(range);
+			}
+		};
+
+		root.addEventListener('click', (event) => {
+			const target = event.target as HTMLElement;
+
+			const pick = target.closest<HTMLElement>('[data-pick]');
+			if (pick) {
+				const question = step;
+				answers[question] = pick.dataset.pick as StyleKey;
+				syncSelection();
+				window.clearTimeout(autoTimer);
+				autoTimer = window.setTimeout(() => {
+					if (step === question) go(question + 1);
+				}, AUTO_ADVANCE_MS);
+				return;
+			}
+
+			if (target.closest('[data-start]')) go(1);
+			else if (target.closest('[data-back]')) {
+				clearTimers();
+				history.back();
+			} else if (target.closest('[data-copy]')) void copyKeyword();
+			else if (target.closest('[data-restart]')) {
+				answers = {};
+				trackedResult = '';
+				go(STEP_INTRO);
+			}
+		});
+
+		window.addEventListener('popstate', (event) => {
+			const requested = (event.state as {tyylitestiStep?: number} | null)?.tyylitestiStep ?? STEP_INTRO;
+			const next = clampStep(requested);
+			const direction = next >= step ? 1 : -1;
+			clearTimers();
+			step = next;
+			if (next !== requested) history.replaceState({tyylitestiStep: step}, '');
+			render(direction);
+		});
+
+		history.replaceState({tyylitestiStep: STEP_INTRO}, '');
+	}
+</script>

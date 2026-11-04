@@ -1,0 +1,651 @@
+/* Tyylitestin tyylit. Tuodaan vain sivulla /tyylitesti, ei global.css:ssä, jotta
+   muiden sivujen inline-CSS ei kasva. Testin värit ovat handoffin mukaiset ja
+   rajattu .tyylitesti-juureen; ne eivät kuulu sivuston tokeneihin. */
+
+@font-face {
+  font-family: 'DM Sans Variable';
+  src: url('@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2') format('woff2-variations');
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
+/* Sivuston Fraunces-tiedostojen kursiivissa on koukeroiset WONK-kirjaimet (esim. h ja k).
+   Prototyypin kursiivi vaatii full-tiedoston, jossa WONK-akselin voi kytkeä pois. */
+@font-face {
+  font-family: 'Tyylitesti Fraunces';
+  src: url('@fontsource-variable/fraunces/files/fraunces-latin-standard-normal.woff2') format('woff2-variations');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tyylitesti Fraunces';
+  src: url('@fontsource-variable/fraunces/files/fraunces-latin-full-italic.woff2') format('woff2-variations');
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+.tyylitesti {
+  --tt-cream: #fffbf5;
+  --tt-surface: #fff7ec;
+  --tt-text: #3d302b;
+  --tt-wine: #570301;
+  --tt-blue: #cee0fb;
+  --tt-pink: #fcd0cd;
+  --tt-olive: #d1c360;
+  --tt-line-soft: rgb(61 48 43 / 0.15);
+  --tt-line: rgb(61 48 43 / 0.25);
+  --tt-line-strong: rgb(61 48 43 / 0.35);
+  --tt-heading: 'Tyylitesti Fraunces', serif;
+  --tt-body: 'DM Sans Variable', sans-serif;
+  /* Sivuston kiinteän headerin korkeus reunaviivan kanssa. */
+  --tyylitesti-header-height: 73px;
+
+  container-type: inline-size;
+  min-height: 100vh;
+  padding-top: var(--tyylitesti-header-height);
+  background-color: var(--tt-cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 .5H48M.5 0V48' fill='none' stroke='%23CEE0FB' stroke-dasharray='3 3'/%3E%3C/svg%3E");
+  color: var(--tt-text);
+  font-family: var(--tt-body);
+  font-size: 16px;
+  line-height: 1.6;
+  font-variation-settings: 'WONK' 0, 'SOFT' 0;
+}
+
+/* Sama raja kuin sivuston headerissa, jossa näkyvä header vaihtuu työpöytäversioon. */
+@media (min-width: 64rem) {
+  .tyylitesti {
+    --tyylitesti-header-height: 98px;
+  }
+}
+
+.tyylitesti [hidden] {
+  display: none !important;
+}
+
+.tyylitesti h1,
+.tyylitesti h2,
+.tyylitesti h3,
+.tyylitesti h4 {
+  margin: 0;
+  color: var(--tt-text);
+  font-variation-settings: inherit;
+}
+
+.tyylitesti em {
+  font-style: italic;
+}
+
+.tyylitesti p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.tyylitesti button {
+  font-family: inherit;
+  color: var(--tt-text);
+  cursor: pointer;
+}
+
+.tyylitesti a {
+  color: var(--tt-wine);
+}
+
+.tyylitesti a:hover {
+  color: var(--tt-text);
+}
+
+.tyylitesti :is(button, a, input):focus-visible {
+  outline: 2px solid var(--tt-wine);
+  outline-offset: 2px;
+}
+
+/* Edistyminen */
+.tyylitesti__progress {
+  position: sticky;
+  top: var(--tyylitesti-header-height);
+  z-index: 2;
+  background: var(--tt-cream);
+  border-bottom: 1px solid var(--tt-line-soft);
+}
+
+.tyylitesti__progress-row {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 10px 24px;
+}
+
+.tyylitesti__progress-label {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tyylitesti__progress-track {
+  height: 2px;
+  background: rgb(61 48 43 / 0.1);
+}
+
+.tyylitesti__progress-fill {
+  width: 20%;
+  height: 2px;
+  background: var(--tt-wine);
+  transition: width 0.4s ease;
+}
+
+.tyylitesti__stage {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  outline: none;
+}
+
+/* Yhteiset */
+.tyylitesti__label {
+  font-family: var(--tt-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tyylitesti .tyylitesti__label--wine {
+  color: var(--tt-wine);
+}
+
+.tyylitesti__body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.tyylitesti__card {
+  border: 1px solid var(--tt-line);
+  border-radius: 14px;
+  background: var(--tt-surface);
+}
+
+.tyylitesti__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 36px;
+  border: 1px solid var(--tt-text);
+  border-radius: 999px;
+  background: var(--tt-cream);
+  font-size: 17px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.tyylitesti__button:hover {
+  background: var(--tt-pink);
+}
+
+.tyylitesti .tyylitesti__button--link {
+  min-height: 54px;
+  padding: 0 30px;
+  color: var(--tt-text);
+  font-size: 16px;
+  text-decoration: none;
+}
+
+/* Intro */
+.tyylitesti__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 680px;
+  margin: 0 auto;
+  padding-top: 24px;
+}
+
+.tyylitesti .tyylitesti__title {
+  font-family: var(--tt-heading);
+  font-weight: 400;
+  font-size: clamp(42px, 8cqi, 76px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.tyylitesti .tyylitesti__lead {
+  font-size: clamp(18px, 2.4cqi, 21px);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.tyylitesti__gets {
+  padding: 22px 24px;
+}
+
+.tyylitesti__gets .tyylitesti__label {
+  margin-bottom: 14px;
+}
+
+.tyylitesti__gets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.tyylitesti__gets-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.tyylitesti__gets-list span {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--tt-text);
+  border-radius: 50%;
+}
+
+.tyylitesti__start {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tyylitesti__hint {
+  padding-left: 4px;
+  font-size: 14px;
+}
+
+/* Kysymykset */
+.tyylitesti__question {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tyylitesti__back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--tt-line-strong);
+  border-radius: 999px;
+  background: var(--tt-cream);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tyylitesti__back:hover {
+  background: var(--tt-blue);
+}
+
+.tyylitesti .tyylitesti__question-title {
+  font-family: var(--tt-heading);
+  font-weight: 400;
+  font-size: clamp(32px, 5.4cqi, 50px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.tyylitesti__options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 640px;
+}
+
+.tyylitesti__option {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 16px 20px;
+  border: 1px solid rgb(61 48 43 / 0.3);
+  border-radius: 14px;
+  background: var(--tt-surface);
+  font-size: 17px;
+  line-height: 1.4;
+  text-align: left;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.tyylitesti__option:hover,
+.tyylitesti__option[aria-pressed='true'] {
+  border-color: var(--tt-text);
+  background: var(--tt-blue);
+}
+
+.tyylitesti__image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 640px;
+}
+
+.tyylitesti__image-option {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgb(61 48 43 / 0.3);
+  border-radius: 14px;
+  background: var(--tt-surface);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.tyylitesti__image-option img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tyylitesti__image-option:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.tyylitesti__image-grid.has-pick .tyylitesti__image-option[aria-pressed='false'] {
+  opacity: 0.55;
+}
+
+.tyylitesti__image-grid.has-pick .tyylitesti__image-option[aria-pressed='false']:hover {
+  opacity: 1;
+}
+
+.tyylitesti__image-option[aria-pressed='true'] {
+  border: 2px solid var(--tt-text);
+}
+
+.tyylitesti__image-name {
+  display: none;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 6px 8px;
+  border: 1px solid rgb(61 48 43 / 0.2);
+  border-radius: 999px;
+  background: var(--tt-cream);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.tyylitesti__image-option[aria-pressed='true'] .tyylitesti__image-name {
+  display: block;
+}
+
+/* Lataus */
+.tyylitesti__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.tyylitesti__loader {
+  display: grid;
+  grid-template-columns: repeat(4, 40px);
+  background: var(--tt-cream);
+}
+
+.tyylitesti__loader-cell {
+  display: block;
+  width: 40px;
+  height: 40px;
+  padding: 3px;
+  border: 1px dashed #9db8e0;
+}
+
+.tyylitesti__loader-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--tt-line);
+  border-radius: 4px;
+  opacity: 0;
+  animation: tyylitesti-fill 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.tyylitesti__loader-fill.is-round {
+  border-radius: 50%;
+}
+
+@keyframes tyylitesti-fill {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tyylitesti .tyylitesti__loading-text {
+  font-family: var(--tt-heading);
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+/* Tulos */
+.tyylitesti.is-result {
+  background-image: none;
+}
+
+.tyylitesti__result {
+  display: flex;
+  flex-direction: column;
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 24px;
+}
+
+/* Osioiden pieni otsikko ja sen alle tuleva lyhyt viiva. */
+.tyylitesti .tyylitesti__section-title {
+  font-family: var(--tt-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--tt-wine);
+}
+
+.tyylitesti .tyylitesti__section-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  margin-top: 10px;
+  border-top: 1px solid var(--tt-wine);
+}
+
+.tyylitesti__result-section {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 44px 0;
+  border-top: 1px solid var(--tt-line);
+}
+
+.tyylitesti__result-head {
+  padding-top: 0;
+  border-top: none;
+}
+
+.tyylitesti .tyylitesti__result-title {
+  font-family: var(--tt-heading);
+  font-weight: 400;
+  font-size: clamp(40px, 6cqi, 60px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.tyylitesti .tyylitesti__italic {
+  font-family: var(--tt-heading);
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.tyylitesti__fit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tyylitesti__fit + .tyylitesti__fit {
+  margin-top: 10px;
+}
+
+.tyylitesti .tyylitesti__fit-label {
+  font-family: var(--tt-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.tyylitesti__palette {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 4px 0 6px;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.tyylitesti__palette li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tyylitesti__palette-ball {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--tt-line-soft);
+  border-radius: 50%;
+}
+
+.tyylitesti__invite {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 24px;
+  background: var(--tt-pink);
+}
+
+.tyylitesti .tyylitesti__dm {
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.tyylitesti__dm strong {
+  color: var(--tt-wine);
+  font-weight: 600;
+}
+
+.tyylitesti .tyylitesti__small {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tyylitesti__keyword-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.tyylitesti__keyword {
+  padding: 10px 22px;
+  border: 1px dashed var(--tt-wine);
+  border-radius: 10px;
+  background: var(--tt-cream);
+  color: var(--tt-wine);
+  font-family: var(--tt-heading);
+  font-size: clamp(30px, 5cqi, 40px);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  user-select: all;
+}
+
+.tyylitesti__copy {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--tt-line-strong);
+  border-radius: 999px;
+  background: var(--tt-cream);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tyylitesti__copy:hover {
+  background: var(--tt-blue);
+}
+
+.tyylitesti__invite-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+
+.tyylitesti__restart {
+  min-height: 44px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.tyylitesti .tyylitesti__restart:hover {
+  color: var(--tt-wine);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tyylitesti *,
+  .tyylitesti *::before,
+  .tyylitesti *::after {
+    transition: none !important;
+  }
+
+  .tyylitesti__loader-fill {
+    animation: none;
+    opacity: 1;
+  }
+
+  .tyylitesti__image-option:hover {
+    transform: none;
+  }
+}
