@@ -224,49 +224,11 @@
   line-height: 1.45;
 }
 
-.tyylitesti__gets {
-  padding: 22px 24px;
-}
-
-.tyylitesti__gets .tyylitesti__label {
-  margin-bottom: 14px;
-}
-
-.tyylitesti__gets-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 16px;
-  line-height: 1.45;
-}
-
-.tyylitesti__gets-list li {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.tyylitesti__gets-list span {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border: 1px solid var(--tt-text);
-  border-radius: 50%;
-}
-
 .tyylitesti__start {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-}
-
-.tyylitesti__hint {
-  padding-left: 4px;
-  font-size: 14px;
 }
 
 /* Kysymykset */
