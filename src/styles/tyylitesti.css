@@ -191,14 +191,6 @@
   background: var(--tt-pink);
 }
 
-.tyylitesti .tyylitesti__button--link {
-  min-height: 54px;
-  padding: 0 30px;
-  color: var(--tt-text);
-  font-size: 16px;
-  text-decoration: none;
-}
-
 /* Intro */
 .tyylitesti__intro {
   display: flex;
@@ -609,68 +601,9 @@
   border-radius: 50%;
 }
 
-.tyylitesti__invite {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 28px 24px;
-  background: var(--tt-pink);
-}
-
-.tyylitesti .tyylitesti__dm {
-  font-size: 17px;
-  line-height: 1.55;
-}
-
-.tyylitesti__dm strong {
-  color: var(--tt-wine);
-  font-weight: 600;
-}
-
 .tyylitesti .tyylitesti__small {
   font-size: 14px;
   line-height: 1.5;
-}
-
-.tyylitesti__keyword-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-}
-
-.tyylitesti__keyword {
-  padding: 10px 22px;
-  border: 1px dashed var(--tt-wine);
-  border-radius: 10px;
-  background: var(--tt-cream);
-  color: var(--tt-wine);
-  font-family: var(--tt-heading);
-  font-size: clamp(30px, 5cqi, 40px);
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  user-select: all;
-}
-
-.tyylitesti__copy {
-  min-height: 44px;
-  padding: 0 20px;
-  border: 1px solid var(--tt-line-strong);
-  border-radius: 999px;
-  background: var(--tt-cream);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.tyylitesti__copy:hover {
-  background: var(--tt-blue);
-}
-
-.tyylitesti__invite-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 24px;
 }
 
 .tyylitesti__restart {
@@ -685,19 +618,6 @@
 
 .tyylitesti .tyylitesti__restart:hover {
   color: var(--tt-wine);
-}
-
-/* Puhelimella koodisana ja Kopioi mahtuvat samalle riville, ja napin teksti pysyy yhdellä rivillä. */
-@media (max-width: 29.99rem) {
-  .tyylitesti__keyword {
-    padding: 10px 14px;
-  }
-
-  .tyylitesti .tyylitesti__button--link {
-    width: 100%;
-    padding: 0 16px;
-    text-align: center;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

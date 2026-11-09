@@ -234,25 +234,6 @@ const content = {
 						<p class="tyylitesti__italic" data-images></p>
 					</div>
 				</div>
-
-				<div class="tyylitesti__invite">
-					<p class="tyylitesti__dm">Sun sivujesi herättämä tunne voi ratkaista, varaako ihanneasiakas ajan.</p>
-					<p class="tyylitesti__dm">
-						Lähetä mulle DM: <strong data-keyword-inline></strong> + linkki sun someen tai kotisivuille. Kerron 3 kohtaa, joilla
-						saat palvelukokemuksesi tunnelman välittymään jo ennen ajanvarausta.
-					</p>
-					<p class="tyylitesti__small">Maksutta, ei sitoumusta.</p>
-					<div class="tyylitesti__keyword-row">
-						<span class="tyylitesti__keyword" data-keyword></span>
-						<button type="button" class="tyylitesti__copy" aria-live="polite" data-copy>Kopioi</button>
-					</div>
-					<div class="tyylitesti__invite-actions">
-						<a class="tyylitesti__button tyylitesti__button--link" href={INSTAGRAM_URL} target="_blank" rel="noopener">
-							<span>Lähetä <span data-keyword-button></span> Instagramissa</span>
-						</a>
-						<button type="button" class="tyylitesti__restart" data-restart>Tee testi uudestaan</button>
-					</div>
-				</div>
 			</section>
 		</div>
 	</div>
@@ -271,7 +252,6 @@ const content = {
 	const AUTO_ADVANCE_MS = 550;
 	const LOADING_MS = 2200;
 	const LOADING_MS_REDUCED = 600;
-	const COPIED_MS = 1800;
 	const IMAGE_QUESTION = 4;
 
 	const root = document.querySelector<HTMLElement>('[data-tyylitesti]');
@@ -284,8 +264,6 @@ const content = {
 		const progressLabel = root.querySelector<HTMLElement>('[data-progress-label]')!;
 		const progressBar = root.querySelector<HTMLElement>('[data-progress-bar]')!;
 		const progressFill = root.querySelector<HTMLElement>('[data-progress-fill]')!;
-		const copyButton = root.querySelector<HTMLButtonElement>('[data-copy]')!;
-		const keywordEl = root.querySelector<HTMLElement>('[data-keyword]')!;
 		const emailForm = root.querySelector<HTMLFormElement>('[data-email-form]')!;
 		const emailInput = emailForm.elements.namedItem('email') as HTMLInputElement;
 		const companyInput = emailForm.elements.namedItem('companyName') as HTMLInputElement;
@@ -296,7 +274,6 @@ const content = {
 		let answers: Answers = {};
 		let autoTimer: number | undefined;
 		let loadingTimer: number | undefined;
-		let copiedTimer: number | undefined;
 		let trackedResult = '';
 		// Tulokseen pääsee vasta, kun lomake on lähetetty näillä vastauksilla.
 		let formSubmitted = false;
@@ -417,8 +394,6 @@ const content = {
 		const renderResult = () => {
 			const key: StyleKey = scoreAnswers(answers);
 
-			setCopied(false);
-
 			// Sama vastausyhdistelmä rakennetaan ja lasketaan vain kerran, vaikka selaimessa palattaisiin takaisin.
 			const answerKey = JSON.stringify(answers);
 			if (trackedResult !== answerKey) {
@@ -432,9 +407,6 @@ const content = {
 				setText('[data-experience]', result.experience);
 				setText('[data-shapes]', result.shapes);
 				setText('[data-images]', result.images);
-				setText('[data-keyword-inline]', KEYWORDS[key]);
-				setText('[data-keyword-button]', KEYWORDS[key]);
-				keywordEl.textContent = KEYWORDS[key];
 
 				root.querySelector<HTMLElement>('[data-palette]')!.replaceChildren(
 					...result.palette.map(({name, hex}) => {
@@ -494,27 +466,6 @@ const content = {
 			render(direction);
 		};
 
-		function setCopied(copied: boolean) {
-			window.clearTimeout(copiedTimer);
-			copyButton.textContent = copied ? 'Kopioitu!' : 'Kopioi';
-			if (copied) copiedTimer = window.setTimeout(() => setCopied(false), COPIED_MS);
-		}
-
-		const copyKeyword = async () => {
-			const keyword = keywordEl.textContent ?? '';
-			try {
-				await navigator.clipboard.writeText(keyword);
-				setCopied(true);
-			} catch {
-				// Kopiointi ei onnistunut: valitaan sana, jotta sen voi kopioida käsin.
-				const selection = window.getSelection();
-				const range = document.createRange();
-				range.selectNodeContents(keywordEl);
-				selection?.removeAllRanges();
-				selection?.addRange(range);
-			}
-		};
-
 		root.addEventListener('click', (event) => {
 			const target = event.target as HTMLElement;
 
@@ -535,16 +486,6 @@ const content = {
 			else if (target.closest('[data-back]')) {
 				clearTimers();
 				history.back();
-			} else if (target.closest('[data-copy]')) void copyKeyword();
-			else if (target.closest('[data-restart]')) {
-				answers = {};
-				trackedResult = '';
-				formSubmitted = false;
-				lastSent = '';
-				emailForm.reset();
-				showFieldError(emailInput, false);
-				showFieldError(companyInput, false);
-				go(STEP_INTRO);
 			}
 		});
 
