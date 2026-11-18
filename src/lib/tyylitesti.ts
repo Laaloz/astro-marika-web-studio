@@ -160,77 +160,122 @@ export function isValidEmail(email: string): boolean {
 }
 
 export interface PaletteColor {
-	/** Pitkissä nimissä on pehmeä tavuviiva (\u00AD), jotta nimi mahtuu pallon alle puhelimella. */
+	/** Pitkissä nimissä on pehmeä tavuviiva (\u00AD), jotta nimi mahtuu värilaattaan puhelimella. */
 	name: string;
 	hex: string;
+	/** Näkyy värin nimen perässä: "Helmi – pehmeä ja vaalea pohjasävy". */
+	description: string;
 }
 
 export interface WorldResult {
 	world: string;
-	/** Kappale osiossa "Näin sun ihanneasiakas sen kokee". */
-	experience: string;
-	/** Esimerkkivärit, näkyvät vain väripalloina. */
+	/** Rivi maailman nimen alla. */
+	tagline: string;
+	/** Osio "Millaisen mielikuvan välität?". */
+	impression: string;
+	/** Esimerkkivärit, näkyvät vain värilaattoina. */
 	palette: [PaletteColor, PaletteColor, PaletteColor, PaletteColor, PaletteColor];
+	/** Kappale väripaletin alla. */
+	paletteNote: string;
+	typography: string;
 	shapes: string;
 	images: string;
+	/** Osio "Kokeile tätä omilla nettisivuillasi". */
+	tryThis: string;
 }
 
 export const RESULTS: Record<StyleKey, WorldResult> = {
 	A: {
 		world: 'Leikkisä ja luova',
-		experience:
-			'Sun sivuista välittyy persoonallisuus ja luovuus. Ne kertovat, että yritykselläsi on oma tapansa tehdä asioita, eikä kaikkea tarvitse tehdä samalla tavalla kuin muut.',
+		tagline: 'persoonallisuus, luovuus ja rohkeus tehdä omalla tavalla.',
+		impression:
+			'Sun sivuista välittyy persoonallisuus ja luovuus. Ne kertovat, että yritykselläsi on oma tapansa tehdä asioita, eikä kaiken tarvitse näyttää samalta kuin muilla. Uskallat kokeilla, leikitellä ja tuoda omaa luonnettasi esiin.',
 		palette: [
-			{name: 'taivas', hex: '#99B7F5'},
-			{name: 'metsä', hex: '#267F53'},
-			{name: 'appelsiini', hex: '#F5793B'},
-			{name: 'karkki', hex: '#F296BD'},
-			{name: 'aurinko', hex: '#FCCA59'},
+			{name: 'Taivas', hex: '#99B7F5', description: 'raikas sininen'},
+			{name: 'Metsä', hex: '#267F53', description: 'luonnonläheinen vihreä'},
+			{name: 'Appel\u00ADsiini', hex: '#F5793B', description: 'energinen oranssi'},
+			{name: 'Karkki', hex: '#F296BD', description: 'pehmeä pinkki'},
+			{name: 'Aurinko', hex: '#FCCA59', description: 'lämmin keltainen'},
 		],
-		shapes: 'vapaat ja yllättävät, kuten aallot, kiemurat ja epäsymmetria',
-		images: 'ilmeitä, liikettä, värejä ja hauskoja yksityiskohtia',
+		paletteNote:
+			'Näillä väreillä voit tuoda ilmeeseen energiaa, iloa ja persoonallisuutta. Kokeile rohkeasti värien yhdistämistä, mutta anna kokonaisuudelle myös selkeä rakenne.',
+		typography:
+			'Suosi persoonallisia, pyöreitä ja hieman yllätyksellisiä fontteja. Otsikoissa voit leikitellä erilaisilla kirjaintyyleillä ja tekstikokoilla. Leipätekstissä kannattaa kuitenkin säilyttää selkeys ja helppolukuisuus.',
+		shapes:
+			'Vapaat ja yllättävät muodot, kuten aallot, kaarevat linjat ja epäsymmetriset sommittelut sopivat tähän tyyliin. Kokeile myös pieniä graafisia yksityiskohtia ja leikkisiä elementtejä.',
+		images:
+			'Ilmeitä, liikettä, värejä ja hauskoja yksityiskohtia. Kuvissa saa näkyä elämää, persoonallisuutta ja aitoja tilanteita. Älä pelkää poiketa perinteisestä kuvamaailmasta.',
+		tryThis:
+			'Valitse yksi tai kaksi rohkeampaa tehosteväriä ja anna niiden näkyä otsikoissa, painikkeissa tai muissa yksityiskohdissa. Kokeile erilaisia asetteluja ja tuo mukaan jotain yllättävää, joka tekee sivuista sinun näköisesi.',
 	},
 	B: {
 		world: 'Maanläheinen ja ajaton',
-		experience:
-			'Sun sivuista välittyy lämpö ja aitous. Ne kertovat, että yrityksesi on helposti lähestyttävä ja että tekemisessäsi arvostetaan laatua ja huolellisuutta.',
+		tagline: 'lämpö, aitous ja huolellisuus.',
+		impression:
+			'Sun sivuista välittyy lämpö ja aitous. Ne kertovat, että yrityksesi on helposti lähestyttävä ja että tekemisessäsi arvostetaan laatua ja huolellisuutta. Ilmeessä saa näkyä inhimillisyys ja pienet yksityiskohdat.',
 		palette: [
-			{name: 'voikreemi', hex: '#EDE2D0'},
-			{name: 'vehnä', hex: '#E9D2A9'},
-			{name: 'aprikoosi', hex: '#BB6A57'},
-			{name: 'mokka', hex: '#A57865'},
-			{name: 'kaakao', hex: '#7B5747'},
+			{name: 'Voi\u00ADkreemi', hex: '#EDE2D0', description: 'lämmin ja pehmeä vaalea sävy'},
+			{name: 'Vehnä', hex: '#E9D2A9', description: 'luonnollinen hiekan sävy'},
+			{name: 'Apri\u00ADkoosi', hex: '#BB6A57', description: 'lämmin persikkainen sävy'},
+			{name: 'Mokka', hex: '#A57865', description: 'pehmeä ruskea'},
+			{name: 'Kaakao', hex: '#7B5747', description: 'syvä tummanruskea'},
 		],
-		shapes: 'pehmeät ja pyöreät',
-		images: 'luonnonvalo, aidot hetket, sä työssä ja sun käsien jälki',
+		paletteNote:
+			'Näillä väreillä voit rakentaa lämpimän ja luonnollisen kokonaisuuden. Yhdistä vaaleita sävyjä maanläheisiin ruskeisiin ja käytä lämpimämpiä sävyjä tuomaan ilmeeseen elävyyttä.',
+		typography:
+			'Suosi pehmeitä, klassisia ja helposti lähestyttäviä fontteja. Otsikoissa voi olla hieman persoonallista ja perinteistä kirjaintyyliä, joka tuo ilmeeseen lämpöä. Leipätekstin kannattaa olla selkeää ja vaivatonta lukea.',
+		shapes:
+			'Pehmeät ja pyöreät muodot, luonnolliset linjat ja maltilliset yksityiskohdat sopivat tähän tyyliin. Voit kokeilla myös kevyitä tekstuureja ja käsintehdyn tuntua tuovia elementtejä.',
+		images:
+			'Luonnonvalo, aidot hetket, materiaalien pinnat ja käsillä tekeminen. Suosi kuvia, joissa näkyy luonnollisuutta ja lämpöä. Kuvien ei tarvitse olla liian viimeisteltyjä – pieni rosoisuus voi tehdä niistä entistä kiinnostavampia.',
+		tryThis:
+			'Yhdistä lämmin vaalea tausta, ruskeat yksityiskohdat ja aidot valokuvat. Voit tuoda tunnelmaa sivuille myös materiaalien tekstuureilla ja pehmeillä muodoilla. Anna kuvien ja tekstien kertoa yrityksesi tarinaa.',
 	},
 	C: {
 		world: 'Moderni ja rohkea',
-		experience:
-			'Sun sivuista välittyy itsevarmuus ja vahva oma näkemys. Ne kertovat, että tiedät mitä teet etkä pelkää erottua joukosta.',
+		tagline: 'itsevarmuus, vahvuus ja vaikuttavuus.',
+		impression:
+			'Sun sivuista välittyy itsevarmuus ja vahva oma näkemys. Ne kertovat, että tiedät mitä teet etkä pelkää erottua joukosta. Uskallat ottaa tilaa ja näyttää yrityksesi persoonan sellaisena kuin se on.',
 		palette: [
-			{name: 'musta', hex: '#030303'},
-			{name: 'yön\u00ADsininen', hex: '#131936'},
-			{name: 'viinin\u00ADpunainen', hex: '#390007'},
-			{name: 'luun\u00ADvalkoinen', hex: '#D6D1C0'},
-			{name: 'grafiitti', hex: '#515159'},
+			{name: 'Musta', hex: '#030303', description: 'vahva ja ajaton pohjasävy'},
+			{name: 'Yön\u00ADsininen', hex: '#131936', description: 'syvä ja tyylikäs sininen'},
+			{name: 'Viinin\u00ADpunainen', hex: '#390007', description: 'intensiivinen tehosteväri'},
+			{name: 'Luun\u00ADvalkoinen', hex: '#D6D1C0', description: 'pehmeä vaalea vastapaino'},
+			{name: 'Grafiitti', hex: '#515159', description: 'tumma ja hillitty harmaa'},
 		],
-		shapes: 'selkeät ja suorat, terävät kulmat ja isot elementit',
-		images: 'tiukat rajaukset, lähikuvat ja yhtenäinen vahva tyyli',
+		paletteNote:
+			'Näillä väreillä voit rakentaa vahvan ja näyttävän kokonaisuuden. Kokeile tummien ja vaaleiden sävyjen kontrastia ja käytä tehostevärejä harkitusti.',
+		typography:
+			'Suosi näyttäviä otsikkofontteja, joissa on persoonallisuutta ja vahvaa ilmaisua. Otsikoissa voit käyttää suuria kirjaimia ja rohkeita tekstikokoja. Yhdistä niihin selkeä ja moderni leipäteksti, joka pitää kokonaisuuden helposti luettavana.',
+		shapes:
+			'Selkeät ja suorat linjat, terävät kulmat ja isot elementit sopivat tähän tyyliin. Kokeile rohkeita sommitteluja, suuria otsikoita ja vahvoja kontrasteja. Yksittäinen näyttävä elementti voi tehdä paljon.',
+		images:
+			'Tiukat rajaukset, lähikuvat, voimakkaat kontrastit ja yhtenäinen kuvallinen tyyli. Valitse kuvia, joissa on vahva tunnelma ja selkeä visuaalinen ilmaisu. Kuvien ei tarvitse olla perinteisiä tai ennalta arvattavia.',
+		tryThis:
+			'Anna otsikoille tilaa ja käytä kontrastia rohkeasti. Yhdistä tummaa ja vaaleaa, kokeile suuria tekstikokoja ja pidä väripaletti hallittuna. Älä pelkää jättää vahvaa visuaalista jälkeä.',
 	},
 	D: {
 		world: 'Rauhallinen ja minimalistinen',
-		experience:
-			'Sun sivuista välittyy rauhallisuus ja varmuus. Ne kertovat, että uskot yksinkertaisuuden voimaan etkä tarvitse ylimääräistä tehdäksesi vaikutuksen.',
+		tagline: 'levollisuus, selkeys ja harkittu yksinkertaisuus.',
+		impression:
+			'Sun sivuista välittyy rauhallisuus ja varmuus. Ne kertovat, että uskot yksinkertaisuuden voimaan ja arvostat selkeyttä. Sun ei tarvitse huutaa tullaksesi huomatuksi harkitut yksityiskohdat ja selkeä kokonaisuus tekevät vaikutuksen.',
 		palette: [
-			{name: 'helmi', hex: '#F6F2EF'},
-			{name: 'satama', hex: '#B0C0CC'},
-			{name: 'keskiyö', hex: '#363E4F'},
-			{name: 'usva', hex: '#D9DFE3'},
-			{name: 'meren\u00ADvihreä', hex: '#8EA39D'},
+			{name: 'Helmi', hex: '#F6F2EF', description: 'pehmeä ja vaalea pohjasävy'},
+			{name: 'Satama', hex: '#B0C0CC', description: 'hillitty sininen'},
+			{name: 'Keskiyö', hex: '#363E4F', description: 'syvä tummansininen'},
+			{name: 'Usva', hex: '#D9DFE3', description: 'viileä vaaleanharmaa'},
+			{name: 'Meren\u00ADvihreä', hex: '#8EA39D', description: 'rauhallinen vihertävä sävy'},
 		],
-		shapes: 'yksinkertaiset, ohuet viivat ja paljon tilaa',
-		images: 'vähän mutta harkittuja, valoisia ja samaa sävyä',
+		paletteNote:
+			'Näillä väreillä voit luoda sivuille harmonisen ja levollisen tunnelman. Käytä vaaleita sävyjä pohjana ja tummempia värejä harkittuina tehosteina.',
+		typography:
+			'Suosi selkeitä, kevyitä ja helposti luettavia fontteja. Otsikoissa voit käyttää hieman persoonallisempaa ja eleganttia kirjaintyyliä, kun taas leipätekstissä kannattaa suosia yksinkertaista ja selkeää fonttia.',
+		shapes:
+			'Yksinkertaiset linjat, ohuet rajaukset ja harkitut yksityiskohdat sopivat tähän tyyliin. Jätä elementtien ympärille reilusti tyhjää tilaa. Kaikkea ei tarvitse täyttää.',
+		images:
+			'Vähän mutta harkittuja kuvia. Suosi luonnonvaloa, rauhallisia sävyjä, selkeitä sommitteluja ja aitoja yksityiskohtia. Kuvien ei tarvitse olla näyttäviä, vaan niiden tehtävä on tukea kokonaisuuden tunnelmaa.',
+		tryThis:
+			'Anna sisällölle tilaa hengittää. Käytä vaaleaa taustaa, selkeitä otsikoita ja yhtä tai kahta tehosteväriä. Mieti jokaisen elementin kohdalla, tuoko se jotain olennaista kokonaisuuteen.',
 	},
 };
 

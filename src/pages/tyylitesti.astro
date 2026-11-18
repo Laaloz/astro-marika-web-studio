@@ -208,31 +208,59 @@ const content = {
 
 			<section class="tyylitesti__result" data-step="8" hidden>
 				<div class="tyylitesti__result-section tyylitesti__result-head">
-					<p class="tyylitesti__section-title">Tämä tunnelma tukee sun yrityksen persoonaa</p>
-					<h1 class="tyylitesti__result-title"><span data-world></span></h1>
+					<h1 class="tyylitesti__result-title" data-world></h1>
+					<p class="tyylitesti__italic" data-tagline></p>
 				</div>
 
 				<div class="tyylitesti__result-section">
-					<h2 class="tyylitesti__section-title">Näin sun ihanneasiakas sen kokee</h2>
-					<p class="tyylitesti__italic" data-experience></p>
+					<h2 class="tyylitesti__section-title">Millaisen mielikuvan välität?</h2>
+					<p class="tyylitesti__italic" data-impression></p>
 				</div>
 
 				<div class="tyylitesti__result-section">
-					<h2 class="tyylitesti__section-title">Sulle sopii</h2>
+					<h2 class="tyylitesti__section-title">Värimaailma</h2>
+					<p class="tyylitesti__body">Suuntaa-antava väripaletti:</p>
+					<div class="tyylitesti__swatches" aria-hidden="true" data-swatches></div>
+					<ul class="tyylitesti__swatch-list" data-swatch-list></ul>
+					<p class="tyylitesti__body" data-palette-note></p>
+				</div>
 
-					<div class="tyylitesti__fit">
-						<h3 class="tyylitesti__fit-label">Värit</h3>
-						<ul class="tyylitesti__palette" data-palette></ul>
-						<p class="tyylitesti__italic">Esimerkiksi nämä värit sopisivat sun sivujen tunnelmaan</p>
-					</div>
-					<div class="tyylitesti__fit">
-						<h3 class="tyylitesti__fit-label">Muodot</h3>
-						<p class="tyylitesti__italic" data-shapes></p>
-					</div>
-					<div class="tyylitesti__fit">
-						<h3 class="tyylitesti__fit-label">Kuvat</h3>
-						<p class="tyylitesti__italic" data-images></p>
-					</div>
+				<div class="tyylitesti__result-section">
+					<h2 class="tyylitesti__section-title">Typografia</h2>
+					<p class="tyylitesti__body" data-typography></p>
+				</div>
+
+				<div class="tyylitesti__result-section">
+					<h2 class="tyylitesti__section-title">Muodot ja elementit</h2>
+					<p class="tyylitesti__body" data-shapes></p>
+				</div>
+
+				<div class="tyylitesti__result-section">
+					<h2 class="tyylitesti__section-title">Kuvamaailma</h2>
+					<p class="tyylitesti__body" data-images></p>
+				</div>
+
+				<div class="tyylitesti__result-section">
+					<h2 class="tyylitesti__section-title">Kokeile tätä omilla nettisivuillasi</h2>
+					<p class="tyylitesti__body" data-try></p>
+				</div>
+
+				<div class="tyylitesti__result-section tyylitesti__ending">
+					<h2 class="tyylitesti__ending-title">Tämä on vasta alkua!</h2>
+					<p class="tyylitesti__body">
+						Muista, ettei visuaalisen ilmeen tarvitse syntyä kerralla valmiiksi. Nämä ehdotukset ovat suuntaa antavaa
+						inspiraatiota, eivät sääntöjä, joita sinun pitäisi noudattaa pilkulleen.
+					</p>
+					<p class="tyylitesti__body">
+						Poimi mukaan ne värit, muodot ja ideat, jotka tuntuvat omilta. Voit myös yhdistellä eri tyylien elementtejä ja
+						löytää sitä kautta jotain ihan omanlaistasi.
+					</p>
+					<p class="tyylitesti__body">
+						Tärkeintä on, että yrityksesi visuaalinen ilme tuntuu omalta ja tukee sitä mielikuvaa, jonka haluat asiakkaillesi
+						välittää.
+					</p>
+					<p class="tyylitesti__italic">Pienistä oivalluksista syntyy usein jotain todella oman näköistä. 🤎</p>
+					<p class="tyylitesti__signature">– Studio Maura</p>
 				</div>
 			</section>
 		</div>
@@ -391,6 +419,12 @@ const content = {
 				});
 		};
 
+		/** Värilaatan nimi luetaan vaaleana tummalta pohjalta ja tummana vaalealta. */
+		const isDark = (hex: string) => {
+			const [r, g, b] = [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16) / 255);
+			return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.55;
+		};
+
 		const renderResult = () => {
 			const key: StyleKey = scoreAnswers(answers);
 
@@ -404,17 +438,32 @@ const content = {
 					root.querySelector<HTMLElement>(selector)!.textContent = text;
 				};
 				setText('[data-world]', result.world);
-				setText('[data-experience]', result.experience);
+				setText('[data-tagline]', result.tagline);
+				setText('[data-impression]', result.impression);
+				setText('[data-palette-note]', result.paletteNote);
+				setText('[data-typography]', result.typography);
 				setText('[data-shapes]', result.shapes);
 				setText('[data-images]', result.images);
+				setText('[data-try]', result.tryThis);
 
-				root.querySelector<HTMLElement>('[data-palette]')!.replaceChildren(
+				root.querySelector<HTMLElement>('[data-swatches]')!.replaceChildren(
 					...result.palette.map(({name, hex}) => {
+						const swatch = document.createElement('div');
+						swatch.className = 'tyylitesti__swatch';
+						swatch.style.background = hex;
+						swatch.classList.toggle('is-dark', isDark(hex));
+						const label = document.createElement('span');
+						label.textContent = name;
+						swatch.append(label);
+						return swatch;
+					}),
+				);
+				root.querySelector<HTMLElement>('[data-swatch-list]')!.replaceChildren(
+					...result.palette.map(({name, description}) => {
 						const item = document.createElement('li');
-						const ball = document.createElement('span');
-						ball.className = 'tyylitesti__palette-ball';
-						ball.style.background = hex;
-						item.append(ball, name);
+						const title = document.createElement('strong');
+						title.textContent = name.replace(/\u00AD/g, '');
+						item.append(title, ` – ${description}`);
 						return item;
 					}),
 				);

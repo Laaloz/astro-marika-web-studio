@@ -41,6 +41,10 @@ test('jokaisella maailmalla on oma sisältö oikeassa rakenteessa', () => {
 	]);
 	for (const key of STYLE_KEYS) {
 		assert.equal(RESULTS[key].palette.length, 5);
+		for (const field of ['tagline', 'impression', 'paletteNote', 'typography', 'shapes', 'images', 'tryThis'] as const) {
+			assert.ok(RESULTS[key][field].length > 0, `${key}.${field} puuttuu`);
+		}
+		assert.ok(RESULTS[key].palette.every((color) => color.description && /^#[0-9A-F]{6}$/.test(color.hex)));
 	}
 });
 

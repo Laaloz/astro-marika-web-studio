@@ -557,48 +557,67 @@
   line-height: 1.45;
 }
 
-.tyylitesti__fit {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.tyylitesti__fit + .tyylitesti__fit {
-  margin-top: 10px;
-}
-
-.tyylitesti .tyylitesti__fit-label {
-  font-family: var(--tt-body);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.tyylitesti__palette {
+/* Värilaatat: nimi laatan alareunassa. Lista laattojen alla kertoo nimet ja kuvaukset. */
+.tyylitesti__swatches {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  margin: 4px 0 6px;
-  padding: 0;
-  list-style: none;
-  font-size: 12px;
-  line-height: 1.3;
+  margin: 4px 0;
+  border: 1px solid var(--tt-line-soft);
 }
 
-.tyylitesti__palette li {
+.tyylitesti__swatch {
+  display: flex;
+  align-items: flex-end;
+  min-height: 150px;
+  padding: 12px 10px;
+  color: var(--tt-text);
+  font-size: 12px;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+
+.tyylitesti__swatch.is-dark {
+  color: var(--tt-cream);
+}
+
+.tyylitesti__swatch-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.tyylitesti__palette-ball {
-  display: block;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--tt-line-soft);
-  border-radius: 50%;
+.tyylitesti__swatch-list strong {
+  font-weight: 600;
+}
+
+.tyylitesti__ending {
+  padding-bottom: 8px;
+}
+
+.tyylitesti .tyylitesti__ending-title {
+  font-family: var(--tt-heading);
+  font-weight: 400;
+  font-size: clamp(30px, 5cqi, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.tyylitesti .tyylitesti__signature {
+  font-family: var(--tt-heading);
+  font-size: 20px;
+}
+
+@media (max-width: 29.99rem) {
+  .tyylitesti__swatch {
+    min-height: 110px;
+    padding: 10px 6px;
+    font-size: 11px;
+  }
 }
 
 .tyylitesti .tyylitesti__small {
