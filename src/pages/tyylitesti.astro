@@ -240,11 +240,6 @@ const content = {
 					<p class="tyylitesti__body" data-images></p>
 				</div>
 
-				<div class="tyylitesti__result-section">
-					<h2 class="tyylitesti__section-title">Kokeile tätä omilla nettisivuillasi</h2>
-					<p class="tyylitesti__body" data-try></p>
-				</div>
-
 				<div class="tyylitesti__result-section tyylitesti__ending">
 					<h2 class="tyylitesti__ending-title">Toivon että sait inspiraatiota päivääsi! 🤎</h2>
 					<p class="tyylitesti__body">
@@ -439,7 +434,6 @@ const content = {
 				setText('[data-typography]', result.typography);
 				setText('[data-shapes]', result.shapes);
 				setText('[data-images]', result.images);
-				setText('[data-try]', result.tryThis);
 
 				root.querySelector<HTMLElement>('[data-swatches]')!.replaceChildren(
 					...result.palette.map(({name, hex}) => {

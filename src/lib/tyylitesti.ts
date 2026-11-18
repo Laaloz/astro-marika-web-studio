@@ -180,8 +180,6 @@ export interface WorldResult {
 	typography: string;
 	shapes: string;
 	images: string;
-	/** Osio "Kokeile tätä omilla nettisivuillasi". */
-	tryThis: string;
 }
 
 export const RESULTS: Record<StyleKey, WorldResult> = {
@@ -205,8 +203,6 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 			'Vapaat ja yllättävät muodot, kuten aallot, kaarevat linjat ja epäsymmetriset sommittelut sopivat tähän tyyliin. Kokeile myös pieniä graafisia yksityiskohtia ja leikkisiä elementtejä.',
 		images:
 			'Ilmeitä, liikettä, värejä ja hauskoja yksityiskohtia. Kuvissa saa näkyä elämää, persoonallisuutta ja aitoja tilanteita. Älä pelkää poiketa perinteisestä kuvamaailmasta.',
-		tryThis:
-			'Valitse yksi tai kaksi rohkeampaa tehosteväriä ja anna niiden näkyä otsikoissa, painikkeissa tai muissa yksityiskohdissa. Kokeile erilaisia asetteluja ja tuo mukaan jotain yllättävää, joka tekee sivuista sinun näköisesi.',
 	},
 	B: {
 		world: 'Maanläheinen ja ajaton',
@@ -228,8 +224,6 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 			'Pehmeät ja pyöreät muodot, luonnolliset linjat ja maltilliset yksityiskohdat sopivat tähän tyyliin. Voit kokeilla myös kevyitä tekstuureja ja käsintehdyn tuntua tuovia elementtejä.',
 		images:
 			'Luonnonvalo, aidot hetket, materiaalien pinnat ja käsillä tekeminen. Suosi kuvia, joissa näkyy luonnollisuutta ja lämpöä. Kuvien ei tarvitse olla liian viimeisteltyjä – pieni rosoisuus voi tehdä niistä entistä kiinnostavampia.',
-		tryThis:
-			'Yhdistä lämmin vaalea tausta, ruskeat yksityiskohdat ja aidot valokuvat. Voit tuoda tunnelmaa sivuille myös materiaalien tekstuureilla ja pehmeillä muodoilla. Anna kuvien ja tekstien kertoa yrityksesi tarinaa.',
 	},
 	C: {
 		world: 'Moderni ja rohkea',
@@ -251,8 +245,6 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 			'Selkeät ja suorat linjat, terävät kulmat ja isot elementit sopivat tähän tyyliin. Kokeile rohkeita sommitteluja, suuria otsikoita ja vahvoja kontrasteja. Yksittäinen näyttävä elementti voi tehdä paljon.',
 		images:
 			'Tiukat rajaukset, lähikuvat, voimakkaat kontrastit ja yhtenäinen kuvallinen tyyli. Valitse kuvia, joissa on vahva tunnelma ja selkeä visuaalinen ilmaisu. Kuvien ei tarvitse olla perinteisiä tai ennalta arvattavia.',
-		tryThis:
-			'Anna otsikoille tilaa ja käytä kontrastia rohkeasti. Yhdistä tummaa ja vaaleaa, kokeile suuria tekstikokoja ja pidä väripaletti hallittuna. Älä pelkää jättää vahvaa visuaalista jälkeä.',
 	},
 	D: {
 		world: 'Rauhallinen ja minimalistinen',
@@ -274,8 +266,6 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 			'Yksinkertaiset linjat, ohuet rajaukset ja harkitut yksityiskohdat sopivat tähän tyyliin. Jätä elementtien ympärille reilusti tyhjää tilaa. Kaikkea ei tarvitse täyttää.',
 		images:
 			'Vähän mutta harkittuja kuvia. Suosi luonnonvaloa, rauhallisia sävyjä, selkeitä sommitteluja ja aitoja yksityiskohtia. Kuvien ei tarvitse olla näyttäviä, vaan niiden tehtävä on tukea kokonaisuuden tunnelmaa.',
-		tryThis:
-			'Anna sisällölle tilaa hengittää. Käytä vaaleaa taustaa, selkeitä otsikoita ja yhtä tai kahta tehosteväriä. Mieti jokaisen elementin kohdalla, tuoko se jotain olennaista kokonaisuuteen.',
 	},
 };
 
