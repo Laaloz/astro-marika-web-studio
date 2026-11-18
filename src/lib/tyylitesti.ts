@@ -237,7 +237,7 @@ export const RESULTS: Record<StyleKey, WorldResult> = {
 		impression:
 			'Sun sivuista välittyy itsevarmuus ja vahva oma näkemys. Ne kertovat, että tiedät mitä teet etkä pelkää erottua joukosta. Uskallat ottaa tilaa ja näyttää yrityksesi persoonan sellaisena kuin se on.',
 		palette: [
-			{name: 'Musta', hex: '#030303', description: 'vahva ja ajaton pohjasävy'},
+			{name: 'Hiili', hex: '#242424', description: 'voimakas ja ajaton pohjasävy'},
 			{name: 'Yön\u00ADsininen', hex: '#131936', description: 'syvä ja tyylikäs sininen'},
 			{name: 'Viinin\u00ADpunainen', hex: '#390007', description: 'intensiivinen tehosteväri'},
 			{name: 'Luun\u00ADvalkoinen', hex: '#D6D1C0', description: 'pehmeä vaalea vastapaino'},
